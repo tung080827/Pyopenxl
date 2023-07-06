@@ -18,23 +18,63 @@ from PIL import ImageTk, Image
 from tkinter.font import Font
 from tkinter import filedialog
 import gui_function as gui
+import os
+import win32com.client
+from pathlib import Path  # core library
 
 # wb_convert = load_workbook(r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\H137_UCIe_TC_Bump_coordination_official.xlsx", data_only=True)
 # wb_convert.save(r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\H137_UCIe_TC_Bump_coordination_official_value.xlsx")
 # wb_convert.close()
-wb_d = load_workbook(r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\H137_UCIe_TC_Bump_coordination_official.xlsx", data_only=True)
-ws1_d = wb_d["APD"]
-wstemp_d = wb_d["BALL"]
 
-wb = load_workbook(r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\H137_UCIe_TC_Bump_coordination_official.xlsx")
-ws1 = wb["APD"]
-wstemp = wb["BALL"]
 # ws2 = wb.create_sheet('BALL_temp')
 # table = ws1.tables.items()
 # die1_col = input_params["Die_net_col"]
 # die2_col = "N"
 # row_start = 3
+excel_file = r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\H137_UCIe_TC_Bump_coordination_official.xlsx"
 
+ball_table = {
+    "tb_sheet": "BGA",
+    "tb_begin_cell": "AQ2",
+    "tb_end_cell": "AT1297"
+}
+
+def refresh_excel(excelfile):
+    excel_file = os.path.join(excelfile)
+    excel = win32com.client.gencache.EnsureDispatch('Excel.Application')
+    excel.DisplayAlerts = True # disabling prompts to overwrite existing file
+    excel.Workbooks.Open(excel_file )
+    excel.ActiveWorkbook.Save()
+    excel.DisplayAlerts = True # enabling prompts
+    excel.ActiveWorkbook.Close()
+
+def copy_table(cell):
+    wb_tempsheet = load_workbook(excel_file)
+    row_begin = coordinate_to_tuple(cell['tb_begin_cell'])[0]
+    col_begin = coordinate_to_tuple(cell['tb_begin_cell'])[1]
+    row_end = coordinate_to_tuple(cell['tb_end_cell'])[0]
+    col_end = coordinate_to_tuple(cell['tb_end_cell'])[1]
+    wstmp_create_name = str(cell['tb_sheet']) + "TEMP"
+    wstmp_create = wb_tempsheet.create_sheet(wstmp_create_name)
+    
+    source_sheet = wb_tempsheet[cell['tb_sheet']]
+
+    print(row_begin)
+    print(col_begin)
+    print(row_end)
+    print(col_end)
+    for i in range (row_begin, row_end + 1):
+        for j in range (col_begin, col_end + 1):
+            if(str(source_sheet[get_column_letter(j) + str(i)].value).find("=") != -1):
+                wstmp_create[get_column_letter(j) + str(i)].value = f"={cell['tb_sheet']}!{str(source_sheet[get_column_letter(j) + str(i)].value).replace('=','')}"
+            else:
+               wstmp_create[get_column_letter(j) + str(i)].value = f"={cell['tb_sheet']}!{str(get_column_letter(j) + str(i))}"
+    wb_tempsheet.save(excel_file)
+    wb_tempsheet.close()
+    return row_begin,col_begin,row_end,col_end,wstmp_create_name 
+
+ball_tmp_tb = copy_table(ball_table)
+refresh_excel(excel_file)
 input_params = {
     "Die_X_col": "H", # The column contain Die X coordinate
     "Die_Y_col": "I", # The column contain Die Y coordinate
@@ -77,6 +117,14 @@ ball_die_cmp = 0
 # ball_maxrow = 1297
 r = apd_table["tb_start"]
 pin_number = 1
+
+wb_d = load_workbook(excel_file, data_only=True)
+ws1_d = wb_d["APD"]
+wstemp_d = wb_d[ball_tmp_tb[4]]
+
+wb = load_workbook(excel_file)
+ws1 = wb["APD"]
+wstemp = wb["BALL"]
 
 def matching(wsheet, swheet_temp, apd_table):     
     ws1[apd_table["X_coord"] + str(r)].value = ws1[input_params["Die_X_col"] + str(i)].value
@@ -329,7 +377,7 @@ for m in range (input_params["Ball_start"], input_params["Ball_end"] + 1):
     ws1[apd_table["Pin_BGA"] + str(r)].value = wstemp[input_params["Ball_coord_col"]+ str(m)].value    
     r = r + 1
 print(input_params["Ball_end"]) 
-wb.save(r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\H137_UCIe_TC_Bump_coordination_official.xlsx")
+wb.save(excel_file)
 # print(len(table))3446	4692.95	DIE7_BP_ATO
 
 # print(table[0])
