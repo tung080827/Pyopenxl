@@ -15,8 +15,9 @@ from tkinter import *
 from ttkthemes import ThemedTk, THEMES
 from PIL import Image
 from PIL import ImageTk, Image
-from tkinter.font import Font
+from tkinter.font import Font as tkfont
 from tkinter import filedialog
+from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection
 
 import gui_function as gui
 # adv = 1
@@ -67,6 +68,7 @@ stfont= ("Franklin Gothic Medium", 10, 'underline', "italic")
 theme_list = ["adapta", "aquativo", "arc", "black","blue", "breeze", "clearlooks", "elegance", "equilux", "itft1", "keramik", "keramik_alt", "kroc", "plastik", "radiance", "ubuntu", "scidblue", "scidgreen", "scidgrey", "scidmint", "scidpink", "scidpurple", "scidsand", "smog", "winxpblue", "yaru" ]
 package_list = ["S-Organic", "A-CoWoS", "A-EMIB"]
 foundry_list = ["TSMC-MapWSR", "TSMC-MapWoSR", "SS-MapWSR", "SS-MapWoSR", "GF-MapWSR", "GF-MapWSR"]
+int_couple_number = ["2", "4", "6", "8", "10", "12", "14", "16"]
 
 # Create control variables
 a = tk.BooleanVar()
@@ -129,10 +131,10 @@ def intp_toggle():
     print("interposer day")
         # if(entry['state'] == 'disable'):
     if(isIntp.get() == 1):
-        entry_enable(xwidth_i, yheight_i, Die1_xoffset_i, Die1_yoffset_i, Die2_xoffset_i, Die2_yoffset_i)
+        entry_enable(xwidth_i, yheight_i, Die1_xoffset_i, Die1_yoffset_i, Die2_xoffset_i, Die2_yoffset_i, intp_sheet, Die1_name, Die2_name, int_tb_loc)
        
     elif(isIntp.get() == 0):
-        entry_disable(xwidth_i, yheight_i, Die1_xoffset_i, Die1_yoffset_i, Die2_xoffset_i, Die2_yoffset_i)
+        entry_disable(xwidth_i, yheight_i, Die1_xoffset_i, Die1_yoffset_i, Die2_xoffset_i, Die2_yoffset_i, intp_sheet, Die1_name, Die2_name, int_tb_loc)
         
 def progress_bar(value):
     progress['value'] = value
@@ -188,6 +190,8 @@ myLabel_w =my_canvas.create_window(80,770,anchor="nw", window=myLabel)
 frame = tk.Label(root, bg="#c9f2dc", font=("Courier New", 10), foreground="#f2a50a")
 my_canvas.create_window(600, 80, window=frame, anchor="nw", width= 280, height=100)
 
+def get_num_intdie(event):
+    pass
 def mynotif(content):
     if(content == ""):
         myLabel.configure(text="", anchor='w')
@@ -251,7 +255,16 @@ def Die1_yoffset_i_guide(event):
 def Die2_xoffset_i_guide(event):
      myguide(frame, "INFO:" + "X Offset of Die2/chip2 . \nThis param used for    \n Die/chip placement on PKG      ")
 def Die2_yoffset_i_guide(event):
-     myguide(frame, "INFO:" + "Y Offset of Die2/chip2 . \nThis param used for    \n Die/chip placement on PKG      ")        
+     myguide(frame, "INFO:" + "Y Offset of Die2/chip2 . \nThis param used for    \n Die/chip placement on PKG      ")
+def intp_sheet_guide(event):
+     myguide(frame, "INFO:" + "Name of interposer sheet.\n to put intterposer Die table \n ")
+def Die1_name_guide(event):
+     myguide(frame, "INFO:" + "Name of interposer Die1.\n Die Flipped + Rotate -90\n ")
+def Die2_name_guide(event):
+     myguide(frame, "INFO:" + "Name of interposer Die2.\n Die Flipped + Rotate +90\n ")
+def int_tb_guide(event):
+     myguide(frame, "INFO:" + "First cell to place the table.\n ")
+        
 xfont = ("System", 12, "bold", 'underline', 'italic')
 theme_combo_t = ttk.Label(root,text="Choose theme:",border=20, font=xfont, background='#b434eb', borderwidth=3)
 theme_combo_t_w = my_canvas.create_window(750, 15, window=theme_combo_t)
@@ -266,7 +279,7 @@ pfont= ("Rosewood Std Regular", 12, "bold", 'underline' )
 excel_t = ttk.Label(root,text="PLOC path:",border=20,font=pfont, borderwidth=5)
 excel_t_w = my_canvas.create_window(30,40, anchor="nw", window=excel_t)
 excel_i = ttk.Entry(root, width=115)
-excel_i.insert(0, r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\UCIe_TC_N3P_Bump_coordination_CoWoS_S.xlsx")
+excel_i.insert(0, r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Bump_CoWoS_S.xlsx")
 excel_i_w = my_canvas.create_window(150,40, anchor="nw", window=excel_i)
 
 # -------------------------excel sheet_name input--------------------------#
@@ -492,71 +505,91 @@ interopser_w =my_canvas.create_window(30, 500, anchor="nw", window=interopser)
 
 my_canvas.create_text(30, 540, text="Die/Chip size input:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 xwidth_i = ttk.Entry(root)
-xwidth_i_w = my_canvas.create_window(150, 560, anchor="nw", window=xwidth_i)
+xwidth_i_w = my_canvas.create_window(150, 560, anchor="nw", window=xwidth_i, width= 170)
 xwidth_i.insert(0, "3938.352")
 xwidth_i.bind('<FocusIn>', xwidth_i_guide)
 xwidth_i.bind('<FocusOut>', un_guide)
 
 yheight_i = ttk.Entry(root, width=20)
-yheight_w = my_canvas.create_window(300, 560, anchor="nw", window=yheight_i)
+yheight_w = my_canvas.create_window(340, 560, anchor="nw", window=yheight_i, width=170)
 yheight_i.insert(0, "2262.872")
 yheight_i.bind('<FocusIn>', yheight_i_guide)
 yheight_i.bind('<FocusOut>', un_guide)
 
 
-my_canvas.create_text(500, 540, text="Die/Chip Offset:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
-Die1_xoffset_i = ttk.Entry(root)
-Die1_xoffset_w = my_canvas.create_window(600, 560, anchor="nw", window=Die1_xoffset_i)
-Die1_xoffset_i.insert(0, "-4350.8")
-Die1_xoffset_i.bind('<FocusIn>', Die1_xoffset_i_guide)
-Die1_xoffset_i.bind('<FocusOut>', un_guide)
 
-Die1_yoffset_i = ttk.Entry(root, width=20)
-Die1_yoffset_w = my_canvas.create_window(750, 560, anchor="nw", window=Die1_yoffset_i)
-Die1_yoffset_i.insert(0, "16.2349999999999")
-Die1_yoffset_i.bind('<FocusIn>', Die1_yoffset_i_guide)
-Die1_yoffset_i.bind('<FocusOut>', un_guide)
 
-Die2_xoffset_i = ttk.Entry(root)
-Die2_xoffset_w = my_canvas.create_window(600, 590, anchor="nw", window=Die2_xoffset_i)
-Die2_xoffset_i.insert(0, "1571.96")
-Die2_xoffset_i.bind('<FocusIn>', Die2_xoffset_i_guide)
-Die2_xoffset_i.bind('<FocusOut>', un_guide)
-
-Die2_yoffset_i = ttk.Entry(root, width=20)
-Die2_yoffset_w = my_canvas.create_window(750, 590, anchor="nw", window=Die2_yoffset_i)
-Die2_yoffset_i.insert(0, "97.9849999999997")
-Die2_yoffset_i.bind('<FocusIn>', Die2_yoffset_i_guide)
-Die2_yoffset_i.bind('<FocusOut>', un_guide)
-
-my_canvas.create_text(30, 595, text="OUT DIE name/location:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
-my_canvas.create_text(60, 635, text="Sheet:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+my_canvas.create_text(500, 540, text="OUT DIE sheet/location:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
 intp_sheet = ttk.Entry(root)
-intp_sheet_w = my_canvas.create_window(150, 630, anchor="nw", window=intp_sheet)
+intp_sheet_w = my_canvas.create_window(520, 560, anchor="nw", window=intp_sheet, width=170)
 intp_sheet.insert(0, "Package_substrate")
-intp_sheet.bind('<FocusIn>', xwidth_i_guide)
+intp_sheet.bind('<FocusIn>', intp_sheet_guide)
 intp_sheet.bind('<FocusOut>', un_guide)
 
+int_tb_loc = ttk.Entry(root)
+int_tb_locc_w = my_canvas.create_window(710, 560, anchor="nw", window=int_tb_loc, width=170)
+int_tb_loc.insert(0, "X111")
+int_tb_loc.bind('<FocusIn>', int_tb_guide)
+int_tb_loc.bind('<FocusOut>', un_guide)
+
+my_canvas.create_text(30, 595, text="Die/Chip Offset:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+int_die_num = ttk.Label(root,text="Choose die num:",border=20, font=xfont, background='green', borderwidth=3)
+int_die_num_w = my_canvas.create_window(300, 610, window=int_die_num)
+
+int_die_num_combo = ttk.Combobox(root, state="readonly", values=int_couple_number, width=15)
+int_die_num_combo_w = my_canvas.create_window(450,610, window=int_die_num_combo)
+int_die_num_combo.current(0)
+int_die_num_combo.bind('<<ComboboxSelected>>', get_num_intdie)
+
+my_canvas.create_text(60, 635, text="Die name:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 Die1_name = ttk.Entry(root)
-Die1_name_w = my_canvas.create_window(300, 630, anchor="nw", window=Die1_name)
+Die1_name_w = my_canvas.create_window(150, 630, anchor="nw", window=Die1_name, width= 360)
 Die1_name.insert(0, "DIE3")
-Die1_name.bind('<FocusIn>', xwidth_i_guide)
+Die1_name.bind('<FocusIn>', Die1_name_guide)
 Die1_name.bind('<FocusOut>', un_guide)
 
 
 
 Die2_name = ttk.Entry(root)
-Die2_name_w = my_canvas.create_window(450, 630, anchor="nw", window=Die2_name)
+Die2_name_w = my_canvas.create_window(520, 630, anchor="nw", window=Die2_name, width=360)
 Die2_name.insert(0, "DIE7")
-Die2_name.bind('<FocusIn>', xwidth_i_guide)
+Die2_name.bind('<FocusIn>', Die2_name_guide)
 Die2_name.bind('<FocusOut>', un_guide)
 
-int_tb_loc = ttk.Entry(root)
-int_tb_locc_w = my_canvas.create_window(600, 630, anchor="nw", window=int_tb_loc)
-int_tb_loc.insert(0, "X111")
-int_tb_loc.bind('<FocusIn>', xwidth_i_guide)
-int_tb_loc.bind('<FocusOut>', un_guide)
+
+
+my_canvas.create_text(60, 675, text="X offset:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+Die1_xoffset_i = ttk.Entry(root)
+Die1_xoffset_w = my_canvas.create_window(150, 670, anchor="nw", window=Die1_xoffset_i, width=360)
+Die1_xoffset_i.insert(0, "-4350.8")
+Die1_xoffset_i.bind('<FocusIn>', Die1_xoffset_i_guide)
+Die1_xoffset_i.bind('<FocusOut>', un_guide)
+
+my_canvas.create_text(60, 715, text="Y offset:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+Die1_yoffset_i = ttk.Entry(root, width=20)
+Die1_yoffset_w = my_canvas.create_window(150, 710, anchor="nw", window=Die1_yoffset_i, width=360)
+Die1_yoffset_i.insert(0, "16.2349999999999")
+Die1_yoffset_i.bind('<FocusIn>', Die1_yoffset_i_guide)
+Die1_yoffset_i.bind('<FocusOut>', un_guide)
+
+Die2_xoffset_i = ttk.Entry(root)
+Die2_xoffset_w = my_canvas.create_window(520, 670, anchor="nw", window=Die2_xoffset_i, width=360)
+Die2_xoffset_i.insert(0, "1571.96")
+Die2_xoffset_i.bind('<FocusIn>', Die2_xoffset_i_guide)
+Die2_xoffset_i.bind('<FocusOut>', un_guide)
+
+Die2_yoffset_i = ttk.Entry(root, width=20)
+Die2_yoffset_w = my_canvas.create_window(520, 710, anchor="nw", window=Die2_yoffset_i, width=360)
+Die2_yoffset_i.insert(0, "97.9849999999997")
+Die2_yoffset_i.bind('<FocusIn>', Die2_yoffset_i_guide)
+Die2_yoffset_i.bind('<FocusOut>', un_guide)
+
+
+
+
+
+
 
 separator1 = ttk.Separator(root)
 
@@ -737,16 +770,12 @@ def get_params_and_generate():
 def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, die_coor, dummybump, opt_sr, die_params, int_die_tb, int_gen ):
 
 
-  
-
-
-
     mynotif("")
     root.update_idletasks()
     mynotif("Loading the ploc file...")
     root.update_idletasks()
     try:
-        wb_d = load_workbook(excel_path, data_only=True)
+        # wb_d = load_workbook(excel_path, data_only=True)
         wb_f = load_workbook(excel_path)
         print(wb_f)   
     except:
@@ -755,21 +784,59 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
         progress_bar(0)
         mynotif("Error")
         root.update_idletasks()
+        return
     
     # ws = wb_f.create_sheet('Tung')
     try:
-       wsvisual_d = wb_d[bump_visual_sheet] 
-       wsvisual_f = wb_f[bump_visual_sheet]
-       wsdiebump_d = wb_d[die_table['sheet']]
-       wsdiebump_f = wb_f[die_table['sheet']]
-       wsintbump_d = wb_d[int_die_tb['sheet']]
-       wsintbump_f = wb_f[int_die_tb['sheet']]
+        sheet_list = wb_f.sheetnames
+       #wsvisual_d = wb_d[bump_visual_sheet]  # use for further function
+        wsvisual_f = wb_f[bump_visual_sheet]
+      # wsdiebump_d = wb_d[die_table['sheet']] # use for further function
+        # wsdiebump_f = wb_f[die_table['sheet']]
+        # wsintbump_f = wb_f[int_die_tb['sheet']]
+        if die_table['sheet'] in sheet_list:
+            wsdiebump_f = wb_f[die_table['sheet']]
+        else:
+            msg_ws = messagebox.askquestion('Create Sheet', 'The ' + die_table['sheet'] + ' doesn\'t exist. Do you want to create it?',icon='question')
+            mynotif("")
+            mynotif("The " + die_table['sheet'] + " doesn't exist.")
+            if(msg_ws == 'yes'):
+                mynotif("")
+                mynotif('Creating the sheet...')
+                wsdiebump_f = wb_f.create_sheet(die_table['sheet'])
+            else:
+                mynotif("")
+                progress_bar(0)
+                return
+        if(int_gen == 1):
+            if int_die_tb['sheet'] in sheet_list:
+                wsintbump_f = wb_f[int_die_tb['sheet']]
+            else:
+                mynotif("")
+                mynotif("The " + int_die_tb['sheet'] + " doesn't exist.")
+                msg_ws = messagebox.askquestion('Create Sheet', 'The ' + int_die_tb['sheet'] + ' doesn\'t exist. Do you want to create it?', icon='question')
+            
+                if(msg_ws == 'yes'):
+                    wsintbump_f = wb_f.create_sheet(int_die_tb['sheet'])
+                    mynotif("")
+                    mynotif('Creating the sheet...')
+                else:
+                    mynotif("")
+                    progress_bar(0)
+                    return
+            
+      
+        
+       
+       #wsintbump_d = wb_d[int_die_tb['sheet']] # use for further function
+       
     except:
-        print("Sheet name doesn't exist")
-        show_error("Sheet name doesn't exist")
+        print("Sheet " + bump_visual_sheet + " doesn't exist")
+        show_error("Sheet " + bump_visual_sheet + " doesn't exist")
         progress_bar(0)
         mynotif("Error")
         root.update_idletasks()
+        return
     
     
 
@@ -793,13 +860,22 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
 
             r_die = die_tb_y + 2
             r_int = int_tb_y + 2
-            wsdiebump_f[die_table['location']].value = die_table['name']
-            wsdiebump_f.merge_cells(die_table['location'] + ":" + get_column_letter(die_tb_x + 2) + str(die_tb_y))
-          
-            wsdiebump_f[get_column_letter(die_tb_x) + str(die_tb_y + 1)].value = "X"
-            wsdiebump_f[get_column_letter(die_tb_x + 1) + str(die_tb_y + 1)].value = "Y"
-            wsdiebump_f[get_column_letter(die_tb_x + 2)  + str(str(die_tb_y + 1))].value = "Bump name"
 
+            title_bg_fill = PatternFill(patternType='solid', fgColor='9e42f5')
+            subtil_bg_fill = PatternFill(patternType='solid',fgColor='0e7bf0')
+            wsdiebump_f[die_table['location']].value = die_table['name']
+           
+            wsdiebump_f.merge_cells(die_table['location'] + ":" + get_column_letter(die_tb_x + 2) + str(die_tb_y))
+            for c1 in range(0,3):
+                wsdiebump_f[get_column_letter(die_tb_x + c1) + str(die_tb_y)].fill = title_bg_fill
+
+            wsdiebump_f[get_column_letter(die_tb_x) + str(die_tb_y + 1)].value = "X"
+
+            wsdiebump_f[get_column_letter(die_tb_x + 1) + str(die_tb_y + 1)].value = "Y"
+
+            wsdiebump_f[get_column_letter(die_tb_x + 2)  + str(str(die_tb_y + 1))].value = "Bump name"
+            for c2 in range(0,3):
+                wsdiebump_f[get_column_letter(die_tb_x + c2) + str(die_tb_y + 1)].fill = subtil_bg_fill
             
 
             # xwidth = float (ws_f[get_column_letter(xmax) + die_coor["xcoor"]].value)
@@ -811,7 +887,7 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
             # ywidth = ws_f[die_coor["ycoor"] + str(ymin)].value
             # minyval = ws_f[die_coor["ycoor"] + str(ymax)].value
             if (package_type == 1):
-                print("De sua sau di")
+                print("Generate for Advance Package")
                 dm_bump_coor= []
                 dm_cnt=0
                 mynotif("")
@@ -830,22 +906,14 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
 
                     print(xmin_dm,xmax_dm)
                     print(ymin_dm,ymax_dm)
+                    print(dummybump)
 
                     for dummycol1 in range(xmin_dm, xmax_dm + 1):
                         for dummyrow1 in range(ymin_dm, ymax_dm + 1):
                             col_dm = get_column_letter(dummycol1)
-                            if (wsdiebump_f[col_dm + str(dummyrow1)].value != None):
+                            if (wsvisual_f[col_dm + str(dummyrow1)].value != None):
                                 
-                                # cell_valx = "'" + str(bump_visual_sheet) + "'!" + str(wsvisual_f[col_dm + xcoor_dm].value).replace('=','')
-                                # if(getstring(cell_valx,"!","!") == 1):
-                                #     wsdiebump_f[get_column_letter(die_tb_x)+str(r_die)].value = f"='{bump_visual_sheet}'!{str(wsvisual_f[col_dm + xcoor_dm].value).replace('=','')}"
-                                # else:
-                                #     wsdiebump_f[get_column_letter(die_tb_x)+str(r_die)].value = f"={str(wsvisual_f[col_dm + xcoor_dm].value).replace('=','')}"
-                                # cell_valy = "'" + str(bump_visual_sheet) + "'!" + str(wsvisual_f[ycoor_dm + str(dummyrow1)].value).replace('=','')
-                                # if(getstring(cell_valy,"!","!") == 1):
-                                #     wsdiebump_f[get_column_letter(die_tb_x + 1)+str(r_die)].value = f"='{bump_visual_sheet}'!{str(wsvisual_f[ycoor_dm + str(dummyrow1)].value).replace('=','')}"
-                                # else:
-                                #     wsdiebump_f[get_column_letter(die_tb_x + 1)+str(r_die)].value = f"={str(wsvisual_f[ycoor_dm + str(dummyrow1)].value).replace('=','')}"
+                                # Den dummy bump table
                                 wsdiebump_f[get_column_letter(die_tb_x)+str(r_die)].value = f"='{bump_visual_sheet}'!{col_dm + xcoor_dm}"
                                 wsdiebump_f[get_column_letter(die_tb_x + 1)+str(r_die)].value = f"='{bump_visual_sheet}'!{ycoor_dm + str(dummyrow1)}"
                                 wsdiebump_f[get_column_letter(die_tb_x + 2)+str(r_die)].value =  f"='{bump_visual_sheet}'!{col_dm+ str(dummyrow1)}"
@@ -857,145 +925,114 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
 
                                 if(int_gen == 1):
                                 # #----------------------------Flip bump map in y axis - Rotate -90 - Rotate +90---------------------------
-                                #     cell_valx =  "'" + str(bump_visual_sheet) + "'!" + str(wsvisual_f[col_dm + xcoor_dm].value).replace('=','')
-                                    
-                                #     if(getstring(cell_valx,"!","!") == 1):
-                                        wsintbump_f[get_column_letter(int_tb_x)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-('{bump_visual_sheet}'!{str(col_dm + xcoor_dm)})" # Flip Y axis
-                                        wsintbump_f[get_column_letter(int_tb_x + 5)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-('{bump_visual_sheet}'!{str(col_dm + xcoor_dm)})+({str(die_params['die1_yoffset'])})" # Rotate -90
-                                        wsintbump_f[get_column_letter(int_tb_x + 9)+str(r_int)].value = f"=('{bump_visual_sheet}'!{str(col_dm + xcoor_dm)})+({str(die_params['die2_yoffset']).replace('=','')})" # Rotate +90
-                                        # wsintbump_f[get_column_letter(int_tb_x)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-('{bump_visual_sheet}'!{str(wsvisual_f[col_dm + xcoor_dm].value).replace('=','')})" # Flip Y axis
-                                #         wsintbump_f[get_column_letter(int_tb_x + 5)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-('{bump_visual_sheet}'!{str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')})+({str(die_params['die1_yoffset'])})" # Rotate -90
-                                #         wsintbump_f[get_column_letter(int_tb_x + 9)+str(r_int)].value = f"=('{bump_visual_sheet}'!{str(wsvisual_f[col_dm + xcoor_dm].value).replace('=','')})+({str(die_params['die2_yoffset']).replace('=','')})" # Rotate +90
-                                #     else:
-                                #         wsintbump_f[get_column_letter(int_tb_x)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-({str(wsvisual_f[col_dm + xcoor_dm].value).replace('=','')})" # Flip Y axis
-                                #         wsintbump_f[get_column_letter(int_tb_x + 5)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-({str(wsvisual_f[col_dm + xcoor_dm].value).replace('=','')})+({str(die_params['die1_yoffset'])})" # Rotate -90
-                                #         wsintbump_f[get_column_letter(int_tb_x + 9)+str(r_int)].value = f"=({str(wsvisual_f[col_dm + xcoor_dm].value).replace('=','')})+({str(die_params['die2_yoffset']).replace('=','')})" # Rotate +90
-                                    
-                                #     cell_val = "'" + str(bump_visual_sheet) + "'!" + str(wsvisual_f[ycoor_dm + str(dummyrow1)].value).replace('=','')
-                                #     if(getstring(cell_val,"!","!") == 1):
-                                        wsintbump_f[get_column_letter(int_tb_x + 1)+str(r_int)].value = f"='{bump_visual_sheet}'!{ycoor_dm + str(dummyrow1)}" # Flip Y axis
-                                        wsintbump_f[get_column_letter(int_tb_x + 4)+str(r_int)].value = f"=({str(die_params['chip_height']).replace('=','')})-('{bump_visual_sheet}'!{ycoor_dm + str(dummyrow1)})+({str(die_params['die1_xoffset'])})" # Rotate -90
-                                        wsintbump_f[get_column_letter(int_tb_x + 8)+str(r_int)].value = f"=('{bump_visual_sheet}'!{ycoor_dm + str(dummyrow1)})+({str(die_params['die2_xoffset']).replace('=','')})" # Rotate +90
-                                #         wsintbump_f[get_column_letter(int_tb_x + 1)+str(r_int)].value = f"='{bump_visual_sheet}'!{str(wsvisual_f[ycoor_dm + str(dummyrow1)].value).replace('=','')}" # Flip Y axis
-                                #         wsintbump_f[get_column_letter(int_tb_x + 4)+str(r_int)].value = f"=({str(die_params['chip_height']).replace('=','')})-('{bump_visual_sheet}'!{str(wsvisual_f[ycoor_dm + str(dummyrow1)].value).replace('=','')})+({str(die_params['die1_xoffset'])})" # Rotate -90
-                                #         wsintbump_f[get_column_letter(int_tb_x + 8)+str(r_int)].value = f"=('{bump_visual_sheet}'!{str(wsvisual_f[ycoor_dm + str(dummyrow1)].value).replace('=','')})+({str(die_params['die2_xoffset']).replace('=','')})" # Rotate +90
-                                #     else:
-                                #         wsintbump_f[get_column_letter(int_tb_x + 1)+str(r_int)].value = f"={str(wsvisual_f[ycoor_dm + str(dummyrow1)].value).replace('=','')}" # Flip Y axis
-                                #         wsintbump_f[get_column_letter(int_tb_x + 4)+str(r_int)].value = f"=({str(die_params['chip_height']).replace('=','')})-({str(wsvisual_f[ycoor_dm + str(dummyrow1)].value).replace('=','')})+({str(die_params['die1_xoffset'])})" # Rotate -90
-                                #         wsintbump_f[get_column_letter(int_tb_x + 8)+str(r_int)].value = f"=({str(wsvisual_f[ycoor_dm + str(dummyrow1)].value).replace('=','')})+({str(die_params['die2_xoffset']).replace('=','')})" # Rotate +90
-                                        wsintbump_f[get_column_letter(int_tb_x + 2)+str(r_int)].value =  f"='{bump_visual_sheet}'!{col_dm+ str(dummyrow1)}" #Flip Y axis
-                                        if(wsvisual_f[col_dm+ str(dummyrow1)].value == "VSS"):
-                                            wsintbump_f[get_column_letter(int_tb_x + 6)+str(r_int)].value = f"='{bump_visual_sheet}'!{col_dm+ str(dummyrow1)}" # Rotate -90
-                                            wsintbump_f[get_column_letter(int_tb_x + 10)+str(r_int)].value = f"='{bump_visual_sheet}'!{col_dm+ str(dummyrow1)}" # Rotate +90
-                                        else:
-                                            wsintbump_f[get_column_letter(int_tb_x + 6)+str(r_int)].value = f"=\"{int_die_tb['Die1_name']}_\"&'{bump_visual_sheet}'!{col_dm+ str(dummyrow1)}" # Rotate -90
-                                            wsintbump_f[get_column_letter(int_tb_x + 10)+str(r_int)].value = f"=\"{int_die_tb['Die2_name']}_\"&'{bump_visual_sheet}'!{col_dm+ str(dummyrow1)}" # Rotate +90
+                              
+                                    wsintbump_f[get_column_letter(int_tb_x)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-('{bump_visual_sheet}'!{str(col_dm + xcoor_dm)})" # Flip Y axis
+                                    wsintbump_f[get_column_letter(int_tb_x + 5)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-('{bump_visual_sheet}'!{str(col_dm + xcoor_dm)})+({str(die_params['die1_yoffset'])})" # Rotate -90
+                                    wsintbump_f[get_column_letter(int_tb_x + 9)+str(r_int)].value = f"=('{bump_visual_sheet}'!{str(col_dm + xcoor_dm)})+({str(die_params['die2_yoffset']).replace('=','')})" # Rotate +90
+                            
+                                    wsintbump_f[get_column_letter(int_tb_x + 1)+str(r_int)].value = f"='{bump_visual_sheet}'!{ycoor_dm + str(dummyrow1)}" # Flip Y axis
+                                    wsintbump_f[get_column_letter(int_tb_x + 4)+str(r_int)].value = f"=({str(die_params['chip_height']).replace('=','')})-('{bump_visual_sheet}'!{ycoor_dm + str(dummyrow1)})+({str(die_params['die1_xoffset'])})" # Rotate -90
+                                    wsintbump_f[get_column_letter(int_tb_x + 8)+str(r_int)].value = f"=('{bump_visual_sheet}'!{ycoor_dm + str(dummyrow1)})+({str(die_params['die2_xoffset']).replace('=','')})" # Rotate +90
 
-                                        r_int += 1
-                                #     wsintbump_f[get_column_letter(int_tb_x + 2)+str(r_int)].value =  f"='{bump_visual_sheet}'!{col_dm+ str(dummyrow1)}" #Flip Y axis
-                                #     if(wsvisual_f[col_dm+ str(dummyrow1)].value == "VSS"):
-                                #         wsintbump_f[get_column_letter(int_tb_x + 6)+str(r_int)].value = f"='{bump_visual_sheet}'!{col_dm+ str(dummyrow1)}" # Rotate -90
-                                #         wsintbump_f[get_column_letter(int_tb_x + 10)+str(r_int)].value = f"='{bump_visual_sheet}'!{col_dm+ str(dummyrow1)}" # Rotate +90
-                                #     else:
-                                #         wsintbump_f[get_column_letter(int_tb_x + 6)+str(r_int)].value = f"=\"{int_die_tb['Die1_name']}_\"&'{bump_visual_sheet}'!{col_dm+ str(dummyrow1)}" # Rotate -90
-                                #         wsintbump_f[get_column_letter(int_tb_x + 10)+str(r_int)].value = f"=\"{int_die_tb['Die2_name']}_\"&'{bump_visual_sheet}'!{col_dm+ str(dummyrow1)}" # Rotate +90
+                                    wsintbump_f[get_column_letter(int_tb_x + 2)+str(r_int)].value =  f"='{bump_visual_sheet}'!{col_dm+ str(dummyrow1)}" #Flip Y axis
+                                    if(wsvisual_f[col_dm+ str(dummyrow1)].value == "VSS"):
+                                        wsintbump_f[get_column_letter(int_tb_x + 6)+str(r_int)].value = f"='{bump_visual_sheet}'!{col_dm+ str(dummyrow1)}" # Rotate -90
+                                        wsintbump_f[get_column_letter(int_tb_x + 10)+str(r_int)].value = f"='{bump_visual_sheet}'!{col_dm+ str(dummyrow1)}" # Rotate +90
+                                    else:
+                                        wsintbump_f[get_column_letter(int_tb_x + 6)+str(r_int)].value = f"=\"{int_die_tb['Die1_name']}_\"&'{bump_visual_sheet}'!{col_dm+ str(dummyrow1)}" # Rotate -90
+                                        wsintbump_f[get_column_letter(int_tb_x + 10)+str(r_int)].value = f"=\"{int_die_tb['Die2_name']}_\"&'{bump_visual_sheet}'!{col_dm+ str(dummyrow1)}" # Rotate +90
 
-                                #     r_int += 1
-
+                                    r_int += 1
+                               
 
                 #---------Create Die bump exclued dummy bump at 4 corner-----------#
 
-                # match = 0
-                # mynotif("")
-                # root.update_idletasks()
-                # mynotif("Generating Die bump...")
-                # root.update_idletasks()
-                # for col in range(xmin, xmax + 1):
-                #     for row in range(ymin, ymax + 1):       
-                #         col_l = get_column_letter(col)
-                #         #print(col_l)
-                #         i = 0 
-                #         while(i < len(dm_bump_coor)):
-                #             xy = col_l + str(row)
-                #             if(xy ==  dm_bump_coor[i]):
-                #                 match = 1
-                #             else:
-                #                 match = 0
-                #             if(match == 1):
-                #                 break
-                #             i += 1
-                #         if (match == 0 and wsvisual_f[col_l + str(row)].value != None):
-                #             #  get the X value from Visual bump sheet
-                #                 cell_valx = "'" + str(bump_visual_sheet) + "'!" + str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')
+                match = 0
+                mynotif("")
+                root.update_idletasks()
+                mynotif("Generating Die bump...")
+                root.update_idletasks()
+                for col in range(xmin, xmax + 1):
+                    for row in range(ymin, ymax + 1):       
+                        col_l = get_column_letter(col)
+                        #print(col_l)
+                        i = 0 
+                        while(i < len(dm_bump_coor)):
+                            xy = col_l + str(row)
+                            if(xy ==  dm_bump_coor[i]):
+                                match = 1
+                            else:
+                                match = 0
+                            if(match == 1):
+                                break
+                            i += 1
+                        if (match == 0 and wsvisual_f[col_l + str(row)].value != None):
+                            #  get the X value from Visual bump sheet
+                            if (wsvisual_f[col_l + str(row)].value != None):
+                           
+                                #  get the X value from Visual bump sheet
+                            
+                                wsdiebump_f[get_column_letter(die_tb_x)+str(r_die)].value = f"='{bump_visual_sheet}'!{col_l + str(die_coor['xcoor'])}"
+                         
+                                # #  get the Y value from Visual bump sheet
+                         
+                                wsdiebump_f[get_column_letter(die_tb_x + 1)+str(r_die)].value = f"='{bump_visual_sheet}'!{die_coor['ycoor'] + str(row)}"
                                 
-                #                 if(getstring(cell_valx,"!","!") == 1):
-                #                     wsdiebump_f[get_column_letter(die_tb_x)+str(r_die)].value = f"='{bump_visual_sheet}'!{str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')}"
-                #                     print(str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=',''))                                
-
-                #                 else:                                             
-                #                     wsdiebump_f[get_column_letter(die_tb_x)+str(r_die)].value = f"={str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')}"
+                                #  get the Bump name from Visual bump sheet
+                                wsdiebump_f[get_column_letter(die_tb_x + 2)+str(r_die)].value =  f"='{bump_visual_sheet}'!{col_l+ str(row)}"
+                                r_die += 1
                                 
-                #                 #  get the Y value from Visual bump sheet
-                #                 cell_valy = "'" + str(bump_visual_sheet) + "'!" + str(wsvisual_f[die_coor['ycoor'] + str(row)].value).replace('=','')
-                                
-                #                 if(getstring(cell_valy,"!","!") == 1):
-                #                     wsdiebump_f[get_column_letter(die_tb_x + 1)+str(r_die)].value = f"='{bump_visual_sheet}'!{str(wsvisual_f[die_coor['ycoor'] + str(row)].value).replace('=','')}"
-                                    
-                #                 else: 
-                                    
-                #                     wsdiebump_f[get_column_letter(die_tb_x + 1)+str(r_die)].value = f"={str(wsvisual_f[die_coor['ycoor'] + str(row)].value).replace('=','')}"
-                #                 #  get the Bump name from Visual bump sheet
-                #                 wsdiebump_f[get_column_letter(die_tb_x + 2)+str(r_die)].value =  f"='{bump_visual_sheet}'!{col_l+ str(row)}"
-                #                 r_die += 1
-                #                 if(int_gen == 1):
-                #                     wsintbump_f[get_column_letter(int_tb_x ) + str(int_tb_y)].value = "Die Flipped by Y axis"
-                #                     wsintbump_f.merge_cells(get_column_letter(int_tb_x) + str(int_tb_y) + ":" + get_column_letter(int_tb_x + 2) + str(int_tb_y))
-                #                     wsintbump_f[get_column_letter(int_tb_x) + str(int_tb_y + 1)].value = "X"
-                #                     wsintbump_f[get_column_letter(int_tb_x + 1) + str(int_tb_y + 1)].value = "Y"
-                #                     wsintbump_f[get_column_letter(int_tb_x + 2)  + str(str(int_tb_y + 1))].value = "Bump name"
+                                if(int_gen == 1):
+                                    wsintbump_f[get_column_letter(int_tb_x ) + str(int_tb_y)].value = "Die Flipped by Y axis"
+                                    wsintbump_f.merge_cells(get_column_letter(int_tb_x) + str(int_tb_y) + ":" + get_column_letter(int_tb_x + 2) + str(int_tb_y))
+                                    for c3 in range(0,3):
+                                        wsintbump_f[get_column_letter(int_tb_x + c3) + str(die_tb_y)].fill = title_bg_fill
 
-                #                     wsintbump_f[get_column_letter(int_tb_x + 4) + str(int_tb_y)].value =  str(int_die_tb['Die1_name']) + " = Die Flipped rotate -90 + Die1 offset"
-                #                     wsintbump_f.merge_cells(get_column_letter(int_tb_x + 4) + str(int_tb_y) + ":" + get_column_letter(int_tb_x + 6) + str(int_tb_y))
-                #                     wsintbump_f[get_column_letter(int_tb_x + 4) + str(int_tb_y + 1)].value = "X"
-                #                     wsintbump_f[get_column_letter(int_tb_x + 5) + str(int_tb_y + 1)].value = "Y"
-                #                     wsintbump_f[get_column_letter(int_tb_x + 6)  + str(str(int_tb_y + 1))].value = "Bump name"
+                                    wsintbump_f[get_column_letter(int_tb_x) + str(int_tb_y + 1)].value = "X"
+                                    wsintbump_f[get_column_letter(int_tb_x + 1) + str(int_tb_y + 1)].value = "Y"
+                                    wsintbump_f[get_column_letter(int_tb_x + 2)  + str(str(int_tb_y + 1))].value = "Bump name"
+                                    for c4 in range(0,3):
+                                        wsintbump_f[get_column_letter(int_tb_x + c4) + str(die_tb_y + 1)].fill = subtil_bg_fill
 
-                #                     wsintbump_f[get_column_letter(int_tb_x + 8) + str(int_tb_y)].value = str(int_die_tb['Die2_name']) + " = Die Flipped rotate +90 + Die2 offset"
-                #                     wsintbump_f.merge_cells(get_column_letter(int_tb_x + 8) + str(int_tb_y) + ":" + get_column_letter(int_tb_x + 10) + str(int_tb_y))
-                #                     wsintbump_f[get_column_letter(int_tb_x + 8) + str(int_tb_y + 1)].value = "X"
-                #                     wsintbump_f[get_column_letter(int_tb_x + 9) + str(int_tb_y + 1)].value = "Y"
-                #                     wsintbump_f[get_column_letter(int_tb_x + 10)  + str(str(int_tb_y + 1))].value = "Bump name"
+                                    wsintbump_f[get_column_letter(int_tb_x + 4) + str(int_tb_y)].value =  str(int_die_tb['Die1_name']) + " = Die Flipped rotate -90 + Die1 offset"
+                                    wsintbump_f.merge_cells(get_column_letter(int_tb_x + 4) + str(int_tb_y) + ":" + get_column_letter(int_tb_x + 6) + str(int_tb_y))
+                                    for c5 in range(0,3):
+                                        wsintbump_f[get_column_letter(int_tb_x + 4 + c5) + str(die_tb_y)].fill = title_bg_fill
+                                    wsintbump_f[get_column_letter(int_tb_x + 4) + str(int_tb_y + 1)].value = "X"
+                                    wsintbump_f[get_column_letter(int_tb_x + 5) + str(int_tb_y + 1)].value = "Y"
+                                    wsintbump_f[get_column_letter(int_tb_x + 6)  + str(str(int_tb_y + 1))].value = "Bump name"
+                                    for c6 in range(0,3):
+                                        wsintbump_f[get_column_letter(int_tb_x + 4 + c6) + str(die_tb_y + 1)].fill = subtil_bg_fill
+
+                                    wsintbump_f[get_column_letter(int_tb_x + 8) + str(int_tb_y)].value = str(int_die_tb['Die2_name']) + " = Die Flipped rotate +90 + Die2 offset"
+                                    wsintbump_f.merge_cells(get_column_letter(int_tb_x + 8) + str(int_tb_y) + ":" + get_column_letter(int_tb_x + 10) + str(int_tb_y))
+                                    for c7 in range(0,3):
+                                        wsintbump_f[get_column_letter(int_tb_x + 8 + c7) + str(die_tb_y)].fill = title_bg_fill
+                                    wsintbump_f[get_column_letter(int_tb_x + 8) + str(int_tb_y + 1)].value = "X"
+                                    wsintbump_f[get_column_letter(int_tb_x + 9) + str(int_tb_y + 1)].value = "Y"
+                                    wsintbump_f[get_column_letter(int_tb_x + 10)  + str(str(int_tb_y + 1))].value = "Bump name"
+                                    for c8 in range(0,3):
+                                        wsintbump_f[get_column_letter(int_tb_x + 8 + c8) + str(die_tb_y + 1)].fill = subtil_bg_fill
+                                     #----------------------------Flip bump map in y axis - Rotate -90 - Rotate +90---------------------------
                                     
-                #                     #----------------------------Flip bump map in y axis - Rotate -90 - Rotate +90---------------------------
-                #                     cell_valx =  "'" + str(bump_visual_sheet) + "'!" + str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')
-                #                     if(getstring(cell_valx,"!","!") == 1):
-                #                         wsintbump_f[get_column_letter(int_tb_x)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-('{bump_visual_sheet}'!{str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')})" # Flip Y axis
-                #                         wsintbump_f[get_column_letter(int_tb_x + 5)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-('{bump_visual_sheet}'!{str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')})+({str(die_params['die1_yoffset'])})" # Rotate -90
-                #                         wsintbump_f[get_column_letter(int_tb_x + 9)+str(r_int)].value = f"=('{bump_visual_sheet}'!{str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')})+({str(die_params['die2_yoffset']).replace('=','')})" # Rotate +90
-                #                     else:
-                #                         wsintbump_f[get_column_letter(int_tb_x)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-({str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')})" # Flip Y axis
-                #                         wsintbump_f[get_column_letter(int_tb_x + 5)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-({str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')})+({str(die_params['die1_yoffset'])})" # Rotate -90
-                #                         wsintbump_f[get_column_letter(int_tb_x + 9)+str(r_int)].value = f"=({str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')})+({str(die_params['die2_yoffset']).replace('=','')})" # Rotate +90
+                                    wsintbump_f[get_column_letter(int_tb_x)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-('{bump_visual_sheet}'!{col_l + str(die_coor['xcoor'])})" # Flip Y axis
+                                    wsintbump_f[get_column_letter(int_tb_x + 5)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-('{bump_visual_sheet}'!{col_l + str(die_coor['xcoor'])})+({str(die_params['die1_yoffset'])})" # Rotate -90
+                                    wsintbump_f[get_column_letter(int_tb_x + 9)+str(r_int)].value = f"=('{bump_visual_sheet}'!{col_l + str(die_coor['xcoor'])})+({str(die_params['die2_yoffset']).replace('=','')})" # Rotate +90
                                     
-                #                     cell_val = "'" + str(bump_visual_sheet) + "'!" + str(wsvisual_f[die_coor['ycoor'] + str(row)].value).replace('=','')
-                #                     if(getstring(cell_val,"!","!") == 1):
-                #                         wsintbump_f[get_column_letter(int_tb_x + 1)+str(r_int)].value = f"='{bump_visual_sheet}'!{str(wsvisual_f[die_coor['ycoor'] + str(row)].value).replace('=','')}" # Flip Y axis
-                #                         wsintbump_f[get_column_letter(int_tb_x + 4)+str(r_int)].value = f"=({str(die_params['chip_height']).replace('=','')})-('{bump_visual_sheet}'!{str(wsvisual_f[die_coor['ycoor']+str(row)].value).replace('=','')})+({str(die_params['die1_xoffset'])})" # Rotate -90
-                #                         wsintbump_f[get_column_letter(int_tb_x + 8)+str(r_int)].value = f"=('{bump_visual_sheet}'!{str(wsvisual_f[die_coor['ycoor'] + str(row)].value).replace('=','')})+({str(die_params['die2_xoffset']).replace('=','')})" # Rotate +90
-                #                     else:
-                #                         wsintbump_f[get_column_letter(int_tb_x + 1)+str(r_int)].value = f"={str(wsvisual_f[die_coor['ycoor'] + str(row)].value).replace('=','')}" # Flip Y axis
-                #                         wsintbump_f[get_column_letter(int_tb_x + 4)+str(r_int)].value = f"=({str(die_params['chip_height']).replace('=','')})-({str(wsvisual_f[die_coor['ycoor']+str(row)].value).replace('=','')})+({str(die_params['die1_xoffset'])})" # Rotate -90
-                #                         wsintbump_f[get_column_letter(int_tb_x + 8)+str(r_int)].value = f"=({str(wsvisual_f[die_coor['ycoor'] + str(row)].value).replace('=','')})+({str(die_params['die2_xoffset']).replace('=','')})" # Rotate +90
+                                    wsintbump_f[get_column_letter(int_tb_x + 1)+str(r_int)].value = f"='{bump_visual_sheet}'!{die_coor['ycoor'] + str(row)}" # Flip Y axis
+                                    wsintbump_f[get_column_letter(int_tb_x + 4)+str(r_int)].value = f"=({str(die_params['chip_height']).replace('=','')})-('{bump_visual_sheet}'!{die_coor['ycoor']+str(row)})+({str(die_params['die1_xoffset'])})" # Rotate -90
+                                    wsintbump_f[get_column_letter(int_tb_x + 8)+str(r_int)].value = f"=('{bump_visual_sheet}'!{die_coor['ycoor'] + str(row)})+({str(die_params['die2_xoffset']).replace('=','')})" # Rotate +90
+                                    
+                                    wsintbump_f[get_column_letter(int_tb_x + 2)+str(r_int)].value =  f"='{bump_visual_sheet}'!{col_l+ str(row)}" #Flip Y axis
+                                    if(wsvisual_f[col_l+ str(row)].value == "VSS"):
+                                        wsintbump_f[get_column_letter(int_tb_x + 6)+str(r_int)].value = f"='{bump_visual_sheet}'!{col_l+ str(row)}" # Rotate -90
+                                        wsintbump_f[get_column_letter(int_tb_x + 10)+str(r_int)].value = f"='{bump_visual_sheet}'!{col_l+ str(row)}" # Rotate +90
+                                    else:
+                                        wsintbump_f[get_column_letter(int_tb_x + 6)+str(r_int)].value = f"=\"{int_die_tb['Die1_name']}_\"&'{bump_visual_sheet}'!{col_l+ str(row)}" # Rotate -90
+                                        wsintbump_f[get_column_letter(int_tb_x + 10)+str(r_int)].value = f"=\"{int_die_tb['Die2_name']}_\"&'{bump_visual_sheet}'!{col_l+ str(row)}" # Rotate +90
 
-                #                     wsintbump_f[get_column_letter(int_tb_x + 2)+str(r_int)].value =  f"='{bump_visual_sheet}'!{col_l+ str(row)}" #Flip Y axis
-                #                     if(wsvisual_f[col_l+ str(row)].value == "VSS"):
-                #                         wsintbump_f[get_column_letter(int_tb_x + 6)+str(r_int)].value = f"='{bump_visual_sheet}'!{col_l+ str(row)}" # Rotate -90
-                #                         wsintbump_f[get_column_letter(int_tb_x + 10)+str(r_int)].value = f"='{bump_visual_sheet}'!{col_l+ str(row)}" # Rotate +90
-                #                     else:
-                #                         wsintbump_f[get_column_letter(int_tb_x + 6)+str(r_int)].value = f"=\"{int_die_tb['Die1_name']}_\"&'{bump_visual_sheet}'!{col_l+ str(row)}" # Rotate -90
-                #                         wsintbump_f[get_column_letter(int_tb_x + 10)+str(r_int)].value = f"=\"{int_die_tb['Die2_name']}_\"&'{bump_visual_sheet}'!{col_l+ str(row)}" # Rotate +90
-
-                #                     r_int += 1
+                                    r_int += 1
+                                    
             else:
                 process_notify("Generating Die bump...")
                 for col in range(xmin, xmax + 1):
@@ -1003,27 +1040,15 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
                             col_l = get_column_letter(col)
                             #print(col_l)
                             if (wsvisual_f[col_l + str(row)].value != None):
-                               
                            
                                 #  get the X value from Visual bump sheet
-                                cell_valx = "'" + str(bump_visual_sheet) + "'!" + str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')
+                            
+                                wsdiebump_f[get_column_letter(die_tb_x)+str(r_die)].value = f"='{bump_visual_sheet}'!{col_l + str(die_coor['xcoor'])}"
+                         
+                                # #  get the Y value from Visual bump sheet
+                         
+                                wsdiebump_f[get_column_letter(die_tb_x + 1)+str(r_die)].value = f"='{bump_visual_sheet}'!{die_coor['ycoor'] + str(row)}"
                                 
-                                if(getstring(cell_valx,"!","!") == 1):
-                                    wsdiebump_f[get_column_letter(die_tb_x)+str(r_die)].value = f"='{bump_visual_sheet}'!{str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')}"
-                                    print(str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=',''))                                
-
-                                else:                                             
-                                    wsdiebump_f[get_column_letter(die_tb_x)+str(r_die)].value = f"={str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')}"
-                                
-                                #  get the Y value from Visual bump sheet
-                                cell_valy = "'" + str(bump_visual_sheet) + "'!" + str(wsvisual_f[die_coor['ycoor'] + str(row)].value).replace('=','')
-                                
-                                if(getstring(cell_valy,"!","!") == 1):
-                                    wsdiebump_f[get_column_letter(die_tb_x + 1)+str(r_die)].value = f"='{bump_visual_sheet}'!{str(wsvisual_f[die_coor['ycoor'] + str(row)].value).replace('=','')}"
-                                    
-                                else: 
-                                    
-                                    wsdiebump_f[get_column_letter(die_tb_x + 1)+str(r_die)].value = f"={str(wsvisual_f[die_coor['ycoor'] + str(row)].value).replace('=','')}"
                                 #  get the Bump name from Visual bump sheet
                                 wsdiebump_f[get_column_letter(die_tb_x + 2)+str(r_die)].value =  f"='{bump_visual_sheet}'!{col_l+ str(row)}"
                                 r_die += 1
@@ -1047,26 +1072,15 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
                                     wsintbump_f[get_column_letter(int_tb_x + 10)  + str(str(int_tb_y + 1))].value = "Bump name"
                                     
                                     #----------------------------Flip bump map in y axis - Rotate -90 - Rotate +90---------------------------
-                                    cell_valx =  "'" + str(bump_visual_sheet) + "'!" + str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')
-                                    if(getstring(cell_valx,"!","!") == 1):
-                                        wsintbump_f[get_column_letter(int_tb_x)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-('{bump_visual_sheet}'!{str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')})" # Flip Y axis
-                                        wsintbump_f[get_column_letter(int_tb_x + 5)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-('{bump_visual_sheet}'!{str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')})+({str(die_params['die1_yoffset'])})" # Rotate -90
-                                        wsintbump_f[get_column_letter(int_tb_x + 9)+str(r_int)].value = f"=('{bump_visual_sheet}'!{str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')})+({str(die_params['die2_yoffset']).replace('=','')})" # Rotate +90
-                                    else:
-                                            wsintbump_f[get_column_letter(int_tb_x)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-({str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')})" # Flip Y axis
-                                            wsintbump_f[get_column_letter(int_tb_x + 5)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-({str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')})+({str(die_params['die1_yoffset'])})" # Rotate -90
-                                            wsintbump_f[get_column_letter(int_tb_x + 9)+str(r_int)].value = f"=({str(wsvisual_f[col_l + str(die_coor['xcoor'])].value).replace('=','')})+({str(die_params['die2_yoffset']).replace('=','')})" # Rotate +90
                                     
-                                    cell_val = "'" + str(bump_visual_sheet) + "'!" + str(wsvisual_f[die_coor['ycoor'] + str(row)].value).replace('=','')
-                                    if(getstring(cell_val,"!","!") == 1):
-                                        wsintbump_f[get_column_letter(int_tb_x + 1)+str(r_int)].value = f"='{bump_visual_sheet}'!{str(wsvisual_f[die_coor['ycoor'] + str(row)].value).replace('=','')}" # Flip Y axis
-                                        wsintbump_f[get_column_letter(int_tb_x + 4)+str(r_int)].value = f"=({str(die_params['chip_height']).replace('=','')})-('{bump_visual_sheet}'!{str(wsvisual_f[die_coor['ycoor']+str(row)].value).replace('=','')})+({str(die_params['die1_xoffset'])})" # Rotate -90
-                                        wsintbump_f[get_column_letter(int_tb_x + 8)+str(r_int)].value = f"=('{bump_visual_sheet}'!{str(wsvisual_f[die_coor['ycoor'] + str(row)].value).replace('=','')})+({str(die_params['die2_xoffset']).replace('=','')})" # Rotate +90
-                                    else:
-                                        wsintbump_f[get_column_letter(int_tb_x + 1)+str(r_int)].value = f"={str(wsvisual_f[die_coor['ycoor'] + str(row)].value).replace('=','')}" # Flip Y axis
-                                        wsintbump_f[get_column_letter(int_tb_x + 4)+str(r_int)].value = f"=({str(die_params['chip_height']).replace('=','')})-({str(wsvisual_f[die_coor['ycoor']+str(row)].value).replace('=','')})+({str(die_params['die1_xoffset'])})" # Rotate -90
-                                        wsintbump_f[get_column_letter(int_tb_x + 8)+str(r_int)].value = f"=({str(wsvisual_f[die_coor['ycoor'] + str(row)].value).replace('=','')})+({str(die_params['die2_xoffset']).replace('=','')})" # Rotate +90
-
+                                    wsintbump_f[get_column_letter(int_tb_x)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-('{bump_visual_sheet}'!{col_l + str(die_coor['xcoor'])})" # Flip Y axis
+                                    wsintbump_f[get_column_letter(int_tb_x + 5)+str(r_int)].value = f"=({str(die_params['chip_width']).replace('=','')})-('{bump_visual_sheet}'!{col_l + str(die_coor['xcoor'])})+({str(die_params['die1_yoffset'])})" # Rotate -90
+                                    wsintbump_f[get_column_letter(int_tb_x + 9)+str(r_int)].value = f"=('{bump_visual_sheet}'!{col_l + str(die_coor['xcoor'])})+({str(die_params['die2_yoffset']).replace('=','')})" # Rotate +90
+                                    
+                                    wsintbump_f[get_column_letter(int_tb_x + 1)+str(r_int)].value = f"='{bump_visual_sheet}'!{die_coor['ycoor'] + str(row)}" # Flip Y axis
+                                    wsintbump_f[get_column_letter(int_tb_x + 4)+str(r_int)].value = f"=({str(die_params['chip_height']).replace('=','')})-('{bump_visual_sheet}'!{die_coor['ycoor']+str(row)})+({str(die_params['die1_xoffset'])})" # Rotate -90
+                                    wsintbump_f[get_column_letter(int_tb_x + 8)+str(r_int)].value = f"=('{bump_visual_sheet}'!{die_coor['ycoor'] + str(row)})+({str(die_params['die2_xoffset']).replace('=','')})" # Rotate +90
+                                    
                                     wsintbump_f[get_column_letter(int_tb_x + 2)+str(r_int)].value =  f"='{bump_visual_sheet}'!{col_l+ str(row)}" #Flip Y axis
                                     if(wsvisual_f[col_l+ str(row)].value == "VSS"):
                                         wsintbump_f[get_column_letter(int_tb_x + 6)+str(r_int)].value = f"='{bump_visual_sheet}'!{col_l+ str(row)}" # Rotate -90
@@ -1086,18 +1100,20 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
             popup("PLOC generated successful!!!")
             mynotif("")
         except (ValueError):
-            print ("loi roi")
+            print ("Wrong input, Please check and regenerate")
             show_error("Wrong input, Please check and regenerate")
             progress_bar(0)
             mynotif("Error")
             root.update_idletasks()
+            return
         except:
-            print('Loi quan que` gi` za^y')
+            print('Error!!!')
             
-            show_error("Wrong input, Please check and regenerate")
+            show_error("There are an error in caculations, Please recheck and make sure the input is correct!")
             progress_bar(0)
             mynotif("Error")
             root.update_idletasks()
+            return
             
             
     # elif(opt_sr == 1):
@@ -1226,6 +1242,7 @@ entry_disable(cor1_x1y1, cor1_x2y2, cor1_Xget, cor1_Yget,
 
 entry_disable(sheete_i, sheete_t)
 entry_disable(sr_opt, foundry_combo, out_name2_in, out_col_wsr_i)
+entry_disable(xwidth_i, yheight_i, Die1_xoffset_i, Die1_yoffset_i, Die2_xoffset_i, Die2_yoffset_i, intp_sheet, Die1_name, Die2_name, int_tb_loc)
 sheet_t['text']= "Bump sheet:"
 mynotif("")
 treeScroll = ttk.Scrollbar(root, orient = 'vertical')
@@ -1251,7 +1268,7 @@ style = ttk.Style()
 #                     width = '80')
 style.configure('TCheckbutton', font= ('System', 12, 'underline', 'bold'),
  foreground='black', border=50)
-mediumFont = Font(
+mediumFont = tkfont(
 	family="System",
 	size=16,
 	weight="normal",
