@@ -189,7 +189,7 @@ def choosemode(event):
 
         popup("The EMIB package type have not developed yet, Please use S-Organic to gen 2 times (for C4 and uBump) instead!")
     
-myLabel = ttk.Label(root,text="Info:")
+myLabel = ttk.Label(root,text="---")
 myLabel_w =my_canvas.create_window(80,770,anchor="nw", window=myLabel)
 
 frame = tk.Label(root, bg="#c9f2dc", font=("Courier New", 10), foreground="#f2a50a")
@@ -288,20 +288,20 @@ pfont= ("Rosewood Std Regular", 12, "bold", 'underline' )
 excel_t = ttk.Label(root,text="PLOC path:",border=20,font=pfont, borderwidth=5)
 excel_t_w = my_canvas.create_window(30,40, anchor="nw", window=excel_t)
 excel_i = ttk.Entry(root, width=115)
-excel_i.insert(0, r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Bump_CoWoS_S.xlsx")
+
 excel_i_w = my_canvas.create_window(150,40, anchor="nw", window=excel_i)
 
 # -------------------------excel sheet_name input--------------------------#
 sheet_t = ttk.Label(root,text="Sheet name:",border=20,font=pfont, borderwidth=3)
 sheet_t_w = my_canvas.create_window(30,80, anchor="nw", window=sheet_t)
 sheet_i = ttk.Entry(root, background="#217346", width=20)
-sheet_i.insert(0, "N3P_CoWoS")
+
 sheet_i_w = my_canvas.create_window(150,80, anchor="nw", window=sheet_i)
 # -------------------------excel sheet_name input--------------------------#
 sheete_t = ttk.Label(root,text="C4 sheet:",border=20,font=pfont, borderwidth=3)
 sheete_t_w = my_canvas.create_window(300,80, anchor="nw", window=sheete_t)
 sheete_i = ttk.Entry(root, background="#217346", width=20)
-sheete_i.insert(0, "C4 sheet")
+
 sheete_i_w = my_canvas.create_window(400,80, anchor="nw", window=sheete_i)
 
 # -------------------------pkg type input--------------------------#
@@ -309,7 +309,7 @@ pkg_t = ttk.Label(root,text="Package type:",border=20,font=pfont, borderwidth=3)
 pkg_t_w = my_canvas.create_window(30,120, anchor="nw", window=pkg_t)
 package_combo = ttk.Combobox(root, state="readonly", values=package_list, width=17)
 package_combo_w = my_canvas.create_window(150,120, anchor="nw", window=package_combo)
-package_combo.current(0)
+
 package_combo.bind('<<ComboboxSelected>>', choosemode)
 # -------------------------sealring option input--------------------------#
 sr_opt = ttk.Checkbutton(root, text="For TC", variable=tc_opt,command= entry_toggle)
@@ -324,7 +324,7 @@ sr_opt_w =my_canvas.create_window(300, 120, anchor="nw", window=sr_opt)
 # foundry_combo.current(0)
 srw_i = ttk.Entry(root, width=20)
 my_canvas.create_window(400, 120, anchor="nw", window=srw_i)
-srw_i.insert(0, "21.6")
+
 srw_i.bind('<FocusIn>', srw_i_guide)
 srw_i.bind('<FocusOut>', un_guide)
 
@@ -343,26 +343,26 @@ my_canvas.create_text(30, 200, text="Die bump map config", anchor="nw",font=("He
 # ------------------------Die bump visual parameters input --------------------------#
 x1y1_i = ttk.Entry(root, width=20)
 my_canvas.create_window(150, 230, anchor="nw", window=x1y1_i)
-x1y1_i.insert(0, "C11")
+
 x1y1_i.bind('<FocusIn>', x1y1_guide)
 x1y1_i.bind('<FocusOut>', un_guide)
 
 
 x2y2_i = ttk.Entry(root, width=20)
 my_canvas.create_window(300, 230, anchor="nw", window=x2y2_i)
-x2y2_i.insert(0, "CW103")
+
 x2y2_i.bind('<FocusIn>', x2y2_guide)
 x2y2_i.bind('<FocusOut>', un_guide)
 
 Xget_i = ttk.Entry(root, width=20)
 Xget_i_w = my_canvas.create_window(150, 270, anchor="nw", window=Xget_i)
-Xget_i.insert(0, "8")
+
 Xget_i.bind('<FocusIn>', Xget_guide)
 Xget_i.bind('<FocusOut>', un_guide)
 
 Yget_i = ttk.Entry(root, width=20)
 Yget_i_w = my_canvas.create_window(300, 270, anchor="nw", window=Yget_i)
-Yget_i.insert(0, "B")
+
 Yget_i.bind('<FocusIn>', Yget_guide)
 Yget_i.bind('<FocusOut>', un_guide)
 
@@ -372,25 +372,25 @@ my_canvas.create_text(500, 200, text="Die table config", anchor="nw",font=("Helv
 
 out_tb_sheet = ttk.Entry(root)
 out_tb_sheet_w = my_canvas.create_window(600, 195, anchor="nw", window=out_tb_sheet)
-out_tb_sheet.insert(0, "Bump coordination")
+
 out_tb_sheet.bind('<FocusIn>', outtb_s_guide)
 out_tb_sheet.bind('<FocusOut>', un_guide)
 
 out_name_in = ttk.Entry(root, width=20)
 out_name_in_w = my_canvas.create_window(600, 230, anchor="nw", window=out_name_in)
-out_name_in.insert(0, "Name")
+
 out_name_in.bind('<FocusIn>', out_name_in_guide)
 out_name_in.bind('<FocusOut>', un_guide)
 out_name2_in = ttk.Entry(root, width=20)
 out_name2_in_w = my_canvas.create_window(750, 230, anchor="nw", window=out_name2_in)
-out_name2_in.insert(0, "Name WO SR")
+
 out_name2_in.bind('<FocusIn>', out_name2_in_guide)
 out_name2_in.bind('<FocusOut>', un_guide)
 
 
 out_col_i = ttk.Entry(root, width=20)
 out_col_i_w = my_canvas.create_window(600, 270, anchor="nw", window=out_col_i)
-out_col_i.insert(0, "S111")
+
 out_col_i.bind('<FocusIn>', out_col_in_guide)
 out_col_i.bind('<FocusOut>', un_guide)
 
@@ -398,7 +398,7 @@ out_col_i.bind('<FocusOut>', un_guide)
 
 out_col_wsr_i = ttk.Entry(root)
 out_col_wsr_w = my_canvas.create_window(750, 270, anchor="nw", window=out_col_wsr_i)
-out_col_wsr_i.insert(0, "T64")
+
 out_col_wsr_i.bind('<FocusIn>', out_col_wsr_i_guide)
 out_col_wsr_i.bind('<FocusOut>', un_guide)
 
@@ -410,25 +410,25 @@ my_canvas.create_text(30, 310, text="Die Bummy bump config", anchor="nw",font=("
 my_canvas.create_text(245, 330, text="Corner 1 config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="black")
 cor1_x1y1 = ttk.Entry(root, width=20)
 cor1_x1y1_w = my_canvas.create_window(150, 350, anchor="nw", window=cor1_x1y1)
-cor1_x1y1.insert(0, "C11")
+
 cor1_x1y1.bind('<FocusIn>', dummystart_guide)
 cor1_x1y1.bind('<FocusOut>', un_guide)
 
 cor1_x2y2 = ttk.Entry(root, width=20)
 cor1_x2y2_w = my_canvas.create_window(300, 350, anchor="nw", window=cor1_x2y2)
-cor1_x2y2.insert(0, "E13")
+
 cor1_x2y2.bind('<FocusIn>', dummyend_guide)
 cor1_x2y2.bind('<FocusOut>', un_guide)
 
 cor1_Xget = ttk.Entry(root,width=20)
 cor1_Xget_w = my_canvas.create_window(150, 380, anchor="nw", window=cor1_Xget)
-cor1_Xget.insert(0, "9")
+
 cor1_Xget.bind('<FocusIn>', dummy_Xget_guide)
 cor1_Xget.bind('<FocusOut>', un_guide)
 
 cor1_Yget = ttk.Entry(root, width=20)
 cor1_Yget_w = my_canvas.create_window(300, 380, anchor="nw", window=cor1_Yget)
-cor1_Yget.insert(0, "B")
+
 cor1_Yget.bind('<FocusIn>', dummy_Yget_guide)
 cor1_Yget.bind('<FocusOut>', un_guide)
 #---------------------------------------------------------------------------------------------------------#
@@ -437,25 +437,25 @@ my_canvas.create_text(670, 330, text="Corner 2 config", anchor="nw",font=("Helve
 
 cor2_x1y1 = ttk.Entry(root, width=20)
 cor2_x1y1_w = my_canvas.create_window(600, 350, anchor="nw", window=cor2_x1y1)
-cor2_x1y1.insert(0, "CU11")
+
 cor2_x1y1.bind('<FocusIn>', dummystart_guide)
 cor2_x1y1.bind('<FocusOut>', un_guide)
 
 cor2_x2y2 = ttk.Entry(root, width=20)
 cor2_x2y2_w = my_canvas.create_window(750, 350, anchor="nw", window=cor2_x2y2)
-cor2_x2y2.insert(0, "CW13")
+
 cor2_x2y2.bind('<FocusIn>', dummyend_guide)
 cor2_x2y2.bind('<FocusOut>', un_guide)
 
 cor2_Xget = ttk.Entry(root, width=20)
 cor2_Xget_w = my_canvas.create_window(600, 380, anchor="nw", window=cor2_Xget)
-cor2_Xget.insert(0, "9")
+
 cor2_Xget.bind('<FocusIn>', dummy_Xget_guide)
 cor2_Xget.bind('<FocusOut>', un_guide)
 
 cor2_Yget = ttk.Entry(root, width=20)
 cor2_Yget_w = my_canvas.create_window(750, 380, anchor="nw", window=cor2_Yget)
-cor2_Yget.insert(0, "B")
+
 cor2_Yget.bind('<FocusIn>', dummy_Yget_guide)
 cor2_Yget.bind('<FocusOut>', un_guide)
 
@@ -464,25 +464,25 @@ cor2_Yget.bind('<FocusOut>', un_guide)
 my_canvas.create_text(245, 410, text="Corner 3 config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="black")
 cor3_x1y1 = ttk.Entry(root, width=20)
 cor3_x1y1_w = my_canvas.create_window(150, 430, anchor="nw", window=cor3_x1y1)
-cor3_x1y1.insert(0, "C101")
+
 cor3_x1y1.bind('<FocusIn>', dummystart_guide)
 cor3_x1y1.bind('<FocusOut>', un_guide)
 
 cor3_x2y2 = ttk.Entry(root, width=20)
 cor3_x2y2_w = my_canvas.create_window(300, 430, anchor="nw", window=cor3_x2y2)
-cor3_x2y2.insert(0, "E103")
+
 cor3_x2y2.bind('<FocusIn>', dummyend_guide)
 cor3_x2y2.bind('<FocusOut>', un_guide)
 
 cor3_Xget = ttk.Entry(root)
 cor3_Xget_w = my_canvas.create_window(150, 460, anchor="nw", window=cor3_Xget)
-cor3_Xget.insert(0, "9")
+
 cor3_Xget.bind('<FocusIn>', dummy_Xget_guide)
 cor3_Xget.bind('<FocusOut>', un_guide)
 
 cor3_Yget = ttk.Entry(root)
 cor3_Yget_w = my_canvas.create_window(300, 460, anchor="nw", window=cor3_Yget)
-cor3_Yget.insert(0, "B")
+
 cor3_Yget.bind('<FocusIn>', dummy_Yget_guide)
 cor3_Yget.bind('<FocusOut>', un_guide)
 
@@ -491,25 +491,25 @@ cor3_Yget.bind('<FocusOut>', un_guide)
 my_canvas.create_text(670, 410, text="Corner 4 config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="black")
 cor4_x1y1 = ttk.Entry(root, width=20)
 cor4_x1y1_w = my_canvas.create_window(600, 430, anchor="nw", window=cor4_x1y1)
-cor4_x1y1.insert(0, "CU101")
+
 cor4_x1y1.bind('<FocusIn>', dummystart_guide)
 cor4_x1y1.bind('<FocusOut>', un_guide)
 
 cor4_x2y2 = ttk.Entry(root, width=20)
 cor4_x2y2_w = my_canvas.create_window(750, 430, anchor="nw", window=cor4_x2y2)
-cor4_x2y2.insert(0, "CW103")
+
 cor4_x2y2.bind('<FocusIn>', dummyend_guide)
 cor4_x2y2.bind('<FocusOut>', un_guide)
 
 cor4_Xget = ttk.Entry(root, width=20)
 cor4_Xget_w = my_canvas.create_window(600, 460, anchor="nw", window=cor4_Xget)
-cor4_Xget.insert(0, "9")
+
 cor4_Xget.bind('<FocusIn>', dummy_Xget_guide)
 cor4_Xget.bind('<FocusOut>', un_guide)
 
 cor4_Yget = ttk.Entry(root, width=20)
 cor4_Yget_w = my_canvas.create_window(750, 460, anchor="nw", window=cor4_Yget)
-cor4_Yget.insert(0, "B")
+
 cor4_Yget.bind('<FocusIn>', dummy_Yget_guide)
 cor4_Yget.bind('<FocusOut>', un_guide)
 
@@ -520,97 +520,82 @@ interopser_w =my_canvas.create_window(30, 500, anchor="nw", window=interopser)
 my_canvas.create_text(280, 540, text="Die/Chip size input:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 xwidth_i = ttk.Entry(root)
 xwidth_i_w = my_canvas.create_window(150, 560, anchor="nw", window=xwidth_i, width= 170)
-xwidth_i.insert(0, "3938.352")
+
 xwidth_i.bind('<FocusIn>', xwidth_i_guide)
 xwidth_i.bind('<FocusOut>', un_guide)
 
 yheight_i = ttk.Entry(root, width=20)
 yheight_w = my_canvas.create_window(340, 560, anchor="nw", window=yheight_i, width=170)
-yheight_i.insert(0, "2262.872")
+
 yheight_i.bind('<FocusIn>', yheight_i_guide)
 yheight_i.bind('<FocusOut>', un_guide)
-
-
 
 
 my_canvas.create_text(620, 540, text="OUT DIE sheet/location:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
 intp_sheet = ttk.Entry(root)
 intp_sheet_w = my_canvas.create_window(520, 560, anchor="nw", window=intp_sheet, width=170)
-intp_sheet.insert(0, "Package_substrate")
+
 intp_sheet.bind('<FocusIn>', intp_sheet_guide)
 intp_sheet.bind('<FocusOut>', un_guide)
 
 int_tb_loc = ttk.Entry(root)
 int_tb_locc_w = my_canvas.create_window(710, 560, anchor="nw", window=int_tb_loc, width=170)
-int_tb_loc.insert(0, "X111")
+
 int_tb_loc.bind('<FocusIn>', int_tb_guide)
 int_tb_loc.bind('<FocusOut>', un_guide)
 
 # my_canvas.create_text(30, 595, text="Die/Chip Offset:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 my_canvas.create_text(60, 600, text="Die count:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
-
 int_die_num_combo = ttk.Combobox(root, state="readonly", values=int_couple_number, width=22)
 int_die_num_combo_w = my_canvas.create_window(230,610, window=int_die_num_combo)
-int_die_num_combo.current(0)
+
 int_die_num_combo.bind('<<ComboboxSelected>>', get_num_intdie)
 
 my_canvas.create_text(60, 635, text="Die name:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 Die1_name = ttk.Entry(root)
 Die1_name_w = my_canvas.create_window(150, 630, anchor="nw", window=Die1_name, width= 360)
-Die1_name.insert(0, "DIE3")
+
 Die1_name.bind('<FocusIn>', Die1_name_guide)
 Die1_name.bind('<FocusOut>', un_guide)
 
-
-
 Die2_name = ttk.Entry(root)
 Die2_name_w = my_canvas.create_window(520, 630, anchor="nw", window=Die2_name, width=360)
-Die2_name.insert(0, "DIE7")
+
 Die2_name.bind('<FocusIn>', Die2_name_guide)
 Die2_name.bind('<FocusOut>', un_guide)
-
-
 
 my_canvas.create_text(60, 675, text="X offset:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 Die1_xoffset_i = ttk.Entry(root)
 Die1_xoffset_w = my_canvas.create_window(150, 670, anchor="nw", window=Die1_xoffset_i, width=360)
-Die1_xoffset_i.insert(0, "-4350.8")
+
 Die1_xoffset_i.bind('<FocusIn>', Die1_xoffset_i_guide)
 Die1_xoffset_i.bind('<FocusOut>', un_guide)
 
 my_canvas.create_text(60, 715, text="Y offset:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 Die1_yoffset_i = ttk.Entry(root, width=20)
 Die1_yoffset_w = my_canvas.create_window(150, 710, anchor="nw", window=Die1_yoffset_i, width=360)
-Die1_yoffset_i.insert(0, "16.2349999999999")
+
 Die1_yoffset_i.bind('<FocusIn>', Die1_yoffset_i_guide)
 Die1_yoffset_i.bind('<FocusOut>', un_guide)
 
 Die2_xoffset_i = ttk.Entry(root)
 Die2_xoffset_w = my_canvas.create_window(520, 670, anchor="nw", window=Die2_xoffset_i, width=360)
-Die2_xoffset_i.insert(0, "1571.96")
+
 Die2_xoffset_i.bind('<FocusIn>', Die2_xoffset_i_guide)
 Die2_xoffset_i.bind('<FocusOut>', un_guide)
 
 Die2_yoffset_i = ttk.Entry(root, width=20)
 Die2_yoffset_w = my_canvas.create_window(520, 710, anchor="nw", window=Die2_yoffset_i, width=360)
-Die2_yoffset_i.insert(0, "97.9849999999997")
+
 Die2_yoffset_i.bind('<FocusIn>', Die2_yoffset_i_guide)
 Die2_yoffset_i.bind('<FocusOut>', un_guide)
-
-
-
-
-
 
 
 separator1 = ttk.Separator(root)
 
 separator2 = ttk.Separator(root)
-
-
-
 
 # ------------------------------
 separator1 = ttk.Separator(root)
@@ -618,17 +603,11 @@ separator1 = ttk.Separator(root)
 separator2 = ttk.Separator(root)
 
 
-
-
-
-
-
-
 #--------------------------------------------------------------------------------------------------------#
 
 my_canvas.create_text(880,980, text= "Internal contact: sytung@synopsys.com" ,font=("Helvetica", 8, 'underline'), fill="grey")
 
-def open():
+def open_file():
 	# global my_image
     root.filename = filedialog.askopenfilename(initialdir="./", title="Select A File", filetypes=(("Excel files", "*.xlsx"),("all files", "*.*")))
     excel_i.delete(0,END)
@@ -657,10 +636,134 @@ def getstring(string: str,c1: str, c2: str):
 		else: return 0
 	else:
 		return 1
+def get_saved_params():
+    try:
+        with open(".ploctablebgen_params_saved.txt",'r') as params_saved:
+            line1 = [line.rstrip() for line in params_saved]
+            params = {
+            'excel_path' : line1[0],
+            'bump_visual_sheet' : line1[1],
+            'package_type' : line1[2],
+            'forTC' : line1[3],
+            'sr_width' : line1[4],
+            'die_visual' : line1[5],
+            'die_dummy' : line1[6],
+            'die_out_tb_sheet' : line1[7],
+            'die_out_tb_name1': line1[8],
+            'die_out_tb_name2': line1[9],
+            'die_out_loc': line1[10],
+            'is_interpos' : line1[11],
+            'inter_size' : line1[12],
+            'inter_diecount' : line1[13],
+            'inter_dieL_name' : line1[14],
+            'inter_dieR_name' : line1[15],
+            'inter_xL_offset' : line1[16],
+            'inter_xR_offset' : line1[17],
+            'inter_yL_offset' : line1[18],
+            'inter_yR_offset' : line1[19],
+            'inter_out_tb_sheet' : line1[20],
+            'inter_out_tb_loc' : line1[21]
+            }
+            
+        excel_i.insert(0,params['excel_path'])
+        sheet_i.insert(0, params['bump_visual_sheet'])
+
+        srw_i.insert(0, params['sr_width'])
+        die_visual_list = params['die_visual'].split()
+        x1y1_i.insert(0, die_visual_list[0])
+        x2y2_i.insert(0, die_visual_list[1])
+        Xget_i.insert(0, die_visual_list[2])
+        Yget_i.insert(0, die_visual_list[3])
+
+        dummy_list = params['die_dummy'].split()
+        cor1_x1y1.insert(0, dummy_list[0])
+        cor1_x2y2.insert(0, dummy_list[1])
+        cor1_Xget.insert(0, dummy_list[2])
+        cor1_Yget.insert(0, dummy_list[3])
+        
+        cor2_x1y1.insert(0, dummy_list[4])
+        cor2_x2y2.insert(0, dummy_list[5])
+        cor2_Xget.insert(0, dummy_list[6])
+        cor2_Yget.insert(0, dummy_list[7])
+        
+        cor3_x1y1.insert(0, dummy_list[8])
+        cor3_x2y2.insert(0, dummy_list[9])
+        cor3_Xget.insert(0, dummy_list[10])
+        cor3_Yget.insert(0, dummy_list[11])
+
+        cor4_x1y1.insert(0, dummy_list[12])
+        cor4_x2y2.insert(0, dummy_list[13])
+        cor4_Xget.insert(0, dummy_list[14])
+        cor4_Yget.insert(0, dummy_list[15])
+
+        
+        out_tb_sheet.insert(0, params['die_out_tb_sheet'])
+        out_name_in.insert(0, params['die_out_tb_name1'])
+        out_col_i.insert(0, params['die_out_loc'])
+        out_name2_in.insert(0, params['die_out_tb_name2'])
+        chip_size_list = params['inter_size'].split()
+        xwidth_i.insert(0, chip_size_list[0])
+        yheight_i.insert(0, chip_size_list[1])
+        Die1_name.insert(0, params['inter_dieL_name'])
+        Die2_name.insert(0, params['inter_dieR_name'])
+        Die1_xoffset_i.insert(0, params['inter_xL_offset'])
+        Die2_xoffset_i.insert(0, params['inter_xR_offset'])
+        Die1_yoffset_i.insert(0, params['inter_yL_offset'])
+        Die2_yoffset_i.insert(0, params['inter_yR_offset'])
+        intp_sheet.insert(0, params['inter_out_tb_sheet'])
+        int_tb_loc.insert(0, params['inter_out_tb_loc'])
+        
+        int_die_num_combo.current(int_couple_number.index(params['inter_diecount']))
+        package_combo.current(0)
+        # package_combo.current(package_list.index(params['package_type']))
+
+    except:
+        excel_i.insert(0, r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Bump_CoWoS_S.xlsx")
+        sheet_i.insert(0, "N3P_CoWoS")
+        srw_i.insert(0, "21.6")
+        x1y1_i.insert(0, "C11")
+        x2y2_i.insert(0, "CW103")
+        Xget_i.insert(0, "8")
+        Yget_i.insert(0, "B")
+        out_tb_sheet.insert(0, "Bump coordination")
+        out_name_in.insert(0, "Die with sealring")
+        out_name2_in.insert(0, "Die without sealring")
+        out_col_i.insert(0, "S111")
+        out_col_wsr_i.insert(0, "T64")
+        cor1_x1y1.insert(0, "C11")
+        cor1_x2y2.insert(0, "E13")
+        cor1_Xget.insert(0, "9")
+        cor1_Yget.insert(0, "B")
+        cor2_x1y1.insert(0, "CU11")
+        cor2_x2y2.insert(0, "CW13")
+        cor2_Xget.insert(0, "9")
+        cor2_Yget.insert(0, "B")
+        cor3_x1y1.insert(0, "C101")
+        cor3_x2y2.insert(0, "E103")
+        cor3_Xget.insert(0, "9")
+        cor3_Yget.insert(0, "B")
+        cor4_x1y1.insert(0, "CU101")
+        cor4_x2y2.insert(0, "CW103")
+        cor4_Xget.insert(0, "9")
+        cor4_Yget.insert(0, "B")
+        xwidth_i.insert(0, "3938.352")
+        yheight_i.insert(0, "2262.872")
+        intp_sheet.insert(0, "Package_substrate")
+        int_tb_loc.insert(0, "X111")
+        Die1_name.insert(0, "DIE3")
+        Die2_name.insert(0, "DIE7")
+        Die1_xoffset_i.insert(0, "-4350.8")
+        Die1_yoffset_i.insert(0, "16.2349999999999")
+        Die2_xoffset_i.insert(0, "1571.96")
+        Die2_yoffset_i.insert(0, "97.9849999999997")
+        int_die_num_combo.current(0)
+        package_combo.current(0)
+get_saved_params()
 
 def get_params_and_generate():
     # popup("Generating...")
     # button['state'] = tk.DISABLED
+   
 
     mynotif("Processing the input parameter...")
     button['text']="Generating..."
@@ -759,6 +862,39 @@ def get_params_and_generate():
             }
 
         }
+    
+    with open(".ploctablebgen_params_saved.txt",'w') as params_saved:
+        params_saved.writelines(excel_path+"\n")
+        params_saved.writelines(bump_visual_sheet+"\n")
+        params_saved.writelines(package+"\n")
+        params_saved.writelines(str(tc_sr["isTC"])+"\n")
+        params_saved.writelines(str(tc_sr["sr_w"])+"\n")
+        params_saved.writelines(die_coor['window1'] +" "+ die_coor['window2'] +" "+ die_coor['xcoor']+" "+die_coor['ycoor'] + "\n")
+        params_saved.writelines(cor1_x1y1.get() +" "+ cor1_x2y2.get() +" "+ cor1_Xget.get() +" "+ cor1_Yget.get() +" "+
+                                cor2_x1y1.get() +" "+ cor2_x2y2.get() +" "+ cor2_Xget.get() +" "+ cor2_Yget.get() +" "+
+                                cor3_x1y1.get() +" "+ cor3_x2y2.get() +" "+ cor3_Xget.get() +" "+ cor3_Yget.get() +" "+
+                                cor4_x1y1.get() +" "+ cor4_x2y2.get() +" "+ cor4_Xget.get() +" "+ cor4_Yget.get()
+                                  + "\n")
+        params_saved.writelines(die_table['sheet'] +"\n")
+        params_saved.writelines(die_table['name'] + "\n")
+        params_saved.writelines(die_table['name_wsr']+"\n")
+        params_saved.writelines(die_table['location']+"\n")
+       
+        params_saved.writelines(str(int_gen) + "\n")
+        params_saved.writelines(die_params["chip_width"] + " " + die_params['chip_height'] +"\n")
+        params_saved.writelines(str(int_die_cnt) + "\n")
+      
+
+        params_saved.writelines(int_die_tb['Die1_name'] + "\n")
+        params_saved.writelines(int_die_tb['Die2_name'] + "\n")
+        
+        params_saved.writelines(die_params['die1_xoffset'] + "\n")
+        params_saved.writelines(die_params['die2_xoffset'] + "\n")
+        params_saved.writelines(die_params['die1_yoffset'] + "\n")
+        params_saved.writelines(die_params['die2_yoffset'] + "\n")
+        params_saved.writelines(int_die_tb['sheet'] + "\n")
+        params_saved.writelines(int_die_tb['int_tb_location'] + "\n")
+        
     print("Package: " + package)
     if (package == "A-CoWoS"):
         # print(1)
@@ -882,6 +1018,8 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
         wsdiebump_f.merge_cells(die_table['location'] + ":" + get_column_letter(die_tb_x + 2) + str(die_tb_y))
         for c1 in range(0,3):
             wsdiebump_f[get_column_letter(die_tb_x + c1) + str(die_tb_y)].fill = title_bg_fill
+            wsdiebump_f[get_column_letter(die_tb_x + c1) + str(die_tb_y)].alignment = Alignment(horizontal='center')
+            wsdiebump_f[get_column_letter(die_tb_x + c1) + str(die_tb_y)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
 
         wsdiebump_f[get_column_letter(die_tb_x) + str(die_tb_y + 1)].value = "X"
 
@@ -890,16 +1028,22 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
         wsdiebump_f[get_column_letter(die_tb_x + 2)  + str(str(die_tb_y + 1))].value = "Bump name"
         for c2 in range(0,3):
             wsdiebump_f[get_column_letter(die_tb_x + c2) + str(die_tb_y + 1)].fill = subtil_bg_fill
+            wsdiebump_f[get_column_letter(die_tb_x + c2) + str(die_tb_y + 1)].alignment = Alignment(horizontal='center')
+            wsdiebump_f[get_column_letter(die_tb_x + c2) + str(die_tb_y + 1)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
         if(int(tc_sr['isTC'] == 1)):
             wsdiebump_f[get_column_letter(die_tb_x + 4) + str(die_tb_y)].value = tc_sr['sr_tb']
             wsdiebump_f.merge_cells(get_column_letter(die_tb_x + 4) + str(die_tb_y) + ":" + get_column_letter(die_tb_x + 6) + str(die_tb_y))
             for c1 in range(0,3):
                 wsdiebump_f[get_column_letter(die_tb_x + 4 + c1) + str(die_tb_y)].fill = title_bg_fill
+                wsdiebump_f[get_column_letter(die_tb_x + 4 + c1) + str(die_tb_y)].alignment = Alignment(horizontal='center')
+                wsdiebump_f[get_column_letter(die_tb_x + 4 + c1) + str(die_tb_y)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
             wsdiebump_f[get_column_letter(die_tb_x + 4) + str(die_tb_y + 1)].value = "X"
             wsdiebump_f[get_column_letter(die_tb_x + 5) + str(die_tb_y + 1)].value = "Y"
             wsdiebump_f[get_column_letter(die_tb_x + 6)  + str(str(die_tb_y + 1))].value = "Bump name"
             for c1 in range(0,3):
                 wsdiebump_f[get_column_letter(die_tb_x + 4 + c1) + str(die_tb_y + 1)].fill = subtil_bg_fill
+                wsdiebump_f[get_column_letter(die_tb_x + 4 + c1) + str(die_tb_y + 1)].alignment = Alignment(horizontal='center')
+                wsdiebump_f[get_column_letter(die_tb_x + 4 + c1) + str(die_tb_y + 1)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
 
         if(int_gen == 1):
             die1_list = int_die_tb['Die1_name'].split()
@@ -919,11 +1063,15 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
                 wsintbump_f.merge_cells(get_column_letter(int_tb_x) + str(int_tb_y) + ":" + get_column_letter(int_tb_x + 2) + str(int_tb_y))
                 for c1 in range(0,3):
                     wsintbump_f[get_column_letter(int_tb_x + c1) + str(int_tb_y)].fill = title_bg_fill
+                    wsintbump_f[get_column_letter(int_tb_x + c1) + str(int_tb_y)].alignment = Alignment(horizontal='center')
+                    wsintbump_f[get_column_letter(int_tb_x + c1) + str(int_tb_y)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
                 wsintbump_f[get_column_letter(int_tb_x) + str(int_tb_y + 1)].value = "X"
                 wsintbump_f[get_column_letter(int_tb_x + 1) + str(int_tb_y + 1)].value = "Y"
                 wsintbump_f[get_column_letter(int_tb_x + 2)  + str(str(int_tb_y + 1))].value = "Bump name"
                 for c2 in range(0,3):
                     wsintbump_f[get_column_letter(int_tb_x + c2) + str(int_tb_y + 1)].fill = subtil_bg_fill
+                    wsintbump_f[get_column_letter(int_tb_x + c2) + str(int_tb_y + 1)].alignment = Alignment(horizontal='center')
+                    wsintbump_f[get_column_letter(int_tb_x + c2) + str(int_tb_y + 1)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
                 tbidx = 4
                 for tb in range(0,int(int_die_cnt/2)):
 
@@ -931,21 +1079,29 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
                     wsintbump_f.merge_cells(get_column_letter(int_tb_x + tbidx) + str(int_tb_y) + ":" + get_column_letter(int_tb_x + tbidx + 2) + str(int_tb_y))
                     for c1 in range(0,3):
                         wsintbump_f[get_column_letter(int_tb_x + tbidx + c1) + str(int_tb_y)].fill = title_bg_fill
+                        wsintbump_f[get_column_letter(int_tb_x + tbidx + c1) + str(int_tb_y)].alignment = Alignment(horizontal='center')
+                        wsintbump_f[get_column_letter(int_tb_x + tbidx + c1) + str(int_tb_y)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
                     wsintbump_f[get_column_letter(int_tb_x + tbidx) + str(int_tb_y + 1)].value = "X"
                     wsintbump_f[get_column_letter(int_tb_x + tbidx + 1) + str(int_tb_y + 1)].value = "Y"
                     wsintbump_f[get_column_letter(int_tb_x + tbidx + 2)  + str(str(int_tb_y + 1))].value = "Bump name"
                     for c2 in range(0,3):
                         wsintbump_f[get_column_letter(int_tb_x + tbidx + c2) + str(int_tb_y + 1)].fill = subtil_bg_fill
+                        wsintbump_f[get_column_letter(int_tb_x + tbidx + c2) + str(int_tb_y + 1)].alignment = Alignment(horizontal='center')
+                        wsintbump_f[get_column_letter(int_tb_x + tbidx + c2) + str(int_tb_y + 1)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
 
                     wsintbump_f[get_column_letter(int_tb_x + tbidx + 4) + str(int_tb_y)].value = str(die2_list[tb]) + " = Die Flipped rotate +90 + Die2 offset"
                     wsintbump_f.merge_cells(get_column_letter(int_tb_x + tbidx + 4) + str(int_tb_y) + ":" + get_column_letter(int_tb_x + tbidx + 6) + str(int_tb_y))
                     for c1 in range(0,3):
                         wsintbump_f[get_column_letter(int_tb_x + tbidx + c1 + 4) + str(int_tb_y)].fill = title_bg_fill
+                        wsintbump_f[get_column_letter(int_tb_x + tbidx + c1 + 4) + str(int_tb_y)].alignment = Alignment(horizontal='center')
+                        wsintbump_f[get_column_letter(int_tb_x + tbidx + c1 + 4) + str(int_tb_y)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
                     wsintbump_f[get_column_letter(int_tb_x + tbidx + 4) + str(int_tb_y + 1)].value = "X"
                     wsintbump_f[get_column_letter(int_tb_x + tbidx + 5) + str(int_tb_y + 1)].value = "Y"
                     wsintbump_f[get_column_letter(int_tb_x + tbidx + 6)  + str(str(int_tb_y + 1))].value = "Bump name"
                     for c2 in range(0,3):
                         wsintbump_f[get_column_letter(int_tb_x + tbidx + c2 + 4) + str(int_tb_y + 1)].fill = subtil_bg_fill
+                        wsintbump_f[get_column_letter(int_tb_x + tbidx + c2 + 4) + str(int_tb_y + 1)].alignment = Alignment(horizontal='center')
+                        wsintbump_f[get_column_letter(int_tb_x + tbidx + c2 + 4) + str(int_tb_y + 1)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
                     tbidx += 8
                 int_input_correct = 1
         else:
@@ -987,7 +1143,7 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
                         if (wsvisual_f[col_dm + str(dummyrow1)].value != None):
                             
                             print("Processing for Dummy bump at: " + col_dm + str(dummyrow1))
-                            # Den dummy bump table
+                            # Gen dummy bump table
                             wsdiebump_f[get_column_letter(die_tb_x)+str(r_die)].value = f"='{bump_visual_sheet}'!{col_dm + xcoor_dm}"
                             wsdiebump_f[get_column_letter(die_tb_x + 1)+str(r_die)].value = f"='{bump_visual_sheet}'!{ycoor_dm + str(dummyrow1)}"
                             wsdiebump_f[get_column_letter(die_tb_x + 2)+str(r_die)].value =  f"='{bump_visual_sheet}'!{col_dm+ str(dummyrow1)}"
@@ -1225,23 +1381,20 @@ style.configure('TCheckbutton', font= ('System', 12, 'underline', 'bold'),
  foreground='black', border=50)
 mediumFont = tkfont(
 	family="System",
-	size=16,
+	size=12,
 	weight="normal",
 	slant="italic",
 	underline=1,
 	overstrike=0)
 def hihi():
     button.configure(font=mediumFont, foreground='white', background='Green')
-browse_btn = ttk.Button(root, text="Open File", image=open_imag, command=open)
+browse_btn = ttk.Button(root, text="Open File", image=open_imag, command=open_file)
 browse_btn_w = my_canvas.create_window(865, 40, anchor="nw", window=browse_btn)
 # button = tk.Button(root, text="Generate",font=("System", 14, 'underline', 'bold'), foreground='white', background='#9b34eb', command=get_path, width=40)
 button = tk.Button(root, text="Generate",font = mediumFont, foreground='white', background='#9b34eb', command=get_params_and_generate, width=40)
 # button = ttk.Button(root, text="Generate", command=get_path, width=80)
 
 button_w = my_canvas.create_window(300, 860, anchor="nw", window=button)
-
-
-
 
 
 root.mainloop()

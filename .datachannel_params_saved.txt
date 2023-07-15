@@ -1,0 +1,9 @@
+C:/Users/sytung/OneDrive - Synopsys, Inc/Desktop/py/Test_adp.xlsx
+DWORD
+4
+Left to Right
+16
+S16
+AD30
+Data_Channelx4
+F30
