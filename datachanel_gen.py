@@ -22,15 +22,12 @@ from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection
 import os
 import win32com.client
 from pathlib import Path  # core library
-excel_file = r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Test.xlsx"
-
-
-
-
+# excel_file = r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Test.xlsx"
+from datamapping_gen import * 
 
 root = ThemedTk()
 # my_canvas=tk.Canvas(root)
-root.set_theme("scidpurple")
+# root.set_theme("scidpurple")
 
 root.title("PLOC DATA CHANNEL VISUAL GENERATOR")
 root.geometry("800x800+30+100")
@@ -58,6 +55,7 @@ ch_sequence = ["Right to Left","Left to Right", "Center to Left first","Center t
 
 tc_opt = tk.IntVar()
 isIntp = tk.IntVar()
+ismapgen = tk.IntVar()
 def mynotif(content):
     if(content == ""):
         myLabel.configure(text="", anchor='w')
@@ -71,6 +69,12 @@ def process_notify(content):
         root.update_idletasks()
         mynotif(content)
         root.update_idletasks()
+def entry_disable(*entries):
+    for entry in entries:
+        entry.config(state='disable')
+def entry_enable(*entries):
+    for entry in entries:
+        entry.config(state='normal')
 # ------------------------------------------------------------------------------------------------------------------------------------------------
 
 def myguide(entries, content):
@@ -91,7 +95,10 @@ def x1y1_guide(event):
      myguide(frame, "INFO:" + "Reference channel visual window start cell\n\n - Example:   A0           ")
 def un_guide(event):
      myguide(frame,"")
-
+def map_s_guide(event):
+    myguide(frame, "INFO:" + "Sheet to put channels mapping table\n\n Example: Mapping Data Channel ")
+def map_loc_guide(event):
+    myguide(frame, "INFO:" + "This field to define the\n  output mapping table location.  \n\n - Example: O64 ")
 def x2y2_guide(event):
      myguide(frame, "INFO:" + "Reference channel visual window end cell\n\n - Example:   CU100       ")
 def out_name_in_guide(event):
@@ -113,10 +120,21 @@ def get_ch_cnt(event):
     
         myguide(frame, "INFO:" + "The number of channels: " +  ch_combo.get() + "                ")
  
-
+def DieL_name_guide(event):
+     myguide(frame, "INFO:" + "Name list of left Die.\n (Die Flipped + Rotate -90)\n- Die name MUST NOT contain spaces character\n- The dies name are separated by spaces     ")
+def DieR_name_guide(event):
+     myguide(frame, "INFO:" + "Name list of right Die.\n (Die Flipped + Rotate +90)\n- Die name MUST NOT contain spaces character\n- The dies name are separated by spaces     ")
 def sheet_guide(event):
      myguide(frame, "INFO:" + "Sheet of reference channel bump visual\n\n Example: Bump coordination ")
-
+def gen_mapping_toggle():
+    if(ismapgen.get() == 1):
+        entry_enable(die_R_list, die_L_list, map_tb_sheet, map_loc_i)
+        # entry_enable(xwidth_i, yheight_i, Die1_xoffset_i, Die1_yoffset_i, Die2_xoffset_i, Die2_yoffset_i, intp_sheet, Die1_name, Die2_name, int_tb_loc, int_die_num_combo)
+        print("Gen interposer Die table: ON")
+    elif(ismapgen.get() == 0):
+        entry_disable(die_R_list, die_L_list, map_tb_sheet, map_loc_i)
+        # entry_disable(xwidth_i, yheight_i, Die1_xoffset_i, Die1_yoffset_i, Die2_xoffset_i, Die2_yoffset_i, intp_sheet, Die1_name, Die2_name, int_tb_loc, int_die_num_combo)
+        print("Gen interposer Die table: OFF")
 frame = tk.Label(root, bg="#c9f2dc", font=("Courier New", 10), foreground="#f2a50a")
 my_canvas.create_window(150, 80, window=frame, anchor="nw", width= 500, height=100)
 
@@ -196,6 +214,33 @@ out_col_i.bind('<FocusIn>', out_visual_loc_guide)
 out_col_i.bind('<FocusOut>', un_guide)
 
 # -------------------------pkg type input--------------------------#
+gen_mapping = ttk.Checkbutton(root, text="Die Mapping generator", variable=ismapgen, onvalue=1, offvalue=0,command= gen_mapping_toggle)
+gen_mapping_w =my_canvas.create_window(30, 360, anchor="nw", window=gen_mapping)
+
+die_L_list = ttk.Entry(root, width=20)
+my_canvas.create_window(150, 390, anchor="nw", window=die_L_list, width=275)
+
+die_L_list.bind('<FocusIn>', DieL_name_guide)
+die_L_list.bind('<FocusOut>', un_guide)
+
+die_R_list = ttk.Entry(root, width=20)
+my_canvas.create_window(150, 430, anchor="nw", window=die_R_list, width=275)
+
+die_R_list.bind('<FocusIn>', DieR_name_guide)
+die_R_list.bind('<FocusOut>', un_guide)
+
+map_tb_sheet = ttk.Entry(root)
+map_tb_sheet_w = my_canvas.create_window(500, 390, anchor="nw", window=map_tb_sheet)
+
+map_tb_sheet.bind('<FocusIn>', map_s_guide)
+map_tb_sheet.bind('<FocusOut>', un_guide)
+
+map_loc_i = ttk.Entry(root, width=20)
+map_loc_i_w = my_canvas.create_window(500, 430, anchor="nw", window=map_loc_i)
+
+map_loc_i.bind('<FocusIn>', map_loc_guide)
+map_loc_i.bind('<FocusOut>', un_guide)
+
 
 
 
@@ -215,11 +260,19 @@ def get_saved_params():
                 'x1y1_i': line1[5],
                 'x2y2_i': line1[6],
                 'out_tb_sheet': line1[7],
-                'out_col_i': line1[8]
+                'out_col_i': line1[8],
+                'DieL_name': line1[9],
+                'DieR_name': line1[10],
+                'map_sheet_name': line1[11],
+                'map_tb_ch2ch_loc': line1[12],
+                'theme': line1[13]
 
             }
+        
+        root.set_theme(params['theme'])
+        theme_combo.current(theme_list.index(params['theme']))
         excel_i.insert(0, params['excel_file'])   
-     
+
         sheet_i.insert(0, params['sheet'])
         ch_combo.current(ch_number.index(int(params['ch_combo'])))
         ch_seq_combo.current(ch_sequence.index(params['ch_seq_combo']))
@@ -228,7 +281,15 @@ def get_saved_params():
         x2y2_i.insert(0, params['x2y2_i'])
         out_tb_sheet.insert(0, params['out_tb_sheet'])
         out_col_i.insert(0, params['out_col_i'])
+        die_L_list.insert(0,params['DieL_name'])
+        die_R_list.insert(0, params['DieR_name'])
+        map_tb_sheet.insert(0, params['map_sheet_name'])
+        map_loc_i.insert(0, params['map_tb_ch2ch_loc'])
+
+
     except:
+        root.set_theme("scidpurple")
+        theme_combo.current(theme_list.index("scidpurple"))
         excel_i.insert(0, r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Test3.xlsx")
         sheet_i.insert(0, "DWORD")
         ch_combo.current(3)
@@ -306,13 +367,24 @@ def get_params():
 
             "ch_cnt": ch_combo.get(),
             "data_bit":bit_num_i.get(),
-            "ch_seq":ch_seq_combo.get()
+            "ch_seq":ch_seq_combo.get(),
+            'DieL_name': die_L_list.get(),
+            'DieR_name': die_R_list.get()
         }
 
         output_params ={
             "tb_sheet": out_tb_sheet.get(),
             "tb_loc": out_col_i.get()
         }
+
+        mapping_tb_out = {
+        'sheet_name': map_tb_sheet.get(),
+        # 'tb_ch2ch_name':"DWORD Mapping",
+        'tb_ch2ch_loc':map_loc_i.get(),
+        
+        # 'tb_d2d_name': "DIE to DIE Mapping",
+        
+    }
         with open(".datachannel_params_saved.txt",'w') as params_saved:
             params_saved.writelines(input_params['excel_file'] +"\n")
             params_saved.writelines(input_params['ch_sheet'] +"\n")
@@ -323,8 +395,14 @@ def get_params():
             params_saved.writelines(input_params['ch_cell_end'] +"\n")
             params_saved.writelines(output_params['tb_sheet'] +"\n")
             params_saved.writelines(output_params['tb_loc'] +"\n")
+            params_saved.writelines(input_params['DieL_name'] + "\n")
+            params_saved.writelines(input_params['DieR_name'] + "\n")
+            params_saved.writelines(mapping_tb_out['sheet_name'] + "\n")
+            params_saved.writelines(mapping_tb_out['tb_ch2ch_loc'] + "\n")
+            params_saved.writelines(theme_combo.get() + "\n")
+
         progress_bar(20)
-        gen_datachanel(input_params,output_params)
+        gen_datachanel(input_params,output_params, mapping_tb_out)
     except:
         messagebox.showerror("Error", "Some things wrong. Please re-check")
         progress_bar(0)
@@ -440,7 +518,7 @@ def Left2Right(params):
                 r = params['out_row']
     return c
 # for cnt in range(0,ch_cnt):
-def gen_datachanel(input_params, output_params):
+def gen_datachanel(input_params, output_params, mapping_tb_out):
 
     excel_file = input_params["excel_file"]
     # wb_d = load_workbook(excel_file, data_only=True)
@@ -501,7 +579,7 @@ def gen_datachanel(input_params, output_params):
         root.update_idletasks()
         return
 
-
+    
     row_begin = coordinate_to_tuple(input_params['ch_cell_start'])[0]
     col_begin = coordinate_to_tuple(input_params['ch_cell_start'])[1]
     row_end = coordinate_to_tuple(input_params['ch_cell_end'])[0]
@@ -658,7 +736,24 @@ def gen_datachanel(input_params, output_params):
             params['ch_begin'] = center_nu + 1
             params['ch_end'] = ch_cnt
             Right2left(params)
+    if(ismapgen.get() == 1):
+        mapping_input = {
+            'ch_sheet_name': input_params['ch_sheet'],
+            'ch_begin_cell': input_params['ch_cell_start'],
+            'ch_end_cell': input_params['ch_cell_end'],
+            'ch_num': input_params['ch_cnt'],
+            'bit_num': input_params['data_bit'],
+            'DieL_name': input_params['DieL_name'],
+            'DieR_name': input_params['DieR_name']
+        }
+        mapping_output = {
+            'sheet_name': mapping_tb_out['sheet_name'],
+            # 'tb_ch2ch_name': mapping_tb_out['tb_ch2ch_name'],
+            'tb_ch2ch_loc': mapping_tb_out['tb_ch2ch_loc'],
             
+        }
+        wb_f = mapping_connections(wb_f, mapping_input, mapping_output)
+        
     print("Saving excel file...")
     mynotif("")
     mynotif("Saving excel file...")
@@ -668,7 +763,7 @@ def gen_datachanel(input_params, output_params):
     mynotif("")
     mynotif("Successed!!")
     messagebox.showinfo("Notification", "Data channel has been generated successful!!!")	
-
+entry_disable(die_R_list, die_L_list, map_tb_sheet, map_loc_i)
 browse_btn = ttk.Button(root, text="Open File", image=open_imag, command=browse_file)
 browse_btn_w = my_canvas.create_window(720, 40, anchor="nw", window=browse_btn)
 # button = tk.Button(root, text="Generate",font=("System", 14, 'underline', 'bold'), foreground='white', background='#9b34eb', command=get_path, width=40)

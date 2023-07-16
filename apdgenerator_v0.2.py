@@ -180,14 +180,14 @@ def handle_click(event):
    pass
     
 def ball_sheet_guide(event):
-     myguide(frame, "INFO:" + "Ball sheet name\n\n - Example:   BGA           ")
+     myguide(frame, "INFO:" + "Ball sheet name    \n\n - Example:   BGA           ")
 def un_guide(event):
      myguide(frame,"")
 
 def ball_begin_cell_guide(event):
      myguide(frame, "INFO:" + "Ball table begin cell\n\n - Example:   CU100       ")
 def mapping_sheet_guide(event):
-     myguide(frame, "INFO:" + "Mapping sheet name\n\n - Example:   DIE_Mapping           ")
+     myguide(frame, "INFO:" + "Mapping sheet name          \n\n - Example:   DIE_Mapping           ")
 def mapping_begin_cell_guide(event):
      myguide(frame, "INFO:" + "Mapping table begin cell\n\n - Example:   CU100       ")
 def ball_end_cell_guide(event):
@@ -206,13 +206,13 @@ def DieL_endcell_i_guide(event):
 def DieR_begincell_i_guide(event):
      myguide(frame, "INFO:" + "List of Right Die table begin cell\n\n - Example:   A10  H10 G10       ")
 def DieR_endcell_i_guide(event):
-     myguide(frame, "INFO:" + "List of Right Die table end cell\n\n - - Example:   A10  H10 G10     ")
+     myguide(frame, "INFO:" + "List of Right Die table end cell\n\n - Example:   A10  H10 G10     ")
 def dietb_sheet_guide(event):
-     myguide(frame, "INFO:" + "Ball sheet name\n\n - Example:    Die_table           ")
+     myguide(frame, "INFO:" + "Die tables sheet name         \n\n - Example:    Die_table           ")
 def DieL_name_guide(event):
-     myguide(frame, "INFO:" + "Name list of left Die.\n (Die Flipped + Rotate -90)\n ")
+     myguide(frame, "INFO:" + "Name list of left Die.\n (Die Flipped + Rotate -90)\n- Die name MUST NOT contain spaces character\n- The dies name are separated by spaces     ")
 def DieR_name_guide(event):
-     myguide(frame, "INFO:" + "Name list of right Die.\n (Die Flipped + Rotate +90)\n ")
+     myguide(frame, "INFO:" + "Name list of right Die.\n (Die Flipped + Rotate +90)\n- Die name MUST NOT contain spaces character\n- The dies name are separated by spaces     ")
 def int_tb_guide(event):
     myguide(frame, "INFO:" + "This field to define the\n  first output table cell. \n The next tables placed away \n1 column from previous table \n\n - Example: O64 ")
 def srw_i_guide(event):
@@ -224,7 +224,7 @@ theme_combo_t_w = my_canvas.create_window(750, 15, window=theme_combo_t)
 
 theme_combo = ttk.Combobox(root, state="readonly", values=theme_list, width=15)
 theme_combo_w = my_canvas.create_window(870,15, window=theme_combo)
-theme_combo.current(0)
+
 theme_combo.bind('<<ComboboxSelected>>', choosetheme)
 
 # -------------------------excelpath input--------------------------#
@@ -232,7 +232,7 @@ pfont= ("Rosewood Std Regular", 12, "bold", 'underline' )
 excel_t = ttk.Label(root,text="PLOC path:",border=20,font=pfont, borderwidth=5)
 excel_t_w = my_canvas.create_window(30,40, anchor="nw", window=excel_t)
 excel_i = ttk.Entry(root, width=115)
-excel_i.insert(0, r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Test3.xlsx")
+
 excel_i_w = my_canvas.create_window(150,40, anchor="nw", window=excel_i)
 
 # Separator
@@ -246,39 +246,39 @@ my_canvas.create_text(30, 200, text="Ball Table inputs", anchor="nw",font=("Helv
 # ------------------------Die bump visual parameters input --------------------------#
 ball_sheet_i = ttk.Entry(root, width=20)
 my_canvas.create_window(150, 200, anchor="nw", window=ball_sheet_i, width=225)
-ball_sheet_i.insert(0, "BGA")
+
 ball_sheet_i.bind('<FocusIn>', ball_sheet_guide)
 ball_sheet_i.bind('<FocusOut>', un_guide)
 
 
 ball_begin_cell_i = ttk.Entry(root, width=20)
 my_canvas.create_window(400, 200, anchor="nw", window=ball_begin_cell_i, width=225)
-ball_begin_cell_i.insert(0, "AQ1")
+
 ball_begin_cell_i.bind('<FocusIn>', ball_begin_cell_guide)
 ball_begin_cell_i.bind('<FocusOut>', un_guide)
 
 ball_end_cell = ttk.Entry(root)
 ball_end_cell_w = my_canvas.create_window(650, 200, anchor="nw", window=ball_end_cell, width=225)
-ball_end_cell.insert(0, "AT1297")
+
 ball_end_cell.bind('<FocusIn>', ball_end_cell_guide)
 ball_end_cell.bind('<FocusOut>', un_guide)
 
 my_canvas.create_text(30, 260, text="Mapping table\n inputs", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 mapping_sheet_i = ttk.Entry(root, width=20)
 mapping_sheet_i_w = my_canvas.create_window(150, 260, anchor="nw", window=mapping_sheet_i, width=225)
-mapping_sheet_i.insert(0, "UCIe_Mapping_connection")
+
 mapping_sheet_i.bind('<FocusIn>', mapping_sheet_guide)
 mapping_sheet_i.bind('<FocusOut>', un_guide)
 
 mapping_begin_cell_i = ttk.Entry(root, width=20)
 mapping_begin_cell_i_w = my_canvas.create_window(400, 260, anchor="nw", window=mapping_begin_cell_i, width=225)
-mapping_begin_cell_i.insert(0, "F1")
+
 mapping_begin_cell_i.bind('<FocusIn>', mapping_begin_cell_guide)
 mapping_begin_cell_i.bind('<FocusOut>', un_guide)
 
 mapping_end_cell_i = ttk.Entry(root, width=20)
 mapping_end_cell_i_w = my_canvas.create_window(650, 260, anchor="nw", window=mapping_end_cell_i, width=225)
-mapping_end_cell_i.insert(0, "G178")
+
 mapping_end_cell_i.bind('<FocusIn>', mapping_end_cell_in_guide)
 mapping_end_cell_i.bind('<FocusOut>', un_guide)
 
@@ -291,7 +291,7 @@ my_canvas.create_text(60, 340, text="DIE table\nsheet:", anchor="nw",font=("Helv
 
 dietb_sheet = ttk.Entry(root)
 dietb_sheet_w = my_canvas.create_window(150, 340, anchor="nw", window=dietb_sheet, width=360)
-dietb_sheet.insert(0, "Package_substrate")
+
 dietb_sheet.bind('<FocusIn>', dietb_sheet_guide)
 dietb_sheet.bind('<FocusOut>', un_guide)
 
@@ -305,7 +305,7 @@ my_canvas.create_text(680, 380, text="Right Die:", anchor="nw",font=("Helvetica"
 my_canvas.create_text(60, 410, text="Die name:", anchor="nw",font=("Helvetica", 10, 'underline', 'bold'), fill="#003feb")
 DieL_name = ttk.Entry(root)
 DieL_name_w = my_canvas.create_window(150, 410, anchor="nw", window=DieL_name, width= 360)
-DieL_name.insert(0, "DIE3 DIE4")
+
 DieL_name.bind('<FocusIn>', DieL_name_guide)
 DieL_name.bind('<FocusOut>', un_guide)
 
@@ -313,7 +313,7 @@ DieL_name.bind('<FocusOut>', un_guide)
 
 DieR_name = ttk.Entry(root)
 DieR_name_w = my_canvas.create_window(520, 410, anchor="nw", window=DieR_name, width=360)
-DieR_name.insert(0, "DIE7 DIE8")
+
 DieR_name.bind('<FocusIn>', DieR_name_guide)
 DieR_name.bind('<FocusOut>', un_guide)
 
@@ -322,26 +322,26 @@ DieR_name.bind('<FocusOut>', un_guide)
 my_canvas.create_text(60, 450, text="Begin cell:", anchor="nw",font=("Helvetica", 10, 'underline', 'bold'), fill="#003feb")
 DieL_begincell_i = ttk.Entry(root)
 DieL_begincell_w = my_canvas.create_window(150, 450, anchor="nw", window=DieL_begincell_i, width=360)
-DieL_begincell_i.insert(0, "T19 AB19")
+
 DieL_begincell_i.bind('<FocusIn>', DieL_begincell_i_guide)
 DieL_begincell_i.bind('<FocusOut>', un_guide)
 
 my_canvas.create_text(60, 490, text="End cell:", anchor="nw",font=("Helvetica", 10, 'underline', 'bold'), fill="#003feb")
 DieL_endcell_i = ttk.Entry(root, width=20)
 DieL_endcell_w = my_canvas.create_window(150, 490, anchor="nw", window=DieL_endcell_i, width=360)
-DieL_endcell_i.insert(0, "V791 AD791")
+
 DieL_endcell_i.bind('<FocusIn>', DieL_endcell_i_guide)
 DieL_endcell_i.bind('<FocusOut>', un_guide)
 
 DieR_begincell_i = ttk.Entry(root)
 DieR_begincell_w = my_canvas.create_window(520, 450, anchor="nw", window=DieR_begincell_i, width=360)
-DieR_begincell_i.insert(0, "X19 AF19")
+
 DieR_begincell_i.bind('<FocusIn>', DieR_begincell_i_guide)
 DieR_begincell_i.bind('<FocusOut>', un_guide)
 
 DieR_endcell_i = ttk.Entry(root, width=20)
 DieR_endcell_w = my_canvas.create_window(520, 490, anchor="nw", window=DieR_endcell_i, width=360)
-DieR_endcell_i.insert(0, "Z791 AH791")
+
 DieR_endcell_i.bind('<FocusIn>', DieR_endcell_i_guide)
 DieR_endcell_i.bind('<FocusOut>', un_guide)
 
@@ -349,13 +349,13 @@ my_canvas.create_text(30, 550, text="ADP Table config\nsheet/location:", anchor=
 
 adp_tb = ttk.Entry(root, width=20)
 adp_tb_w = my_canvas.create_window(150, 555, anchor="nw", window=adp_tb, width=360)
-adp_tb.insert(0, "APD")
+
 adp_tb.bind('<FocusIn>', adp_tb_guide)
 adp_tb.bind('<FocusOut>', un_guide)
 
 adp_tb_loc = ttk.Entry(root, width=20)
 adp_tb_loc_w = my_canvas.create_window(520, 555, anchor="nw", window=adp_tb_loc, width=360)
-adp_tb_loc.insert(0, "P4")
+
 adp_tb_loc.bind('<FocusIn>', adp_tb_loc_guide)
 adp_tb_loc.bind('<FocusOut>', un_guide)
 
@@ -365,9 +365,69 @@ separator1 = ttk.Separator(root)
 
 separator2 = ttk.Separator(root)
 
+def get_saved_params():
+    try:
+        with open(".adp_params_saved.txt",'r') as params_saved:
+            line1 = [line.rstrip() for line in params_saved]
+            params = {
+                'theme_combo': line1[0],
+                'excel_i': line1[1],
+                'ball_sheet_i': line1[2],
+                'ball_begin_cell_i': line1[3],
+                'ball_end_cell': line1[4],
+                'mapping_sheet_i': line1[5],
+                'mapping_begin_cell_i': line1[6],
+                'mapping_end_cell_i': line1[7],
+                'dietb_sheet': line1[8],
+                'DieL_name': line1[9],
+                'DieR_name': line1[10],
+                'DieL_begincell_i': line1[11],
+                'DieL_endcell_i': line1[12],
+                'DieR_begincell_i': line1[13],
+                'DieR_endcell_i': line1[14],
+                'adp_tb': line1[15],
+                'adp_tb_loc': line1[16],
 
+            }
+        theme_combo.current(theme_list.index(params['theme_combo']))
+        root.set_theme(params['theme_combo'])
+        excel_i.insert(0, params['excel_i'])
+        ball_sheet_i.insert(0, params['ball_sheet_i'])
+        ball_begin_cell_i.insert(0, params['ball_begin_cell_i'])
+        ball_end_cell.insert(0, params['ball_end_cell'])
+        mapping_sheet_i.insert(0, params['mapping_sheet_i'])
+        mapping_begin_cell_i.insert(0, params['mapping_begin_cell_i'])
+        mapping_end_cell_i.insert(0, params['mapping_end_cell_i'])
+        dietb_sheet.insert(0, params['dietb_sheet'])
+        DieL_name.insert(0, params['DieL_name'])
+        DieR_name.insert(0, params['DieR_name'])
+        DieL_begincell_i.insert(0, params['DieL_begincell_i'])
+        DieL_endcell_i.insert(0, params['DieL_endcell_i'])
+        DieR_begincell_i.insert(0, params['DieR_begincell_i'])
+        DieR_endcell_i.insert(0, params['DieR_endcell_i'])
+        adp_tb.insert(0, params['adp_tb'])
+        adp_tb_loc.insert(0, params['adp_tb_loc'])
+    except:
+        theme_combo.current(0)
+        # root.set_theme(params['theme_combo'])
+        excel_i.insert(0, r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Test3.xlsx")
+        ball_sheet_i.insert(0, "BGA")
+        ball_begin_cell_i.insert(0, "AQ1")
+        ball_end_cell.insert(0, "AT1297")
+        mapping_sheet_i.insert(0, "UCIe_Mapping_connection")
+        mapping_begin_cell_i.insert(0, "F1")
+        mapping_end_cell_i.insert(0, "G178")
+        dietb_sheet.insert(0, "Package_substrate")
+        DieL_name.insert(0, "DIE3 DIE4")
+        DieR_name.insert(0, "DIE7 DIE8")
+        DieL_begincell_i.insert(0, "T19 AB19")
+        DieL_endcell_i.insert(0, "V791 AD791")
+        DieR_begincell_i.insert(0, "X19 AF19")
+        DieR_endcell_i.insert(0, "Z791 AH791")
+        adp_tb.insert(0, "APD")
+        adp_tb_loc.insert(0, "P4")
 
-
+get_saved_params()
 # ------------------------------
 separator1 = ttk.Separator(root)
 
@@ -378,7 +438,7 @@ separator2 = ttk.Separator(root)
 
 my_canvas.create_text(880,980, text= "Internal contact: sytung@synopsys.com" ,font=("Helvetica", 8, 'underline'), fill="grey")
 
-def open():
+def browse_file():
 	# global my_image
     root.filename = filedialog.askopenfilename(initialdir="./", title="Select A File", filetypes=(("Excel files", "*.xlsx"),("all files", "*.*")))
     excel_i.delete(0,END)
@@ -444,6 +504,28 @@ def get_config():
         "tb_loc": str(adp_tb_loc.get())
        
     }
+    with open(".adp_params_saved.txt",'w') as params_saved:
+            params_saved.writelines(theme_combo.get() +"\n")
+            params_saved.writelines(input_params['excel_file'] +"\n")
+            params_saved.writelines(input_params['ball_tb_sheet'] +"\n")
+            params_saved.writelines(input_params['ball_tb_begin_cell'] +"\n")
+            params_saved.writelines(input_params['ball_tb_end_cell'] +"\n")
+            params_saved.writelines(input_params['mapping_sheet'] +"\n")
+            params_saved.writelines(input_params['mapping_begin_cell'] +"\n")
+            params_saved.writelines(input_params['mapping_end_cell'] +"\n")
+            params_saved.writelines(die_params['die_sheet'] +"\n")
+            
+            
+            params_saved.writelines(' '.join(die_params['diel_list']) +"\n")
+            params_saved.writelines(' '.join(die_params['dier_list']) +"\n")
+            params_saved.writelines(' '.join(die_params['diel_begin_list']) +"\n")
+            params_saved.writelines(' '.join(die_params['diel_end_list']) +"\n")
+            params_saved.writelines(' '.join(die_params['dier_begin_list']) +"\n")
+            params_saved.writelines(' '.join(die_params['dier_end_list']) +"\n")
+            params_saved.writelines(out_put['sheet'] +"\n")
+            params_saved.writelines(out_put['tb_loc'] +"\n")
+
+
     return die_params,input_params,out_put
 
 def refresh_excel(excelfile):
@@ -518,7 +600,7 @@ def gen(adp, die, mapping, mapping_prefix, ball, last_ball):
         adp['sheet'][adp['die_name'] + str(adp['beginrow'])].value = "Net_name(Die)"
         adp['sheet'][adp['resdef'] + str(adp['beginrow'])].value = "ResDef"
         adp['sheet'][adp['bga_pin'] + str(adp['beginrow'])].value = "Package_pin"
-
+        adp['sheet'].freeze_panes = 'A'+ str(adp['beginrow'] + 1)
         
         
         for i in range(die['row_min'] + 2, die['row_max'] + 1):
@@ -935,8 +1017,6 @@ def gen_apd():
         "list_compared":[]
     }
 
-
-    
     progress_bar(30)
     progresval = int(40/len(die_params['diel_list']))
     for die_cnt in range(0, len(die_params['diel_list'])):
@@ -996,7 +1076,7 @@ def gen_apd():
         last_ball = get_gen[3]
         print(len(ball['list_compared']))
         progress_bar(30 + die_cnt*progresval)
-    print(ball['begin_row'], ball['end_row'])
+    print(ball['list_row'])
     # for m in range (ball['begin_row'], ball['end_row'] + 1):
     print("Processing unmap Ball...")
     for m in ball['list_row']:
@@ -1054,7 +1134,7 @@ mediumFont = tkfont(
 	overstrike=0)
 def hihi():
     button.configure(font=mediumFont, foreground='white', background='Green')
-browse_btn = ttk.Button(root, text="Open File", image=open_imag, command=open)
+browse_btn = ttk.Button(root, text="Open File", image=open_imag, command=browse_file)
 browse_btn_w = my_canvas.create_window(865, 40, anchor="nw", window=browse_btn)
 # button = tk.Button(root, text="Generate",font=("System", 14, 'underline', 'bold'), foreground='white', background='#9b34eb', command=get_path, width=40)
 button = tk.Button(root, text="Generate",font = mediumFont, foreground='white', background='#9b34eb', command=gen_apd, width=40)

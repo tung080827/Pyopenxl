@@ -26,7 +26,7 @@ import gui_function as gui
 # Create a style
 root = ThemedTk()
 # my_canvas=tk.Canvas(root)
-root.set_theme("scidpurple")
+
 
 root.title("PLOC TABLE GENERATOR")
 root.geometry("1000x1000+30+100")
@@ -662,9 +662,12 @@ def get_saved_params():
             'inter_yL_offset' : line1[18],
             'inter_yR_offset' : line1[19],
             'inter_out_tb_sheet' : line1[20],
-            'inter_out_tb_loc' : line1[21]
+            'inter_out_tb_loc' : line1[21],
+            'theme': line1[22]
             }
-            
+        
+        root.set_theme(params['theme'])
+        theme_combo.current(theme_list.index(params['theme']))
         excel_i.insert(0,params['excel_path'])
         sheet_i.insert(0, params['bump_visual_sheet'])
 
@@ -718,6 +721,8 @@ def get_saved_params():
         # package_combo.current(package_list.index(params['package_type']))
 
     except:
+        root.set_theme("scidpurple")
+        theme_combo.current(theme_list.index("scidpurple"))
         excel_i.insert(0, r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Bump_CoWoS_S.xlsx")
         sheet_i.insert(0, "N3P_CoWoS")
         srw_i.insert(0, "21.6")
@@ -894,6 +899,7 @@ def get_params_and_generate():
         params_saved.writelines(die_params['die2_yoffset'] + "\n")
         params_saved.writelines(int_die_tb['sheet'] + "\n")
         params_saved.writelines(int_die_tb['int_tb_location'] + "\n")
+        params_saved.writelines(theme_combo.get() + "\n")
         
     print("Package: " + package)
     if (package == "A-CoWoS"):
@@ -1063,11 +1069,12 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
                 wsintbump_f.merge_cells(get_column_letter(int_tb_x) + str(int_tb_y) + ":" + get_column_letter(int_tb_x + 2) + str(int_tb_y))
                 for c1 in range(0,3):
                     wsintbump_f[get_column_letter(int_tb_x + c1) + str(int_tb_y)].fill = title_bg_fill
-                    wsintbump_f[get_column_letter(int_tb_x + c1) + str(int_tb_y)].alignment = Alignment(horizontal='center')
+                    wsintbump_f[get_column_letter(int_tb_x + c1) + str(int_tb_y)].alignment = Alignment(horizontal='center',wrapText=True)
                     wsintbump_f[get_column_letter(int_tb_x + c1) + str(int_tb_y)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
                 wsintbump_f[get_column_letter(int_tb_x) + str(int_tb_y + 1)].value = "X"
                 wsintbump_f[get_column_letter(int_tb_x + 1) + str(int_tb_y + 1)].value = "Y"
                 wsintbump_f[get_column_letter(int_tb_x + 2)  + str(str(int_tb_y + 1))].value = "Bump name"
+                wsintbump_f.freeze_panes = 'A' + str(int_tb_y + 1)
                 for c2 in range(0,3):
                     wsintbump_f[get_column_letter(int_tb_x + c2) + str(int_tb_y + 1)].fill = subtil_bg_fill
                     wsintbump_f[get_column_letter(int_tb_x + c2) + str(int_tb_y + 1)].alignment = Alignment(horizontal='center')
@@ -1075,11 +1082,12 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
                 tbidx = 4
                 for tb in range(0,int(int_die_cnt/2)):
 
-                    wsintbump_f[get_column_letter(int_tb_x + tbidx) + str(int_tb_y)].value =  str(die1_list[tb]) + " = Die Flipped rotate -90 + Die1 offset"
+                    wsintbump_f[get_column_letter(int_tb_x + tbidx) + str(int_tb_y)].value =  str(die1_list[tb]) + " = Die Flipped, Rotate -90 + Offset" + "(" + str(die1_xoffset_list[tb]) + "," + str(die1_yoffset_list[tb]) + ")"
                     wsintbump_f.merge_cells(get_column_letter(int_tb_x + tbidx) + str(int_tb_y) + ":" + get_column_letter(int_tb_x + tbidx + 2) + str(int_tb_y))
+                    
                     for c1 in range(0,3):
                         wsintbump_f[get_column_letter(int_tb_x + tbidx + c1) + str(int_tb_y)].fill = title_bg_fill
-                        wsintbump_f[get_column_letter(int_tb_x + tbidx + c1) + str(int_tb_y)].alignment = Alignment(horizontal='center')
+                        wsintbump_f[get_column_letter(int_tb_x + tbidx + c1) + str(int_tb_y)].alignment = Alignment(horizontal='center', wrapText=True)
                         wsintbump_f[get_column_letter(int_tb_x + tbidx + c1) + str(int_tb_y)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
                     wsintbump_f[get_column_letter(int_tb_x + tbidx) + str(int_tb_y + 1)].value = "X"
                     wsintbump_f[get_column_letter(int_tb_x + tbidx + 1) + str(int_tb_y + 1)].value = "Y"
@@ -1089,11 +1097,11 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
                         wsintbump_f[get_column_letter(int_tb_x + tbidx + c2) + str(int_tb_y + 1)].alignment = Alignment(horizontal='center')
                         wsintbump_f[get_column_letter(int_tb_x + tbidx + c2) + str(int_tb_y + 1)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
 
-                    wsintbump_f[get_column_letter(int_tb_x + tbidx + 4) + str(int_tb_y)].value = str(die2_list[tb]) + " = Die Flipped rotate +90 + Die2 offset"
+                    wsintbump_f[get_column_letter(int_tb_x + tbidx + 4) + str(int_tb_y)].value = str(die2_list[tb]) + " = Die Flipped, Rotate +90 + Offset" + "(" + str(die2_xoffset_list[tb]) + "," + str(die2_yoffset_list[tb]) + ")"
                     wsintbump_f.merge_cells(get_column_letter(int_tb_x + tbidx + 4) + str(int_tb_y) + ":" + get_column_letter(int_tb_x + tbidx + 6) + str(int_tb_y))
                     for c1 in range(0,3):
                         wsintbump_f[get_column_letter(int_tb_x + tbidx + c1 + 4) + str(int_tb_y)].fill = title_bg_fill
-                        wsintbump_f[get_column_letter(int_tb_x + tbidx + c1 + 4) + str(int_tb_y)].alignment = Alignment(horizontal='center')
+                        wsintbump_f[get_column_letter(int_tb_x + tbidx + c1 + 4) + str(int_tb_y)].alignment = Alignment(horizontal='center', wrapText=True)
                         wsintbump_f[get_column_letter(int_tb_x + tbidx + c1 + 4) + str(int_tb_y)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
                     wsintbump_f[get_column_letter(int_tb_x + tbidx + 4) + str(int_tb_y + 1)].value = "X"
                     wsintbump_f[get_column_letter(int_tb_x + tbidx + 5) + str(int_tb_y + 1)].value = "Y"

@@ -1,9 +1,14 @@
-C:/Users/sytung/OneDrive - Synopsys, Inc/Desktop/py/Test_adp.xlsx
-DWORD
-4
-Left to Right
-16
-S16
-AD30
-Data_Channelx4
-F30
+C:/Users/sytung/OneDrive - Synopsys, Inc/Desktop/py/Bump_CoWoS_S.xlsx
+N3E_CoWoS_Data_channel_x8
+8
+Right to Left
+64
+CA59
+CJ103
+Data_Channelx8
+D10
+DIE1 DIE2 DIE3 DIE4
+DIE5 DIE6 DIE7 DIE8
+MAPPING
+D10
+itft1
