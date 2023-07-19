@@ -52,7 +52,7 @@ bgm = PhotoImage(file=img_path + r"\frog.png")
 # bg4 = PhotoImage(file= r".\img\internet.png").subsample(2,2)
 # bg5 = PhotoImage(file= r".\img\rocket.png").zoom(2,2)
 open_imag = PhotoImage(file = r".\open-folder.png")
-img_list = ["owl.png", "mountain.png","whale.png", "penguin.png","sunset1.png", "internet.png", "flight.png", "pixelgrey.jpg", "penguin.png", "vn.png", "keramik", "keramik_alt", "bee.png", "elephant.png", "bee.png", "bee.png", "scidblue", "frog.png", "penguin.png", "forest.png", "owlpink1.png", "graffe1.png", "scidsand", "sunset.png", "winxpblue", "yaru" ]
+img_list = ["owl.png", "mountain.png","whale2.png", "penguin.png","sunset1.png", "circuit1.png", "fight.png", "pug.png", "penguin.png", "whale2.png", "elephant_grey.png", "snowman.png", "bee4.png", "elephant.png", "bee2.png", "fox.png", "beach.png", "frog.png", "cow.png", "forest.png", "owlpink2.png", "dinosaurs.png", "sand1.png", "sunset.png", "pig.png", "discord1.png" ]
 
 # Define Canvas
 my_canvas = tk.Canvas(root, width=1200, height=800, bd=0, highlightthickness=0)
@@ -84,7 +84,7 @@ bg_img = my_canvas.create_image(0,0, image=bgm, anchor="nw")
 stfont= ("Franklin Gothic Medium", 10, 'underline', "italic")
 # Create lists for the Comboboxes
 theme_list = ["adapta", "aquativo", "arc", "black","blue", "breeze", "clearlooks", "elegance", "equilux", "itft1", "keramik", "keramik_alt", "kroc", "plastik", "radiance", "ubuntu", "scidblue", "scidgreen", "scidgrey", "scidmint", "scidpink", "scidpurple", "scidsand", "smog", "winxpblue", "yaru" ]
-colour_list = ["#09a5e8", "#292b33", "#1583eb", "#292a2b","#1a7cad", "#0664bd", "#8baac7", "#59564f", "#40454a", "#7aa7f5", "#1c4894", "#1c4894", "#ebab0c", "#0c99eb", "#eb830c", "#eb830c", "#0937ab", "#37ed80", "#707371", "#479403", "#d12a9f", "#9b34eb", "#787122", "#118cbd", "#a3945f", "#621ba8" ]
+colour_list = ["#09a5e8", "#292b33", "#1583eb", "#292a2b","#1a7cad", "#0664bd", "#8baac7", "#59564f", "#40454a", "#7aa7f5", "#7795b4", "#7795b4", "#ebab0c", "#0c99eb", "#eb830c", "#eb830c", "#0937ab", "#37ed80", "#707371", "#479403", "#d12a9f", "#9b34eb", "#787122", "#118cbd", "#ece9d8", "#924d8b" ]
 package_list = ["S-Organic", "A-CoWoS", "A-EMIB"]
 foundry_list = ["TSMC-MapWSR", "TSMC-MapWoSR", "SS-MapWSR", "SS-MapWoSR", "GF-MapWSR", "GF-MapWSR"]
 int_couple_number = ["2", "4", "6", "8", "10", "12", "14", "16"]
@@ -134,6 +134,7 @@ def change_colour(index):
         my_canvas.itemconfig(t, fill = colour_list[index])
     for l in entry_list:
         l.config(background = colour_list[index])
+    frame.configure(highlightbackground=colour_list[index], foreground=colour_list[index])
     global bgm
     p = os.path.join(img_path, img_list[index])
     bgm = PhotoImage(file = p)
@@ -228,8 +229,10 @@ def choosemode(event):
 myLabel = ttk.Label(root,text="---")
 myLabel_w =my_canvas.create_window(80,770,anchor="nw", window=myLabel)
 
-frame = tk.Label(root, bg="#c9f2dc", font=("Courier New", 10), foreground="#f2a50a")
+frame = tk.Label(root, bg="#c9f2dc", font=("Courier New", 10), foreground="#f2a50a", highlightbackground= "blue", highlightthickness=2)
 my_canvas.create_window(600, 80, window=frame, anchor="nw", width= 280, height=100)
+
+
 
 def get_num_intdie(event):
     pass
@@ -1402,6 +1405,7 @@ def get_saved_params():
     except:
         root.set_theme("scidpurple")
         theme_combo.current(theme_list.index("scidpurple"))
+        change_colour(theme_list.index("scidpurple"))
         excel_i.insert(0, r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Bump_CoWoS_S.xlsx")
         sheet_i.insert(0, "N3P_CoWoS")
         srw_i.insert(0, "21.6")
