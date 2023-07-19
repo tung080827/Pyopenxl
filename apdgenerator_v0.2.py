@@ -37,7 +37,8 @@ root.resizable(width=False, height=False)
 root.iconbitmap(r".\mylogo.ico")
 root.option_add("*tearOff", False) # This is always a good idea
 
-bg = ImageTk.PhotoImage(file=r".\bg3_1.png")
+bg = PhotoImage(file=r".\brain.png").subsample(2,2)
+# bg = ImageTk.PhotoImage(file=r".\img\internet.png")
 open_imag = PhotoImage(file = r".\open-folder.png")
 
 # Define Canvas
@@ -69,6 +70,7 @@ my_canvas.create_image(0,0, image=bg, anchor="nw")
 stfont= ("Franklin Gothic Medium", 10, 'underline', "italic")
 # Create lists for the Comboboxes
 theme_list = ["adapta", "aquativo", "arc", "black","blue", "breeze", "clearlooks", "elegance", "equilux", "itft1", "keramik", "keramik_alt", "kroc", "plastik", "radiance", "ubuntu", "scidblue", "scidgreen", "scidgrey", "scidmint", "scidpink", "scidpurple", "scidsand", "smog", "winxpblue", "yaru" ]
+colour_list = ["#09a5e8", "#292b33", "#1583eb", "#292a2b","#1a7cad", "#0664bd", "#8baac7", "#063f75", "#40454a", "#7aa7f5", "#1c4894", "#1c4894", "#ebab0c", "#0c99eb", "#eb830c", "#eb830c", "#0937ab", "#37ed80", "#707371", "#479403", "#d12a9f", "#9b34eb", "#787122", "#118cbd", "#a3945f", "#621ba8" ]
 
 
 # Create control variables
@@ -108,7 +110,14 @@ def round_rectangle(x1, y1, x2, y2, radius=25, **kwargs):
               x1, y1]
 
     return my_canvas.create_polygon(points, **kwargs, smooth=True)
-
+def change_colour(index):
+    listchange =[ball_in_t,mapingtb_t,adptb_t,die_tb_t,die_l_t,die_r_t,die_name_t,die_begin_t,die_end_t, adp_tb_out_t]
+    entry_list = [button,theme_combo_t,excel_t]
+    #  sheet_t, theme_combo_t,excel_t, pkg_t
+    for t in listchange:
+        my_canvas.itemconfig(t, fill = colour_list[index])
+    for l in entry_list:
+        l.config(background = colour_list[index])
 def enable(children):
    for child in children:
       child.configure(state='enable')
@@ -136,9 +145,10 @@ def progress_bar(value):
     root.update_idletasks()
 
 def choosetheme(event):
-    for theme in theme_list:
-        if (theme_combo.get() == theme):
-            root.set_theme(theme)
+    # for theme in theme_list:
+        # if (theme_combo.get() == theme):
+    root.set_theme(theme_combo.get())
+    change_colour(theme_list.index(theme_combo.get()))
            
 
 myLabel = ttk.Label(root,text="----")
@@ -240,7 +250,7 @@ separator = ttk.Separator(root)
 separator_w = my_canvas.create_window(30, 130, anchor="nw", window=separator)
 
 
-my_canvas.create_text(30, 200, text="Ball Table inputs", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+ball_in_t = my_canvas.create_text(30, 200, text="Ball Table inputs", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
 
 # ------------------------Die bump visual parameters input --------------------------#
@@ -263,7 +273,7 @@ ball_end_cell_w = my_canvas.create_window(650, 200, anchor="nw", window=ball_end
 ball_end_cell.bind('<FocusIn>', ball_end_cell_guide)
 ball_end_cell.bind('<FocusOut>', un_guide)
 
-my_canvas.create_text(30, 260, text="Mapping table\n inputs", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+mapingtb_t = my_canvas.create_text(30, 260, text="Mapping table\n inputs", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 mapping_sheet_i = ttk.Entry(root, width=20)
 mapping_sheet_i_w = my_canvas.create_window(150, 260, anchor="nw", window=mapping_sheet_i, width=225)
 
@@ -282,12 +292,12 @@ mapping_end_cell_i_w = my_canvas.create_window(650, 260, anchor="nw", window=map
 mapping_end_cell_i.bind('<FocusIn>', mapping_end_cell_in_guide)
 mapping_end_cell_i.bind('<FocusOut>', un_guide)
 
-my_canvas.create_text(30, 310, text="Die to gen ADP inputs", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+adptb_t = my_canvas.create_text(30, 310, text="Die to gen ADP inputs", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
 
 # ---------------------------------------DIE INPUTS-------------------------------------------------
 
-my_canvas.create_text(60, 340, text="DIE table\nsheet:", anchor="nw",font=("Helvetica", 10, 'underline', 'bold'), fill="#003feb")
+die_tb_t = my_canvas.create_text(60, 340, text="DIE table\nsheet:", anchor="nw",font=("Helvetica", 10, 'underline', 'bold'), fill="#003feb")
 
 dietb_sheet = ttk.Entry(root)
 dietb_sheet_w = my_canvas.create_window(150, 340, anchor="nw", window=dietb_sheet, width=360)
@@ -298,11 +308,11 @@ dietb_sheet.bind('<FocusOut>', un_guide)
 
 
 # my_canvas.create_text(30, 595, text="Die/Chip Offset:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
-my_canvas.create_text(300, 380, text="Left Die:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#003feb")
-my_canvas.create_text(680, 380, text="Right Die:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#003feb")
+die_l_t = my_canvas.create_text(300, 380, text="Left Die:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#003feb")
+die_r_t = my_canvas.create_text(680, 380, text="Right Die:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#003feb")
 
 
-my_canvas.create_text(60, 410, text="Die name:", anchor="nw",font=("Helvetica", 10, 'underline', 'bold'), fill="#003feb")
+die_name_t = my_canvas.create_text(60, 410, text="Die name:", anchor="nw",font=("Helvetica", 10, 'underline', 'bold'), fill="#003feb")
 DieL_name = ttk.Entry(root)
 DieL_name_w = my_canvas.create_window(150, 410, anchor="nw", window=DieL_name, width= 360)
 
@@ -319,14 +329,14 @@ DieR_name.bind('<FocusOut>', un_guide)
 
 
 
-my_canvas.create_text(60, 450, text="Begin cell:", anchor="nw",font=("Helvetica", 10, 'underline', 'bold'), fill="#003feb")
+die_begin_t = my_canvas.create_text(60, 450, text="Begin cell:", anchor="nw",font=("Helvetica", 10, 'underline', 'bold'), fill="#003feb")
 DieL_begincell_i = ttk.Entry(root)
 DieL_begincell_w = my_canvas.create_window(150, 450, anchor="nw", window=DieL_begincell_i, width=360)
 
 DieL_begincell_i.bind('<FocusIn>', DieL_begincell_i_guide)
 DieL_begincell_i.bind('<FocusOut>', un_guide)
 
-my_canvas.create_text(60, 490, text="End cell:", anchor="nw",font=("Helvetica", 10, 'underline', 'bold'), fill="#003feb")
+die_end_t = my_canvas.create_text(60, 490, text="End cell:", anchor="nw",font=("Helvetica", 10, 'underline', 'bold'), fill="#003feb")
 DieL_endcell_i = ttk.Entry(root, width=20)
 DieL_endcell_w = my_canvas.create_window(150, 490, anchor="nw", window=DieL_endcell_i, width=360)
 
@@ -345,7 +355,7 @@ DieR_endcell_w = my_canvas.create_window(520, 490, anchor="nw", window=DieR_endc
 DieR_endcell_i.bind('<FocusIn>', DieR_endcell_i_guide)
 DieR_endcell_i.bind('<FocusOut>', un_guide)
 
-my_canvas.create_text(30, 550, text="ADP Table config\nsheet/location:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+adp_tb_out_t = my_canvas.create_text(30, 550, text="ADP Table config\nsheet/location:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
 adp_tb = ttk.Entry(root, width=20)
 adp_tb_w = my_canvas.create_window(150, 555, anchor="nw", window=adp_tb, width=360)
@@ -365,69 +375,7 @@ separator1 = ttk.Separator(root)
 
 separator2 = ttk.Separator(root)
 
-def get_saved_params():
-    try:
-        with open(".adp_params_saved.txt",'r') as params_saved:
-            line1 = [line.rstrip() for line in params_saved]
-            params = {
-                'theme_combo': line1[0],
-                'excel_i': line1[1],
-                'ball_sheet_i': line1[2],
-                'ball_begin_cell_i': line1[3],
-                'ball_end_cell': line1[4],
-                'mapping_sheet_i': line1[5],
-                'mapping_begin_cell_i': line1[6],
-                'mapping_end_cell_i': line1[7],
-                'dietb_sheet': line1[8],
-                'DieL_name': line1[9],
-                'DieR_name': line1[10],
-                'DieL_begincell_i': line1[11],
-                'DieL_endcell_i': line1[12],
-                'DieR_begincell_i': line1[13],
-                'DieR_endcell_i': line1[14],
-                'adp_tb': line1[15],
-                'adp_tb_loc': line1[16],
 
-            }
-        theme_combo.current(theme_list.index(params['theme_combo']))
-        root.set_theme(params['theme_combo'])
-        excel_i.insert(0, params['excel_i'])
-        ball_sheet_i.insert(0, params['ball_sheet_i'])
-        ball_begin_cell_i.insert(0, params['ball_begin_cell_i'])
-        ball_end_cell.insert(0, params['ball_end_cell'])
-        mapping_sheet_i.insert(0, params['mapping_sheet_i'])
-        mapping_begin_cell_i.insert(0, params['mapping_begin_cell_i'])
-        mapping_end_cell_i.insert(0, params['mapping_end_cell_i'])
-        dietb_sheet.insert(0, params['dietb_sheet'])
-        DieL_name.insert(0, params['DieL_name'])
-        DieR_name.insert(0, params['DieR_name'])
-        DieL_begincell_i.insert(0, params['DieL_begincell_i'])
-        DieL_endcell_i.insert(0, params['DieL_endcell_i'])
-        DieR_begincell_i.insert(0, params['DieR_begincell_i'])
-        DieR_endcell_i.insert(0, params['DieR_endcell_i'])
-        adp_tb.insert(0, params['adp_tb'])
-        adp_tb_loc.insert(0, params['adp_tb_loc'])
-    except:
-        theme_combo.current(0)
-        # root.set_theme(params['theme_combo'])
-        excel_i.insert(0, r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Test3.xlsx")
-        ball_sheet_i.insert(0, "BGA")
-        ball_begin_cell_i.insert(0, "AQ1")
-        ball_end_cell.insert(0, "AT1297")
-        mapping_sheet_i.insert(0, "UCIe_Mapping_connection")
-        mapping_begin_cell_i.insert(0, "F1")
-        mapping_end_cell_i.insert(0, "G178")
-        dietb_sheet.insert(0, "Package_substrate")
-        DieL_name.insert(0, "DIE3 DIE4")
-        DieR_name.insert(0, "DIE7 DIE8")
-        DieL_begincell_i.insert(0, "T19 AB19")
-        DieL_endcell_i.insert(0, "V791 AD791")
-        DieR_begincell_i.insert(0, "X19 AF19")
-        DieR_endcell_i.insert(0, "Z791 AH791")
-        adp_tb.insert(0, "APD")
-        adp_tb_loc.insert(0, "P4")
-
-get_saved_params()
 # ------------------------------
 separator1 = ttk.Separator(root)
 
@@ -524,6 +472,7 @@ def get_config():
             params_saved.writelines(' '.join(die_params['dier_end_list']) +"\n")
             params_saved.writelines(out_put['sheet'] +"\n")
             params_saved.writelines(out_put['tb_loc'] +"\n")
+          
 
 
     return die_params,input_params,out_put
@@ -1141,5 +1090,70 @@ button = tk.Button(root, text="Generate",font = mediumFont, foreground='white', 
 # button = ttk.Button(root, text="Generate", command=get_path, width=80)
 
 button_w = my_canvas.create_window(300, 860, anchor="nw", window=button)
+
+def get_saved_params():
+    try:
+        with open(".adp_params_saved.txt",'r') as params_saved:
+            line1 = [line.rstrip() for line in params_saved]
+            params = {
+                'theme_combo': line1[0],
+                'excel_i': line1[1],
+                'ball_sheet_i': line1[2],
+                'ball_begin_cell_i': line1[3],
+                'ball_end_cell': line1[4],
+                'mapping_sheet_i': line1[5],
+                'mapping_begin_cell_i': line1[6],
+                'mapping_end_cell_i': line1[7],
+                'dietb_sheet': line1[8],
+                'DieL_name': line1[9],
+                'DieR_name': line1[10],
+                'DieL_begincell_i': line1[11],
+                'DieL_endcell_i': line1[12],
+                'DieR_begincell_i': line1[13],
+                'DieR_endcell_i': line1[14],
+                'adp_tb': line1[15],
+                'adp_tb_loc': line1[16],
+
+            }
+        theme_combo.current(theme_list.index(params['theme_combo']))
+        root.set_theme(params['theme_combo'])
+        change_colour(theme_list.index(params['theme_combo']))
+        excel_i.insert(0, params['excel_i'])
+        ball_sheet_i.insert(0, params['ball_sheet_i'])
+        ball_begin_cell_i.insert(0, params['ball_begin_cell_i'])
+        ball_end_cell.insert(0, params['ball_end_cell'])
+        mapping_sheet_i.insert(0, params['mapping_sheet_i'])
+        mapping_begin_cell_i.insert(0, params['mapping_begin_cell_i'])
+        mapping_end_cell_i.insert(0, params['mapping_end_cell_i'])
+        dietb_sheet.insert(0, params['dietb_sheet'])
+        DieL_name.insert(0, params['DieL_name'])
+        DieR_name.insert(0, params['DieR_name'])
+        DieL_begincell_i.insert(0, params['DieL_begincell_i'])
+        DieL_endcell_i.insert(0, params['DieL_endcell_i'])
+        DieR_begincell_i.insert(0, params['DieR_begincell_i'])
+        DieR_endcell_i.insert(0, params['DieR_endcell_i'])
+        adp_tb.insert(0, params['adp_tb'])
+        adp_tb_loc.insert(0, params['adp_tb_loc'])
+    except:
+        theme_combo.current(0)
+        # root.set_theme(params['theme_combo'])
+        excel_i.insert(0, r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Test3.xlsx")
+        ball_sheet_i.insert(0, "BGA")
+        ball_begin_cell_i.insert(0, "AQ1")
+        ball_end_cell.insert(0, "AT1297")
+        mapping_sheet_i.insert(0, "UCIe_Mapping_connection")
+        mapping_begin_cell_i.insert(0, "F1")
+        mapping_end_cell_i.insert(0, "G178")
+        dietb_sheet.insert(0, "Package_substrate")
+        DieL_name.insert(0, "DIE3 DIE4")
+        DieR_name.insert(0, "DIE7 DIE8")
+        DieL_begincell_i.insert(0, "T19 AB19")
+        DieL_endcell_i.insert(0, "V791 AD791")
+        DieR_begincell_i.insert(0, "X19 AF19")
+        DieR_endcell_i.insert(0, "Z791 AH791")
+        adp_tb.insert(0, "APD")
+        adp_tb_loc.insert(0, "P4")
+
+get_saved_params()
 
 root.mainloop()

@@ -47,6 +47,7 @@ my_canvas.create_image(0,0, image=bg, anchor="nw")
 stfont= ("Franklin Gothic Medium", 10, 'underline', "italic")
 # Create lists for the Comboboxes
 theme_list = ["adapta", "aquativo", "arc", "black","blue", "breeze", "clearlooks", "elegance", "equilux", "itft1", "keramik", "keramik_alt", "kroc", "plastik", "radiance", "ubuntu", "scidblue", "scidgreen", "scidgrey", "scidmint", "scidpink", "scidpurple", "scidsand", "smog", "winxpblue", "yaru" ]
+colour_list = ["#09a5e8", "#292b33", "#1583eb", "#292a2b","#1a7cad", "#0664bd", "#8baac7", "#063f75", "#40454a", "#7aa7f5", "#1c4894", "#1c4894", "#ebab0c", "#0c99eb", "#eb830c", "#eb830c", "#0937ab", "#37ed80", "#707371", "#479403", "#d12a9f", "#9b34eb", "#787122", "#118cbd", "#a3945f", "#621ba8" ]
 
 ch_number = [1,2,3,4,5,6,7,8,9, 10, 11, 12, 13, 14, 15, 16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32]
 ch_sequence = ["Right to Left","Left to Right", "Center to Left first","Center to Right first"]
@@ -56,6 +57,14 @@ ch_sequence = ["Right to Left","Left to Right", "Center to Left first","Center t
 tc_opt = tk.IntVar()
 isIntp = tk.IntVar()
 ismapgen = tk.IntVar()
+def change_colour(index):
+    listchange =[out_t,in_t,in_out_t]
+    entry_list = [button, theme_combo_t,excel_t]
+    #  sheet_t, theme_combo_t,excel_t, pkg_t
+    for t in listchange:
+        my_canvas.itemconfig(t, fill = colour_list[index])
+    for l in entry_list:
+        l.config(background = colour_list[index])
 def mynotif(content):
     if(content == ""):
         myLabel.configure(text="", anchor='w')
@@ -88,9 +97,12 @@ def progress_bar(value):
     progress['value'] = value
     root.update_idletasks()
 def choosetheme(event):
-    for theme in theme_list:
-        if (theme_combo.get() == theme):
-            root.set_theme(theme)
+    # for theme in theme_list:
+    #     if (theme_combo.get() == theme):
+    root.set_theme(theme_combo.get())
+    # t = theme_list.index(theme_combo.get())
+
+    change_colour(theme_list.index(theme_combo.get()))
 def x1y1_guide(event):
      myguide(frame, "INFO:" + "Reference channel visual window start cell\n\n - Example:   A0           ")
 def un_guide(event):
@@ -164,12 +176,12 @@ sheet_i = ttk.Entry(root, background="#217346", width=20)
 sheet_i_w = my_canvas.create_window(150,250, anchor="nw", window=sheet_i)
 sheet_i.bind('<FocusIn>', sheet_guide)
 sheet_i.bind('<FocusOut>', un_guide)
-my_canvas.create_text(30, 200, text="Input/Output Config:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+in_out_t = my_canvas.create_text(30, 200, text="Input/Output Config:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
 
 
 # ------------------------Die bump visual parameters input --------------------------#
-my_canvas.create_text(150, 230, text="Input:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+in_t = my_canvas.create_text(150, 230, text="Input:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
 ch_combo = ttk.Combobox(root, state="readonly", values=ch_number, width=17)
 ch_combo_w = my_canvas.create_window(300,250, anchor="nw", window=ch_combo)
@@ -200,7 +212,7 @@ my_canvas.create_window(150, 330, anchor="nw", window=x2y2_i)
 x2y2_i.bind('<FocusIn>', x2y2_guide)
 x2y2_i.bind('<FocusOut>', un_guide)
 
-my_canvas.create_text(500, 230, text="Output:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+out_t = my_canvas.create_text(500, 230, text="Output:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 out_tb_sheet = ttk.Entry(root)
 out_tb_sheet_w = my_canvas.create_window(500, 250, anchor="nw", window=out_tb_sheet)
 
@@ -214,7 +226,7 @@ out_col_i.bind('<FocusIn>', out_visual_loc_guide)
 out_col_i.bind('<FocusOut>', un_guide)
 
 # -------------------------pkg type input--------------------------#
-gen_mapping = ttk.Checkbutton(root, text="Die Mapping generator", variable=ismapgen, onvalue=1, offvalue=0,command= gen_mapping_toggle)
+die_map_t = gen_mapping = ttk.Checkbutton(root, text="Die Mapping generator", variable=ismapgen, onvalue=1, offvalue=0,command= gen_mapping_toggle)
 gen_mapping_w =my_canvas.create_window(30, 360, anchor="nw", window=gen_mapping)
 
 die_L_list = ttk.Entry(root, width=20)
@@ -247,60 +259,7 @@ map_loc_i.bind('<FocusOut>', un_guide)
 myLabel = ttk.Label(root,text="---")
 myLabel_w =my_canvas.create_window(80,500,anchor="nw", window=myLabel)
 
-def get_saved_params():
-    try:
-        with open(".datachannel_params_saved.txt",'r') as params_saved:
-            line1 = [line.rstrip() for line in params_saved]
-            params = {
-                'excel_file': line1[0],
-                'sheet': line1[1],
-                'ch_combo': line1[2],
-                'ch_seq_combo': line1[3],
-                'bit_num_i': line1[4],
-                'x1y1_i': line1[5],
-                'x2y2_i': line1[6],
-                'out_tb_sheet': line1[7],
-                'out_col_i': line1[8],
-                'DieL_name': line1[9],
-                'DieR_name': line1[10],
-                'map_sheet_name': line1[11],
-                'map_tb_ch2ch_loc': line1[12],
-                'theme': line1[13]
 
-            }
-        
-        root.set_theme(params['theme'])
-        theme_combo.current(theme_list.index(params['theme']))
-        excel_i.insert(0, params['excel_file'])   
-
-        sheet_i.insert(0, params['sheet'])
-        ch_combo.current(ch_number.index(int(params['ch_combo'])))
-        ch_seq_combo.current(ch_sequence.index(params['ch_seq_combo']))
-        bit_num_i.insert(0, params['bit_num_i'])
-        x1y1_i.insert(0, params['x1y1_i'])
-        x2y2_i.insert(0, params['x2y2_i'])
-        out_tb_sheet.insert(0, params['out_tb_sheet'])
-        out_col_i.insert(0, params['out_col_i'])
-        die_L_list.insert(0,params['DieL_name'])
-        die_R_list.insert(0, params['DieR_name'])
-        map_tb_sheet.insert(0, params['map_sheet_name'])
-        map_loc_i.insert(0, params['map_tb_ch2ch_loc'])
-
-
-    except:
-        root.set_theme("scidpurple")
-        theme_combo.current(theme_list.index("scidpurple"))
-        excel_i.insert(0, r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Test3.xlsx")
-        sheet_i.insert(0, "DWORD")
-        ch_combo.current(3)
-        ch_seq_combo.current(0)
-        bit_num_i.insert(0, "16")
-        x1y1_i.insert(0, "S16")
-        x2y2_i.insert(0, "AD30")
-        out_tb_sheet.insert(0, "Data_Channelx")
-        out_col_i.insert(0, "D10")
-
-get_saved_params()
 
 def browse_file():
 	# global my_image
@@ -771,6 +730,62 @@ button = tk.Button(root, text="Generate",font = mediumFont, foreground='white', 
 # button = ttk.Button(root, text="Generate", command=get_path, width=80)
 
 button_w = my_canvas.create_window(250, 650, anchor="nw", window=button)
+
+def get_saved_params():
+    try:
+        with open(".datachannel_params_saved.txt",'r') as params_saved:
+            line1 = [line.rstrip() for line in params_saved]
+            params = {
+                'excel_file': line1[0],
+                'sheet': line1[1],
+                'ch_combo': line1[2],
+                'ch_seq_combo': line1[3],
+                'bit_num_i': line1[4],
+                'x1y1_i': line1[5],
+                'x2y2_i': line1[6],
+                'out_tb_sheet': line1[7],
+                'out_col_i': line1[8],
+                'DieL_name': line1[9],
+                'DieR_name': line1[10],
+                'map_sheet_name': line1[11],
+                'map_tb_ch2ch_loc': line1[12],
+                'theme': line1[13]
+
+            }
+        
+        root.set_theme(params['theme'])
+        theme_combo.current(theme_list.index(params['theme']))
+        change_colour(theme_list.index(params['theme']))
+        excel_i.insert(0, params['excel_file'])   
+
+        sheet_i.insert(0, params['sheet'])
+        ch_combo.current(ch_number.index(int(params['ch_combo'])))
+        ch_seq_combo.current(ch_sequence.index(params['ch_seq_combo']))
+        bit_num_i.insert(0, params['bit_num_i'])
+        x1y1_i.insert(0, params['x1y1_i'])
+        x2y2_i.insert(0, params['x2y2_i'])
+        out_tb_sheet.insert(0, params['out_tb_sheet'])
+        out_col_i.insert(0, params['out_col_i'])
+        die_L_list.insert(0,params['DieL_name'])
+        die_R_list.insert(0, params['DieR_name'])
+        map_tb_sheet.insert(0, params['map_sheet_name'])
+        map_loc_i.insert(0, params['map_tb_ch2ch_loc'])
+
+
+    except:
+        root.set_theme("scidpurple")
+        theme_combo.current(theme_list.index("scidpurple"))
+        excel_i.insert(0, r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Test3.xlsx")
+        sheet_i.insert(0, "DWORD")
+        ch_combo.current(3)
+        ch_seq_combo.current(0)
+        bit_num_i.insert(0, "16")
+        x1y1_i.insert(0, "S16")
+        x2y2_i.insert(0, "AD30")
+        out_tb_sheet.insert(0, "Data_Channelx")
+        out_col_i.insert(0, "D10")
+
+get_saved_params()
 
 root.mainloop()
 

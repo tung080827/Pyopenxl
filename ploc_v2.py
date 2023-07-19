@@ -18,7 +18,9 @@ from PIL import ImageTk, Image
 from tkinter.font import Font as tkfont
 from tkinter import filedialog
 from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection
-
+import os
+import win32com.client
+from pathlib import Path  
 import gui_function as gui
 # adv = 1
 
@@ -33,16 +35,32 @@ root.geometry("1000x1000+30+100")
 root.resizable(width=False, height=False)
 root.iconbitmap(r".\mylogo.ico")
 root.option_add("*tearOff", False) # This is always a good idea
+theme_list = ["adapta", "aquativo", "arc", "black","blue", "breeze", "clearlooks", "elegance", "equilux", "itft1", "keramik", "keramik_alt", "kroc", "plastik", "radiance", "ubuntu", "scidblue", "scidgreen", "scidgrey", "scidmint", "scidpink", "scidpurple", "scidsand", "smog", "winxpblue", "yaru" ]
 
-bg = ImageTk.PhotoImage(file=r".\bg3_1.png")
+
+img_path = r".\img\resize1000x1000"
+# bg = ImageTk.PhotoImage(file=r".\img\mountain.png")
+bgm = PhotoImage(file=img_path + r"\frog.png")
+# bg2 = PhotoImage(file = r".\img\resize1000x1000\bee.png")
+# bg3 = PhotoImage(file = r".\img\resize1000x1000\owl.png")
+# bg4 = PhotoImage(file = r".\img\resize1000x1000\mountain.png")
+# bg5 = PhotoImage(file = r".\img\resize1000x1000\whale.png")
+# bg6 = PhotoImage(file = r".\img\resize1000x1000\penguin.png")
+# bg1 = PhotoImage(file= r".\brain.png").subsample(2,2)
+# bg2 = PhotoImage(file= r".\img\braincircuit.png").subsample(3,3)
+# bg3 = PhotoImage(file= r".\img\gear.png").subsample(2,2)
+# bg4 = PhotoImage(file= r".\img\internet.png").subsample(2,2)
+# bg5 = PhotoImage(file= r".\img\rocket.png").zoom(2,2)
 open_imag = PhotoImage(file = r".\open-folder.png")
+img_list = ["owl.png", "mountain.png","whale.png", "penguin.png","sunset1.png", "internet.png", "flight.png", "pixelgrey.jpg", "penguin.png", "vn.png", "keramik", "keramik_alt", "bee.png", "elephant.png", "bee.png", "bee.png", "scidblue", "frog.png", "penguin.png", "forest.png", "owlpink1.png", "graffe1.png", "scidsand", "sunset.png", "winxpblue", "yaru" ]
 
 # Define Canvas
 my_canvas = tk.Canvas(root, width=1200, height=800, bd=0, highlightthickness=0)
 my_canvas.pack(fill="both", expand=True)
 
 # Put the image on the canvas
-my_canvas.create_image(0,0, image=bg, anchor="nw")
+bg_img = my_canvas.create_image(0,0, image=bgm, anchor="nw")
+
 # Make the app responsive
 # root.columnconfigure(index=0, weight=1)
 # root.columnconfigure(index=1, weight=1)
@@ -66,6 +84,7 @@ my_canvas.create_image(0,0, image=bg, anchor="nw")
 stfont= ("Franklin Gothic Medium", 10, 'underline', "italic")
 # Create lists for the Comboboxes
 theme_list = ["adapta", "aquativo", "arc", "black","blue", "breeze", "clearlooks", "elegance", "equilux", "itft1", "keramik", "keramik_alt", "kroc", "plastik", "radiance", "ubuntu", "scidblue", "scidgreen", "scidgrey", "scidmint", "scidpink", "scidpurple", "scidsand", "smog", "winxpblue", "yaru" ]
+colour_list = ["#09a5e8", "#292b33", "#1583eb", "#292a2b","#1a7cad", "#0664bd", "#8baac7", "#59564f", "#40454a", "#7aa7f5", "#1c4894", "#1c4894", "#ebab0c", "#0c99eb", "#eb830c", "#eb830c", "#0937ab", "#37ed80", "#707371", "#479403", "#d12a9f", "#9b34eb", "#787122", "#118cbd", "#a3945f", "#621ba8" ]
 package_list = ["S-Organic", "A-CoWoS", "A-EMIB"]
 foundry_list = ["TSMC-MapWSR", "TSMC-MapWoSR", "SS-MapWSR", "SS-MapWoSR", "GF-MapWSR", "GF-MapWSR"]
 int_couple_number = ["2", "4", "6", "8", "10", "12", "14", "16"]
@@ -107,7 +126,21 @@ def round_rectangle(x1, y1, x2, y2, radius=25, **kwargs):
               x1, y1]
 
     return my_canvas.create_polygon(points, **kwargs, smooth=True)
-
+def change_colour(index):
+    listchange =[bum_visual_t,die_tb_out_t,die_dumy_t,int_size_t,int_s_loc_t,int_die_cnt_t,int_die_name_t,int_xo_t,int_yo_t]
+    entry_list = [button,sheet_t, theme_combo_t,excel_t, pkg_t]
+    #  sheet_t, theme_combo_t,excel_t, pkg_t
+    for t in listchange:
+        my_canvas.itemconfig(t, fill = colour_list[index])
+    for l in entry_list:
+        l.config(background = colour_list[index])
+    global bgm
+    p = os.path.join(img_path, img_list[index])
+    bgm = PhotoImage(file = p)
+    # print(fil)
+    # bg2 = tk.PhotoImage(file = r".\img\resize1000x1000\mountain.png")
+    my_canvas.itemconfigure(bg_img, image=bgm)
+    # my_canvas.itemconfig(bg_img, image =img_list[index])
 def enable(children):
    for child in children:
       child.configure(state='enable')
@@ -145,9 +178,12 @@ def progress_bar(value):
     root.update_idletasks()
 
 def choosetheme(event):
-    for theme in theme_list:
-        if (theme_combo.get() == theme):
-            root.set_theme(theme)
+    # for theme in theme_list:
+    #     if (theme_combo.get() == theme):
+    root.set_theme(theme_combo.get())
+    change_colour(theme_list.index(theme_combo.get())) 
+    # button.config(background=colour_list[theme_list.index(theme_combo.get())])
+    #  
            
 def choosemode(event):   
     if(package_combo.get() == "S-Organic"):
@@ -336,14 +372,13 @@ separator = ttk.Separator(root)
 separator_w = my_canvas.create_window(30, 130, anchor="nw", window=separator)
 
 
-my_canvas.create_text(30, 200, text="Die bump map config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+bum_visual_t = my_canvas.create_text(30, 200, text="Die bump map visual input:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
 
 
 # ------------------------Die bump visual parameters input --------------------------#
 x1y1_i = ttk.Entry(root, width=20)
-my_canvas.create_window(150, 230, anchor="nw", window=x1y1_i)
-
+x1y1_i_w = my_canvas.create_window(150, 230, anchor="nw", window=x1y1_i)
 x1y1_i.bind('<FocusIn>', x1y1_guide)
 x1y1_i.bind('<FocusOut>', un_guide)
 
@@ -367,11 +402,11 @@ Yget_i.bind('<FocusIn>', Yget_guide)
 Yget_i.bind('<FocusOut>', un_guide)
 
 # ------------------------Output table configure --------------------------#
-my_canvas.create_text(500, 200, text="Die table config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+die_tb_out_t = my_canvas.create_text(500, 200, text="Die table out \nconfig:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 # my_canvas.create_text(680, 200, text="Sheet:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
 out_tb_sheet = ttk.Entry(root)
-out_tb_sheet_w = my_canvas.create_window(600, 195, anchor="nw", window=out_tb_sheet)
+out_tb_sheet_w = my_canvas.create_window(600, 195, anchor="nw", window=out_tb_sheet, width=275)
 
 out_tb_sheet.bind('<FocusIn>', outtb_s_guide)
 out_tb_sheet.bind('<FocusOut>', un_guide)
@@ -405,7 +440,7 @@ out_col_wsr_i.bind('<FocusOut>', un_guide)
 
 #------------------------------------Dummybup at 4 corners for Advance package-----------------------------------------------------#
 
-my_canvas.create_text(30, 310, text="Die Bummy bump config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+die_dumy_t = my_canvas.create_text(30, 310, text="Die Bummy bump input:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
 my_canvas.create_text(245, 330, text="Corner 1 config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="black")
 cor1_x1y1 = ttk.Entry(root, width=20)
@@ -517,7 +552,7 @@ cor4_Yget.bind('<FocusOut>', un_guide)
 interopser = ttk.Checkbutton(root, text="Interposer Die generator", variable=isIntp, onvalue=1, offvalue=0,command= intp_toggle)
 interopser_w =my_canvas.create_window(30, 500, anchor="nw", window=interopser)
 
-my_canvas.create_text(280, 540, text="Die/Chip size input:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+int_size_t = my_canvas.create_text(280, 540, text="Die/Chip size input:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 xwidth_i = ttk.Entry(root)
 xwidth_i_w = my_canvas.create_window(150, 560, anchor="nw", window=xwidth_i, width= 170)
 
@@ -531,7 +566,7 @@ yheight_i.bind('<FocusIn>', yheight_i_guide)
 yheight_i.bind('<FocusOut>', un_guide)
 
 
-my_canvas.create_text(620, 540, text="OUT DIE sheet/location:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+int_s_loc_t = my_canvas.create_text(620, 540, text="OUT DIE sheet/location:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
 intp_sheet = ttk.Entry(root)
 intp_sheet_w = my_canvas.create_window(520, 560, anchor="nw", window=intp_sheet, width=170)
@@ -546,14 +581,14 @@ int_tb_loc.bind('<FocusIn>', int_tb_guide)
 int_tb_loc.bind('<FocusOut>', un_guide)
 
 # my_canvas.create_text(30, 595, text="Die/Chip Offset:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
-my_canvas.create_text(60, 600, text="Die count:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+int_die_cnt_t = my_canvas.create_text(60, 600, text="Die count:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
 int_die_num_combo = ttk.Combobox(root, state="readonly", values=int_couple_number, width=22)
 int_die_num_combo_w = my_canvas.create_window(230,610, window=int_die_num_combo)
 
 int_die_num_combo.bind('<<ComboboxSelected>>', get_num_intdie)
 
-my_canvas.create_text(60, 635, text="Die name:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+int_die_name_t = my_canvas.create_text(60, 635, text="Die name:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 Die1_name = ttk.Entry(root)
 Die1_name_w = my_canvas.create_window(150, 630, anchor="nw", window=Die1_name, width= 360)
 
@@ -566,14 +601,14 @@ Die2_name_w = my_canvas.create_window(520, 630, anchor="nw", window=Die2_name, w
 Die2_name.bind('<FocusIn>', Die2_name_guide)
 Die2_name.bind('<FocusOut>', un_guide)
 
-my_canvas.create_text(60, 675, text="X offset:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+int_xo_t = my_canvas.create_text(60, 675, text="X offset:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 Die1_xoffset_i = ttk.Entry(root)
 Die1_xoffset_w = my_canvas.create_window(150, 670, anchor="nw", window=Die1_xoffset_i, width=360)
 
 Die1_xoffset_i.bind('<FocusIn>', Die1_xoffset_i_guide)
 Die1_xoffset_i.bind('<FocusOut>', un_guide)
 
-my_canvas.create_text(60, 715, text="Y offset:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
+int_yo_t = my_canvas.create_text(60, 715, text="Y offset:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 Die1_yoffset_i = ttk.Entry(root, width=20)
 Die1_yoffset_w = my_canvas.create_window(150, 710, anchor="nw", window=Die1_yoffset_i, width=360)
 
@@ -636,134 +671,7 @@ def getstring(string: str,c1: str, c2: str):
 		else: return 0
 	else:
 		return 1
-def get_saved_params():
-    try:
-        with open(".ploctablebgen_params_saved.txt",'r') as params_saved:
-            line1 = [line.rstrip() for line in params_saved]
-            params = {
-            'excel_path' : line1[0],
-            'bump_visual_sheet' : line1[1],
-            'package_type' : line1[2],
-            'forTC' : line1[3],
-            'sr_width' : line1[4],
-            'die_visual' : line1[5],
-            'die_dummy' : line1[6],
-            'die_out_tb_sheet' : line1[7],
-            'die_out_tb_name1': line1[8],
-            'die_out_tb_name2': line1[9],
-            'die_out_loc': line1[10],
-            'is_interpos' : line1[11],
-            'inter_size' : line1[12],
-            'inter_diecount' : line1[13],
-            'inter_dieL_name' : line1[14],
-            'inter_dieR_name' : line1[15],
-            'inter_xL_offset' : line1[16],
-            'inter_xR_offset' : line1[17],
-            'inter_yL_offset' : line1[18],
-            'inter_yR_offset' : line1[19],
-            'inter_out_tb_sheet' : line1[20],
-            'inter_out_tb_loc' : line1[21],
-            'theme': line1[22]
-            }
-        
-        root.set_theme(params['theme'])
-        theme_combo.current(theme_list.index(params['theme']))
-        excel_i.insert(0,params['excel_path'])
-        sheet_i.insert(0, params['bump_visual_sheet'])
 
-        srw_i.insert(0, params['sr_width'])
-        die_visual_list = params['die_visual'].split()
-        x1y1_i.insert(0, die_visual_list[0])
-        x2y2_i.insert(0, die_visual_list[1])
-        Xget_i.insert(0, die_visual_list[2])
-        Yget_i.insert(0, die_visual_list[3])
-
-        dummy_list = params['die_dummy'].split()
-        cor1_x1y1.insert(0, dummy_list[0])
-        cor1_x2y2.insert(0, dummy_list[1])
-        cor1_Xget.insert(0, dummy_list[2])
-        cor1_Yget.insert(0, dummy_list[3])
-        
-        cor2_x1y1.insert(0, dummy_list[4])
-        cor2_x2y2.insert(0, dummy_list[5])
-        cor2_Xget.insert(0, dummy_list[6])
-        cor2_Yget.insert(0, dummy_list[7])
-        
-        cor3_x1y1.insert(0, dummy_list[8])
-        cor3_x2y2.insert(0, dummy_list[9])
-        cor3_Xget.insert(0, dummy_list[10])
-        cor3_Yget.insert(0, dummy_list[11])
-
-        cor4_x1y1.insert(0, dummy_list[12])
-        cor4_x2y2.insert(0, dummy_list[13])
-        cor4_Xget.insert(0, dummy_list[14])
-        cor4_Yget.insert(0, dummy_list[15])
-
-        
-        out_tb_sheet.insert(0, params['die_out_tb_sheet'])
-        out_name_in.insert(0, params['die_out_tb_name1'])
-        out_col_i.insert(0, params['die_out_loc'])
-        out_name2_in.insert(0, params['die_out_tb_name2'])
-        chip_size_list = params['inter_size'].split()
-        xwidth_i.insert(0, chip_size_list[0])
-        yheight_i.insert(0, chip_size_list[1])
-        Die1_name.insert(0, params['inter_dieL_name'])
-        Die2_name.insert(0, params['inter_dieR_name'])
-        Die1_xoffset_i.insert(0, params['inter_xL_offset'])
-        Die2_xoffset_i.insert(0, params['inter_xR_offset'])
-        Die1_yoffset_i.insert(0, params['inter_yL_offset'])
-        Die2_yoffset_i.insert(0, params['inter_yR_offset'])
-        intp_sheet.insert(0, params['inter_out_tb_sheet'])
-        int_tb_loc.insert(0, params['inter_out_tb_loc'])
-        
-        int_die_num_combo.current(int_couple_number.index(params['inter_diecount']))
-        package_combo.current(0)
-        # package_combo.current(package_list.index(params['package_type']))
-
-    except:
-        root.set_theme("scidpurple")
-        theme_combo.current(theme_list.index("scidpurple"))
-        excel_i.insert(0, r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Bump_CoWoS_S.xlsx")
-        sheet_i.insert(0, "N3P_CoWoS")
-        srw_i.insert(0, "21.6")
-        x1y1_i.insert(0, "C11")
-        x2y2_i.insert(0, "CW103")
-        Xget_i.insert(0, "8")
-        Yget_i.insert(0, "B")
-        out_tb_sheet.insert(0, "Bump coordination")
-        out_name_in.insert(0, "Die with sealring")
-        out_name2_in.insert(0, "Die without sealring")
-        out_col_i.insert(0, "S111")
-        out_col_wsr_i.insert(0, "T64")
-        cor1_x1y1.insert(0, "C11")
-        cor1_x2y2.insert(0, "E13")
-        cor1_Xget.insert(0, "9")
-        cor1_Yget.insert(0, "B")
-        cor2_x1y1.insert(0, "CU11")
-        cor2_x2y2.insert(0, "CW13")
-        cor2_Xget.insert(0, "9")
-        cor2_Yget.insert(0, "B")
-        cor3_x1y1.insert(0, "C101")
-        cor3_x2y2.insert(0, "E103")
-        cor3_Xget.insert(0, "9")
-        cor3_Yget.insert(0, "B")
-        cor4_x1y1.insert(0, "CU101")
-        cor4_x2y2.insert(0, "CW103")
-        cor4_Xget.insert(0, "9")
-        cor4_Yget.insert(0, "B")
-        xwidth_i.insert(0, "3938.352")
-        yheight_i.insert(0, "2262.872")
-        intp_sheet.insert(0, "Package_substrate")
-        int_tb_loc.insert(0, "X111")
-        Die1_name.insert(0, "DIE3")
-        Die2_name.insert(0, "DIE7")
-        Die1_xoffset_i.insert(0, "-4350.8")
-        Die1_yoffset_i.insert(0, "16.2349999999999")
-        Die2_xoffset_i.insert(0, "1571.96")
-        Die2_yoffset_i.insert(0, "97.9849999999997")
-        int_die_num_combo.current(0)
-        package_combo.current(0)
-get_saved_params()
 
 def get_params_and_generate():
     # popup("Generating...")
@@ -1404,6 +1312,137 @@ button = tk.Button(root, text="Generate",font = mediumFont, foreground='white', 
 
 button_w = my_canvas.create_window(300, 860, anchor="nw", window=button)
 
+
+# Get saved params
+def get_saved_params():
+    try:
+        with open(".ploctablebgen_params_saved.txt",'r') as params_saved:
+            line1 = [line.rstrip() for line in params_saved]
+            params = {
+            'excel_path' : line1[0],
+            'bump_visual_sheet' : line1[1],
+            'package_type' : line1[2],
+            'forTC' : line1[3],
+            'sr_width' : line1[4],
+            'die_visual' : line1[5],
+            'die_dummy' : line1[6],
+            'die_out_tb_sheet' : line1[7],
+            'die_out_tb_name1': line1[8],
+            'die_out_tb_name2': line1[9],
+            'die_out_loc': line1[10],
+            'is_interpos' : line1[11],
+            'inter_size' : line1[12],
+            'inter_diecount' : line1[13],
+            'inter_dieL_name' : line1[14],
+            'inter_dieR_name' : line1[15],
+            'inter_xL_offset' : line1[16],
+            'inter_xR_offset' : line1[17],
+            'inter_yL_offset' : line1[18],
+            'inter_yR_offset' : line1[19],
+            'inter_out_tb_sheet' : line1[20],
+            'inter_out_tb_loc' : line1[21],
+            'theme': line1[22]
+            }
+        
+        root.set_theme(params['theme'])
+        theme_combo.current(theme_list.index(params['theme']))
+        excel_i.insert(0,params['excel_path'])
+        sheet_i.insert(0, params['bump_visual_sheet'])
+
+        srw_i.insert(0, params['sr_width'])
+        die_visual_list = params['die_visual'].split()
+        x1y1_i.insert(0, die_visual_list[0])
+        x2y2_i.insert(0, die_visual_list[1])
+        Xget_i.insert(0, die_visual_list[2])
+        Yget_i.insert(0, die_visual_list[3])
+
+        dummy_list = params['die_dummy'].split()
+        cor1_x1y1.insert(0, dummy_list[0])
+        cor1_x2y2.insert(0, dummy_list[1])
+        cor1_Xget.insert(0, dummy_list[2])
+        cor1_Yget.insert(0, dummy_list[3])
+        
+        cor2_x1y1.insert(0, dummy_list[4])
+        cor2_x2y2.insert(0, dummy_list[5])
+        cor2_Xget.insert(0, dummy_list[6])
+        cor2_Yget.insert(0, dummy_list[7])
+        
+        cor3_x1y1.insert(0, dummy_list[8])
+        cor3_x2y2.insert(0, dummy_list[9])
+        cor3_Xget.insert(0, dummy_list[10])
+        cor3_Yget.insert(0, dummy_list[11])
+
+        cor4_x1y1.insert(0, dummy_list[12])
+        cor4_x2y2.insert(0, dummy_list[13])
+        cor4_Xget.insert(0, dummy_list[14])
+        cor4_Yget.insert(0, dummy_list[15])
+
+        
+        out_tb_sheet.insert(0, params['die_out_tb_sheet'])
+        out_name_in.insert(0, params['die_out_tb_name1'])
+        out_col_i.insert(0, params['die_out_loc'])
+        out_name2_in.insert(0, params['die_out_tb_name2'])
+        chip_size_list = params['inter_size'].split()
+        xwidth_i.insert(0, chip_size_list[0])
+        yheight_i.insert(0, chip_size_list[1])
+        Die1_name.insert(0, params['inter_dieL_name'])
+        Die2_name.insert(0, params['inter_dieR_name'])
+        Die1_xoffset_i.insert(0, params['inter_xL_offset'])
+        Die2_xoffset_i.insert(0, params['inter_xR_offset'])
+        Die1_yoffset_i.insert(0, params['inter_yL_offset'])
+        Die2_yoffset_i.insert(0, params['inter_yR_offset'])
+        intp_sheet.insert(0, params['inter_out_tb_sheet'])
+        int_tb_loc.insert(0, params['inter_out_tb_loc'])
+        
+        int_die_num_combo.current(int_couple_number.index(params['inter_diecount']))
+        package_combo.current(0)
+        change_colour(theme_list.index(params['theme']))
+        # package_combo.current(package_list.index(params['package_type']))
+
+    except:
+        root.set_theme("scidpurple")
+        theme_combo.current(theme_list.index("scidpurple"))
+        excel_i.insert(0, r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Bump_CoWoS_S.xlsx")
+        sheet_i.insert(0, "N3P_CoWoS")
+        srw_i.insert(0, "21.6")
+        x1y1_i.insert(0, "C11")
+        x2y2_i.insert(0, "CW103")
+        Xget_i.insert(0, "8")
+        Yget_i.insert(0, "B")
+        out_tb_sheet.insert(0, "Bump coordination")
+        out_name_in.insert(0, "Die with sealring")
+        out_name2_in.insert(0, "Die without sealring")
+        out_col_i.insert(0, "S111")
+        out_col_wsr_i.insert(0, "T64")
+        cor1_x1y1.insert(0, "C11")
+        cor1_x2y2.insert(0, "E13")
+        cor1_Xget.insert(0, "9")
+        cor1_Yget.insert(0, "B")
+        cor2_x1y1.insert(0, "CU11")
+        cor2_x2y2.insert(0, "CW13")
+        cor2_Xget.insert(0, "9")
+        cor2_Yget.insert(0, "B")
+        cor3_x1y1.insert(0, "C101")
+        cor3_x2y2.insert(0, "E103")
+        cor3_Xget.insert(0, "9")
+        cor3_Yget.insert(0, "B")
+        cor4_x1y1.insert(0, "CU101")
+        cor4_x2y2.insert(0, "CW103")
+        cor4_Xget.insert(0, "9")
+        cor4_Yget.insert(0, "B")
+        xwidth_i.insert(0, "3938.352")
+        yheight_i.insert(0, "2262.872")
+        intp_sheet.insert(0, "Package_substrate")
+        int_tb_loc.insert(0, "X111")
+        Die1_name.insert(0, "DIE3")
+        Die2_name.insert(0, "DIE7")
+        Die1_xoffset_i.insert(0, "-4350.8")
+        Die1_yoffset_i.insert(0, "16.2349999999999")
+        Die2_xoffset_i.insert(0, "1571.96")
+        Die2_yoffset_i.insert(0, "97.9849999999997")
+        int_die_num_combo.current(0)
+        package_combo.current(0)
+get_saved_params()
 
 root.mainloop()
 
