@@ -35,7 +35,7 @@ root.geometry("1000x1000+30+100")
 root.resizable(width=False, height=False)
 root.iconbitmap(r".\mylogo.ico")
 root.option_add("*tearOff", False) # This is always a good idea
-theme_list = ["adapta", "aquativo", "arc", "black","blue", "breeze", "clearlooks", "elegance", "equilux", "itft1", "keramik", "keramik_alt", "kroc", "plastik", "radiance", "ubuntu", "scidblue", "scidgreen", "scidgrey", "scidmint", "scidpink", "scidpurple", "scidsand", "smog", "winxpblue", "yaru" ]
+# theme_list = ["adapta", "aquativo", "arc", "black","blue", "breeze", "clearlooks", "elegance", "equilux", "itft1", "keramik", "keramik_alt", "kroc", "plastik", "radiance", "ubuntu", "scidblue", "scidgreen", "scidgrey", "scidmint", "scidpink", "scidpurple", "scidsand", "smog", "winxpblue", "yaru" ]
 
 
 img_path = r".\img\resize1000x1000"
@@ -52,7 +52,9 @@ bgm = PhotoImage(file=img_path + r"\frog.png")
 # bg4 = PhotoImage(file= r".\img\internet.png").subsample(2,2)
 # bg5 = PhotoImage(file= r".\img\rocket.png").zoom(2,2)
 open_imag = PhotoImage(file = r".\open-folder.png")
-img_list = ["owl.png", "mountain.png","whale2.png", "penguin.png","sunset1.png", "circuit1.png", "fight.png", "pug.png", "penguin.png", "whale2.png", "elephant_grey.png", "snowman.png", "bee4.png", "elephant.png", "bee2.png", "fox.png", "beach.png", "frog.png", "cow.png", "forest.png", "owlpink2.png", "dinosaurs.png", "sand1.png", "sunset.png", "pig.png", "discord1.png" ]
+img_list = ["owl.png", "mountain.png","whale2.png", "penguin.png","sunset1.png", "circuit1.png", "fight.png", "pug.png", "penguin.png", "whale2.png", "elephant_grey.png", "snowman.png", "bee4.png", "elephant.png", "bee2.png", "fox.png", "beach.png", "frog.png", "cow.png", "forest.png", "owlpink2.png", "dinosaurs.png", "sand1.png", "green.png", "pig.png", "discord1.png" ]
+
+lable_bg_list = ["#F0F0F0","#EDEDED","#EBECEE","#F0F0F0","#F0F0F0","#FCFCFC","#EFF0F1","#EFF0F1","#EFF0F1","#EAECEF","#EFF0F1","#EFF0F1","#FECDD9","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1","#E6EBEF"]
 
 # Define Canvas
 my_canvas = tk.Canvas(root, width=1200, height=800, bd=0, highlightthickness=0)
@@ -134,7 +136,7 @@ def change_colour(index):
         my_canvas.itemconfig(t, fill = colour_list[index])
     for l in entry_list:
         l.config(background = colour_list[index])
-    frame.configure(highlightbackground=colour_list[index], foreground=colour_list[index])
+    frame.configure(highlightbackground=colour_list[index], foreground=colour_list[index], bg=lable_bg_list[index], text=" This frame is for showing guidance")
     global bgm
     p = os.path.join(img_path, img_list[index])
     bgm = PhotoImage(file = p)
@@ -1265,16 +1267,7 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
 # myButton = tk.Button(root,text="Button", command=get_path)
 # myButton.pack()
 
-entry_disable(cor1_x1y1, cor1_x2y2, cor1_Xget, cor1_Yget,
-            cor2_x1y1, cor2_x2y2, cor2_Xget, cor2_Yget,
-            cor3_x1y1, cor3_x2y2, cor3_Xget, cor3_Yget,
-            cor4_x1y1, cor4_x2y2, cor4_Xget, cor4_Yget)
 
-entry_disable(sheete_i, sheete_t)
-entry_disable(srw_i, out_name2_in, out_col_wsr_i)
-entry_disable(xwidth_i, yheight_i, Die1_xoffset_i, Die1_yoffset_i, Die2_xoffset_i, Die2_yoffset_i, intp_sheet, Die1_name, Die2_name, int_tb_loc, int_die_num_combo)
-sheet_t['text']= "Bump sheet:"
-mynotif("")
 treeScroll = ttk.Scrollbar(root, orient = 'vertical')
 
 
@@ -1448,5 +1441,15 @@ def get_saved_params():
         package_combo.current(0)
 get_saved_params()
 
+entry_disable(cor1_x1y1, cor1_x2y2, cor1_Xget, cor1_Yget,
+            cor2_x1y1, cor2_x2y2, cor2_Xget, cor2_Yget,
+            cor3_x1y1, cor3_x2y2, cor3_Xget, cor3_Yget,
+            cor4_x1y1, cor4_x2y2, cor4_Xget, cor4_Yget)
+
+entry_disable(sheete_i, sheete_t)
+entry_disable(srw_i, out_name2_in, out_col_wsr_i)
+entry_disable(xwidth_i, yheight_i, Die1_xoffset_i, Die1_yoffset_i, Die2_xoffset_i, Die2_yoffset_i, intp_sheet, Die1_name, Die2_name, int_tb_loc, int_die_num_combo)
+sheet_t['text']= "Bump sheet:"
+mynotif("")
 root.mainloop()
 

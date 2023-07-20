@@ -26,6 +26,9 @@ from time import sleep
 
 
 # excel_file = r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Test_adp.xlsx"
+img_list = ["owl.png", "mountain.png","whale2.png", "penguin.png","sunset1.png", "circuit1.png", "fight.png", "pug.png", "penguin.png", "whale2.png", "elephant_grey.png", "snowman.png", "bee4.png", "elephant.png", "bee2.png", "fox.png", "beach.png", "frog.png", "cow.png", "forest.png", "owlpink2.png", "dinosaurs.png", "sand1.png", "green.png", "pig.png", "discord1.png" ]
+
+lable_bg_list = ["#F0F0F0","#EDEDED","#EBECEE","#F0F0F0","#F0F0F0","#FCFCFC","#EFF0F1","#EFF0F1","#EFF0F1","#EAECEF","#EFF0F1","#EFF0F1","#FECDD9","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1","#E6EBEF"]
 
 root = ThemedTk()
 # my_canvas=tk.Canvas(root)
@@ -40,13 +43,15 @@ root.option_add("*tearOff", False) # This is always a good idea
 bg = PhotoImage(file=r".\brain.png").subsample(2,2)
 # bg = ImageTk.PhotoImage(file=r".\img\internet.png")
 open_imag = PhotoImage(file = r".\open-folder.png")
-
+img_path = r".\img\resize1000x1000"
+# bg = ImageTk.PhotoImage(file=r".\img\mountain.png")
+bgm = PhotoImage(file=img_path + r"\frog.png")
 # Define Canvas
 my_canvas = tk.Canvas(root, width=1200, height=800, bd=0, highlightthickness=0)
 my_canvas.pack(fill="both", expand=True)
 
 # Put the image on the canvas
-my_canvas.create_image(0,0, image=bg, anchor="nw")
+bg_img = my_canvas.create_image(0,0, image=bg, anchor="nw")
 # Make the app responsive
 # root.columnconfigure(index=0, weight=1)
 # root.columnconfigure(index=1, weight=1)
@@ -70,9 +75,8 @@ my_canvas.create_image(0,0, image=bg, anchor="nw")
 stfont= ("Franklin Gothic Medium", 10, 'underline', "italic")
 # Create lists for the Comboboxes
 theme_list = ["adapta", "aquativo", "arc", "black","blue", "breeze", "clearlooks", "elegance", "equilux", "itft1", "keramik", "keramik_alt", "kroc", "plastik", "radiance", "ubuntu", "scidblue", "scidgreen", "scidgrey", "scidmint", "scidpink", "scidpurple", "scidsand", "smog", "winxpblue", "yaru" ]
-colour_list = ["#09a5e8", "#292b33", "#1583eb", "#292a2b","#1a7cad", "#0664bd", "#8baac7", "#063f75", "#40454a", "#7aa7f5", "#1c4894", "#1c4894", "#ebab0c", "#0c99eb", "#eb830c", "#eb830c", "#0937ab", "#37ed80", "#707371", "#479403", "#d12a9f", "#9b34eb", "#787122", "#118cbd", "#a3945f", "#621ba8" ]
 
-
+colour_list = ["#09a5e8", "#292b33", "#1583eb", "#292a2b","#1a7cad", "#0664bd", "#8baac7", "#59564f", "#40454a", "#7aa7f5", "#7795b4", "#7795b4", "#ebab0c", "#0c99eb", "#eb830c", "#eb830c", "#0937ab", "#37ed80", "#707371", "#479403", "#d12a9f", "#9b34eb", "#787122", "#118cbd", "#ece9d8", "#924d8b" ]
 # Create control variables
 a = tk.BooleanVar()
 b = tk.BooleanVar(value=True)
@@ -118,6 +122,13 @@ def change_colour(index):
         my_canvas.itemconfig(t, fill = colour_list[index])
     for l in entry_list:
         l.config(background = colour_list[index])
+    frame.configure(highlightbackground=colour_list[index], foreground=colour_list[index], bg=lable_bg_list[index], text=" This frame is for showing guidance")
+    global bgm
+    p = os.path.join(img_path, img_list[index])
+    bgm = PhotoImage(file = p)
+
+    my_canvas.itemconfigure(bg_img, image=bgm)
+
 def enable(children):
    for child in children:
       child.configure(state='enable')
@@ -154,7 +165,7 @@ def choosetheme(event):
 myLabel = ttk.Label(root,text="----")
 myLabel_w =my_canvas.create_window(80,770,anchor="nw", window=myLabel)
 
-frame = tk.Label(root, bg="#c9f2dc", font=("Courier New", 10), foreground="#f2a50a")
+frame = tk.Label(root, bg="#c9f2dc", font=("Courier New", 10), foreground="#f2a50a", highlightthickness=2)
 my_canvas.create_window(300, 80, window=frame, anchor="nw", width= 400, height=100)
 
 def popup(notif):
@@ -1135,8 +1146,9 @@ def get_saved_params():
         adp_tb.insert(0, params['adp_tb'])
         adp_tb_loc.insert(0, params['adp_tb_loc'])
     except:
-        theme_combo.current(0)
-        # root.set_theme(params['theme_combo'])
+        root.set_theme("scidpurple")
+        theme_combo.current(theme_list.index("scidpurple"))
+        change_colour(theme_list.index("scidpurple"))
         excel_i.insert(0, r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Test3.xlsx")
         ball_sheet_i.insert(0, "BGA")
         ball_begin_cell_i.insert(0, "AQ1")

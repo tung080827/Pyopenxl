@@ -32,8 +32,8 @@ root.resizable(width=False, height=False)
 root.iconbitmap(r".\mylogo.ico")
 root.option_add("*tearOff", False) # This is always a good idea
 
-bg = ImageTk.PhotoImage(file=r".\bg3_1.png")
-bg1 = ImageTk.PhotoImage(file=r".\brain.png")
+# bg = ImageTk.PhotoImage(file=r".\bg3_1.png")
+# bg1 = ImageTk.PhotoImage(file=r".\brain.png")
 bg2 = PhotoImage(file=r".\brain.png")
 # open_imag = PhotoImage(file = r".\sub\open-folder.png")
 bg2 = bg2.subsample(2, 2)
@@ -50,13 +50,13 @@ my_canvas.create_text(240, 100, text="MENU", anchor="nw",font=("Helvetica", 40, 
 
 stfont= ("Franklin Gothic Medium", 10, 'underline', "italic")
 def get_ploc_app():
-    subprocess.call([r'.\sub\ploc_v2.exe'])
+    subprocess.call([r'.\ploctablegenerator\ploctablegenerator.exe'])
     # call(["python", 'ploc_v2.py'])
 def get_ch_app():
-    subprocess.call([r'.\sub\datachanel_gen.exe'])
+    subprocess.call([r'.\channelmappinggen\channelmappinggen.exe'])
     #  call(["python", 'datachanel_gen.py'])
 def get_adp_app():
-    subprocess.call([r'.\sub\apdgenerator_v0.2.exe'])
+    subprocess.call([r'.\apdgenerator\apdgenerator.exe'])
     #  call(["python", 'apdgenerator_v0.2.py'])
 
 # browse_btn = ttk.Button(root, text="Open File", image=open_imag, command=open)
