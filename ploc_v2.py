@@ -21,7 +21,8 @@ from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection
 import os
 import win32com.client
 from pathlib import Path  
-import gui_function as gui
+
+import tempfile
 # adv = 1
 
 # label.pack(padx=40,pady=40)
@@ -37,7 +38,14 @@ root.iconbitmap(r".\mylogo.ico")
 root.option_add("*tearOff", False) # This is always a good idea
 # theme_list = ["adapta", "aquativo", "arc", "black","blue", "breeze", "clearlooks", "elegance", "equilux", "itft1", "keramik", "keramik_alt", "kroc", "plastik", "radiance", "ubuntu", "scidblue", "scidgreen", "scidgrey", "scidmint", "scidpink", "scidpurple", "scidsand", "smog", "winxpblue", "yaru" ]
 
-
+# temp_dir = tempfile.gettempdir()
+try:
+    temp_file =  os.path.join(tempfile.gettempdir(), ".ploctablebgen_params_saved.txt")
+    print(temp_file)
+    tmp_flag = 0
+except:
+    messagebox.showerror("Can not found the User Temp dir")
+    tmp_flag = 1
 img_path = r".\img\resize1000x1000"
 # bg = ImageTk.PhotoImage(file=r".\img\mountain.png")
 bgm = PhotoImage(file=img_path + r"\frog.png")
@@ -86,7 +94,7 @@ bg_img = my_canvas.create_image(0,0, image=bgm, anchor="nw")
 stfont= ("Franklin Gothic Medium", 10, 'underline', "italic")
 # Create lists for the Comboboxes
 theme_list = ["adapta", "aquativo", "arc", "black","blue", "breeze", "clearlooks", "elegance", "equilux", "itft1", "keramik", "keramik_alt", "kroc", "plastik", "radiance", "ubuntu", "scidblue", "scidgreen", "scidgrey", "scidmint", "scidpink", "scidpurple", "scidsand", "smog", "winxpblue", "yaru" ]
-colour_list = ["#09a5e8", "#292b33", "#1583eb", "#292a2b","#1a7cad", "#0664bd", "#8baac7", "#59564f", "#40454a", "#7aa7f5", "#7795b4", "#7795b4", "#ebab0c", "#0c99eb", "#eb830c", "#eb830c", "#0937ab", "#37ed80", "#707371", "#479403", "#d12a9f", "#9b34eb", "#787122", "#118cbd", "#ece9d8", "#924d8b" ]
+colour_list = ["#09a5e8", "#292b33", "#1583eb", "#292a2b","#1a7cad", "#0664bd", "#8baac7", "#59564f", "#40454a", "#7aa7f5", "#7795b4", "#7795b4", "#ebab0c", "#0c99eb", "#eb830c", "#eb830c", "#0937ab", "#37ed80", "#707371", "#479403", "#d12a9f", "#9b34eb", "#787122", "#118cbd", "#505257", "#924d8b" ]
 package_list = ["S-Organic", "A-CoWoS", "A-EMIB"]
 foundry_list = ["TSMC-MapWSR", "TSMC-MapWoSR", "SS-MapWSR", "SS-MapWoSR", "GF-MapWSR", "GF-MapWSR"]
 int_couple_number = ["2", "4", "6", "8", "10", "12", "14", "16"]
@@ -136,23 +144,26 @@ def change_colour(index):
         my_canvas.itemconfig(t, fill = colour_list[index])
     for l in entry_list:
         l.config(background = colour_list[index])
-    frame.configure(highlightbackground=colour_list[index], foreground=colour_list[index], bg=lable_bg_list[index], text=" This frame is for showing guidance")
+    
+    text.configure(foreground=colour_list[index],bg=lable_bg_list[index], highlightbackground=colour_list[index])
+
     global bgm
     p = os.path.join(img_path, img_list[index])
     bgm = PhotoImage(file = p)
-    # print(fil)
-    # bg2 = tk.PhotoImage(file = r".\img\resize1000x1000\mountain.png")
     my_canvas.itemconfigure(bg_img, image=bgm)
-    # my_canvas.itemconfig(bg_img, image =img_list[index])
+
 def enable(children):
    for child in children:
       child.configure(state='enable')
+
 def disable(children):  
     for child in children:
         child.configure(state='disable')
+
 def entry_disable(*entries):
     for entry in entries:
         entry.config(state='disable')
+
 def entry_enable(*entries):
     for entry in entries:
         entry.config(state='normal')
@@ -163,32 +174,44 @@ def entry_toggle():
         srw_i.config(state='normal')
         entry_enable(out_name2_in)
         print("Gen table without sealring: ON")
+        entry_enable(text)
+        text_delete()
+        mynotif("Gen table without sealring: ON. Please define sealring width at the next to entry")
+        entry_disable(text)
     elif(tc_opt.get() == 0):
         srw_i.config(state='disable')
         entry_disable(out_name2_in)
         print("Gen table without sealring: OFF")
+        entry_enable(text)
+        text_delete()
+        mynotif("Gen table without sealring: OFF")
+        entry_disable(text)
 def intp_toggle():
-    
-        # if(entry['state'] == 'disable'):
     if(isIntp.get() == 1):
         entry_enable(xwidth_i, yheight_i, Die1_xoffset_i, Die1_yoffset_i, Die2_xoffset_i, Die2_yoffset_i, intp_sheet, Die1_name, Die2_name, int_tb_loc, int_die_num_combo)
         print("Gen interposer Die table: ON")
+        entry_enable(text)
+        text_delete()
+        mynotif("Gen interposer Die table: ON")
+        entry_disable(text)
     elif(isIntp.get() == 0):
         entry_disable(xwidth_i, yheight_i, Die1_xoffset_i, Die1_yoffset_i, Die2_xoffset_i, Die2_yoffset_i, intp_sheet, Die1_name, Die2_name, int_tb_loc, int_die_num_combo)
         print("Gen interposer Die table: OFF")
+        entry_enable(text)
+        text_delete()
+        mynotif("Gen interposer Die table: OFF")
+        entry_disable(text)
 def progress_bar(value):
     progress['value'] = value
     root.update_idletasks()
 
 def choosetheme(event):
-    # for theme in theme_list:
-    #     if (theme_combo.get() == theme):
     root.set_theme(theme_combo.get())
     change_colour(theme_list.index(theme_combo.get())) 
-    # button.config(background=colour_list[theme_list.index(theme_combo.get())])
-    #  
+
            
-def choosemode(event):   
+def choosemode(event):  
+    entry_enable(text) 
     if(package_combo.get() == "S-Organic"):
        
        entry_disable(cor1_x1y1, cor1_x2y2, cor1_Xget, cor1_Yget,
@@ -202,9 +225,9 @@ def choosemode(event):
        sheet_t['text']= "Bump sheet:"
         
        print("Package:" + package_combo.get())
+       text_delete()
+       mynotif("Package used:" + package_combo.get())
     elif(package_combo.get() == "A-CoWoS"):
-    #    enable(dmbump_frame.winfo_children())
-        # cor1_x1y1.config(state='disable')
         entry_enable(cor1_x1y1, cor1_x2y2, cor1_Xget, cor1_Yget,
                      cor2_x1y1, cor2_x2y2, cor2_Xget, cor2_Yget,
                      cor3_x1y1, cor3_x2y2, cor3_Xget, cor3_Yget,
@@ -215,6 +238,8 @@ def choosemode(event):
         
         sheet_t['text']= "Bump sheet:"
         print("Package:" + package_combo.get())
+        text_delete()
+        mynotif("Package used:" + package_combo.get())
     else:
         entry_disable(cor1_x1y1, cor1_x2y2, cor1_Xget, cor1_Yget,
                      cor2_x1y1, cor2_x2y2, cor2_Xget, cor2_Yget,
@@ -227,93 +252,161 @@ def choosemode(event):
         sheet_t['text']= "uBump sheet:"
 
         popup("The EMIB package type have not developed yet, Please use S-Organic to gen 2 times (for C4 and uBump) instead!")
+    entry_disable(text)
     
 myLabel = ttk.Label(root,text="---")
 myLabel_w =my_canvas.create_window(80,770,anchor="nw", window=myLabel)
 
-frame = tk.Label(root, bg="#c9f2dc", font=("Courier New", 10), foreground="#f2a50a", highlightbackground= "blue", highlightthickness=2)
-my_canvas.create_window(600, 80, window=frame, anchor="nw", width= 280, height=100)
-
-
 
 def get_num_intdie(event):
     pass
+def text_delete():
+   text.delete("1.0","end")
 def mynotif(content):
-    if(content == ""):
-        myLabel.configure(text="", anchor='w')
-    else:
-        myLabel.configure(text=content, anchor='w')
-        # myLabel = ttk.Label(root,text=content)
-        # myLabel_w =my_canvas.create_window(80,750,anchor="nw", window=myLabel)
-        # myLabel.grid(row=5, column=0, columnspan=2, padx=(20, 10), pady=(20, 10), sticky="nsew")
-def process_notify(content):    
-        mynotif("")
-        root.update_idletasks()
-        mynotif(content)
-        root.update_idletasks()
-# ------------------------------------------------------------------------------------------------------------------------------------------------
+    text.insert(tk.END,content+"\n")
+    text.see("end")
+   
+def process_notify(content): 
+    root.update_idletasks()
+    mynotif(content)
+    root.update_idletasks()
 
 def myguide(entries, content):
-    if(content == ""):
-        entries.configure(text="")
-       
-    else:
-        entries.configure(text=content)
-
+     entries.insert(tk.END, content)
 def handle_click(event):
    pass
-    
-def x1y1_guide(event):
-     myguide(frame, "INFO:" + "Die window start cell\n\n - Example:   A0           ")
-def un_guide(event):
-     myguide(frame,"")
 
-def x2y2_guide(event):
-     myguide(frame, "INFO:" + "Die window end cell\n\n - Example:   CU100       ")
-def Xget_guide(event):
-     myguide(frame, "INFO:" + "Row contains X axis value     \n  which is X location of Bump.\n Must be interger           \n\n - Example: 8                       ")
-def Yget_guide(event):
-     myguide(frame, "INFO:" + "Row contains Y axis value  \nwhich is Y location of Bump.\n Must be Excel column format\n\n Example: CU ")
-def outtb_s_guide(event):
-    myguide(frame, "INFO:" + "Sheet to put Die table\n\n Example: Bump coordination ")
-def out_name_in_guide(event):
-    myguide(frame, "INFO:" + "This field to define the\n   output table name    ")
-def out_name2_in_guide(event):
-    myguide(frame, "INFO:" + "This field to define the \n  output table 2 name.\n Use for TC with 2 option\n with/without sealring ")
-def out_col_in_guide(event):
-    myguide(frame, "INFO:" + "This field to define the\n  first output table location. \n The next tables placed away \n2 column from previous table \n\n - Example: O64 ")
-def out_col_wsr_i_guide(event):
-    myguide(frame, "INFO:" + "This field to define the\n   output table 2 location.\n. Use for TC with 2 option\n with/without sealring\n\n - Example: U64 ")  
-def dummystart_guide(event):
-    myguide(frame, "INFO:" + "Dummy bump window start cell.\n\n - Example:   A0                   ")  
-def dummyend_guide(event):
-    myguide(frame, "INFO:" + "Dummy bump window end cell.\n\n - Example:   E3                   ") 
-def dummy_Xget_guide(event):
-     myguide(frame, "INFO:" + "Row contains X axis values              \n  which is X location of dummy Bump.\n Must be interger                 \n\n- Example: 8                                      ")
-def dummy_Yget_guide(event):
-     myguide(frame, "INFO:" + "Row contains Y axis value     \nwhich is Y location of dummy Bump. \n Must be Excel column format\n\n- Example: CU               ")
-def xwidth_i_guide(event):
-     myguide(frame, "INFO:" + "Width of Die/chip. \nThis param used for \n Flip, rotate die/chip to \nput on PKG ")
-def yheight_i_guide(event):
-     myguide(frame, "INFO:" + "Height of Die/chip. \nThis param used for    \n Flip, rotate die/chip to \nput on PKG            ")
-def Die1_xoffset_i_guide(event):
-     myguide(frame, "INFO:" + "List X Offset of Die1/chip1. \nThis param used for     \n    Die/chip placement on PKG  ")  
-def Die1_yoffset_i_guide(event):
-     myguide(frame, "INFO:" + "List Y Offset of Die1/chip1. \nThis param used for     \n    Die/chip placement on PKG  ")
-def Die2_xoffset_i_guide(event):
-     myguide(frame, "INFO:" + "List X Offset of Die2/chip2. \nThis param used for     \n    Die/chip placement on PKG  ")
-def Die2_yoffset_i_guide(event):
-     myguide(frame, "INFO:" + "List Y Offset of Die2/chip2. \nThis param used for     \n    Die/chip placement on PKG  ")
-def intp_sheet_guide(event):
-     myguide(frame, "INFO:" + "Name of interposer sheet.\n to put intterposer Die table \n ")
-def Die1_name_guide(event):
-     myguide(frame, "INFO:" + "Name list of interposer Die1.\n Die Flipped + Rotate -90\n ")
-def Die2_name_guide(event):
-     myguide(frame, "INFO:" + "Name list of interposer Die2.\n Die Flipped + Rotate +90\n ")
-def int_tb_guide(event):
-    myguide(frame, "INFO:" + "This field to define the\n  first output table cell. \n The next tables placed away \n1 column from previous table \n\n - Example: O64 ")
-def srw_i_guide(event):
-    myguide(frame, "INFO:" + "This field to define the\n  width of sealring . \n - TSMC: 21.6, SS/GF: 14.04 \n\n")
+x1y1_guide = [
+    "INFO: Die window begin cell\n\n ",
+    "      * Example:   A0           "
+]
+x2y2_guide =  [
+    "INFO: Die window end cell\n\n ",
+    "      * Example:   CU100       "
+]
+Xget_guide = [
+    "INFO: Row contains X axis value which is X location of Bump. \n",
+    "      - Must be interger   \n\n",
+    "      * Example:   8       "
+]
+Yget_guide = [
+    "INFO: Row contains Y axis value which is Y location of Bump.\n", 
+    "      - Must be Excel column format\n\n",
+    "      * Example: CU " 
+]
+outtb_s_guide = [
+    "INFO: Sheet to put Die table\n\n ",
+    "      * Example: Bump coordination "
+]
+out_name_in_guide = [
+    "INFO: This field to define the output table name\n\n    ",
+    "      * Example: DieX "
+]
+out_name2_in_guide = [
+    "INFO: This field to define the output table name for bump without sealring.\n",
+    "      - This field will be used when TC option is turned on\n\n",
+    "      * Example: DieX without sealring "
+]
+out_col_in_guide = [
+    "INFO: This field to define the first output table location. \n",
+    "      - The next tables placed away 2 column from previous table \n\n ",
+    "      * Example: O64 "
+]
+out_col_wsr_i_guide = [
+    "INFO: This field to define the first output table location. \n\n",
+    "      * Example: O64 "
+]
+dummystart_guide = [
+    "INFO: Dummy bump window begin cell\n\n ",
+    "      * Example:   A0           "
+]
+dummyend_guide = [
+    "INFO: Dummy bump window end cell\n\n ",
+    "      * Example:   E3           "
+]
+dummy_Xget_guide = [
+    "INFO: Row contains X axis value which is X location of Bump. \n",
+    "      - Must be interger   \n\n",
+    "      * Example:   8       "
+]
+dummy_Yget_guide = [
+    "INFO: Row contains Y axis value which is Y location of Bump.\n",
+    "      - Must be Excel column format\n\n",
+    "      * Example: CU "
+]
+xwidth_i_guide = [
+    "INFO: Width of Die/chip. \n\n",
+    "      - This param used for Flip, Rotate die/chip to put on PKG  "
+]
+yheight_i_guide = [
+    "INFO: Height of Die/chip. \n\n",
+    "      - This param used for Flip, Rotate die/chip to put on PKG  "
+]
+Die1_xoffset_i_guide = [
+    "INFO: List X Offset of Die Left/Up(Chip Left/Up). \n ",
+    "      - This param used for Die/chip placement on PKG  "
+]
+Die1_yoffset_i_guide = [
+    "INFO: List Y Offset of Die Left/Up(Chip Left/Up). \n ",
+    "      - This param used for Die/chip placement on PKG  "
+]
+Die2_xoffset_i_guide = [
+    "INFO: List X Offset of Die Right/Down(Chip Right/Down). \n",
+    "      - This param used for Die/chip placement on PKG  "
+]
+Die2_yoffset_i_guide = [
+    "INFO: List Y Offset of Die Right/Down(Chip Right/Down). \n",
+    "      - This param used for Die/chip placement on PKG  "
+]
+intp_sheet_guide = [
+    "INFO: Name of interposer sheet to put interposer Die table \n\n ",
+    "      * Example: Packge_substrates "
+]
+Die1_name_guide = [
+    "INFO: List Name of interposer Die Left/Up which is outcome of Die Flipped then Rotate -90\n ",
+    "      - The dies name are separated by spaces.\n ",
+    "NOTE: The Die name is mapping between Die Left/Up and Die Right/Down. \n",
+    "For example:\n",
+    "       Die Right list name: DIE5 DIE6 DIE7 DIE8, and\n",
+    "       Die Left list name: DIE1 DIE2 DIE3 DIE4, and\n",
+    "               (DIE1 <=> DIE5) \n",
+    "               (DIE2 <=> DIE6) \n",
+    "               (DIE3 <=> DIE7) \n",
+    "               (DIE4 <=> DIE7)"
+]
+Die2_name_guide = [
+    "INFO: List Name of interposer Die Right/Down which is outcome of Die Flipped then Rotate +90\n ",
+    "      - The dies name are separated by spaces.\n ",
+    "NOTE: The Die name is mapping between Die Left/Up and Die Right/Down. \n",
+    "For example:\n",
+    "       Die Left list name: DIE1 DIE2 DIE3 DIE4, and\n",
+    "       Die Right list name: DIE5 DIE6 DIE7 DIE8, and\n",
+    "               (DIE1 <=> DIE5) \n",
+    "               (DIE2 <=> DIE6) \n",
+    "               (DIE3 <=> DIE7) \n",
+    "               (DIE4 <=> DIE7)"
+]
+int_tb_guide = [
+    "INFO: This field to define the first output table cell. \n ",
+    "       - The next tables placed away 1 column from previous table \n\n ",
+    "       * Example: O64 "
+]
+srw_i_guide = [
+    "INFO: This field to define the width of sealring.\n\n",
+    "Note: Normally, TSMC is 21.6, SS/GF is 14.04 \n\n"
+]
+vssheet_gui = [
+    "INFO: Name of bump visual sheet to generate Bump coordinate table\n\n ",
+    "      * Example: N3P_CoWoS"
+]
+
+def guide(gui_list):
+    entry_enable(text)
+    text_delete()
+    for gui in gui_list:
+       myguide(text,gui)
+    entry_disable(text)
+
         
 xfont = ("System", 12, "bold", 'underline', 'italic')
 theme_combo_t = ttk.Label(root,text="Choose theme:",border=20, font=xfont, background='#b434eb', borderwidth=3)
@@ -338,6 +431,8 @@ sheet_t_w = my_canvas.create_window(30,80, anchor="nw", window=sheet_t)
 sheet_i = ttk.Entry(root, background="#217346", width=20)
 
 sheet_i_w = my_canvas.create_window(150,80, anchor="nw", window=sheet_i)
+sheet_i.bind('<FocusIn>', lambda event: guide(vssheet_gui))
+# sheet_i.bind('<FocusOut>', un_guide)
 # -------------------------excel sheet_name input--------------------------#
 sheete_t = ttk.Label(root,text="C4 sheet:",border=20,font=pfont, borderwidth=3)
 sheete_t_w = my_canvas.create_window(300,80, anchor="nw", window=sheete_t)
@@ -360,17 +455,12 @@ sr_opt_w =my_canvas.create_window(300, 120, anchor="nw", window=sr_opt)
 
 
 # -------------------------foundary selection --------------------------#
-# foundry_combo = ttk.Combobox(root, state="readonly", values=foundry_list, width=17)
-# foundry_combo_w = my_canvas.create_window(400, 120, anchor="nw", window=foundry_combo)
-# foundry_combo.current(0)
+
 srw_i = ttk.Entry(root, width=20)
 my_canvas.create_window(400, 120, anchor="nw", window=srw_i)
 
-srw_i.bind('<FocusIn>', srw_i_guide)
-srw_i.bind('<FocusOut>', un_guide)
-
-# foundry_combo.bind('<<ComboboxSelected>>', choosemode)
-
+srw_i.bind('<FocusIn>', lambda event: guide(srw_i_guide))
+# srw_i.bind('<FocusOut>', un_guide)
 
 # Separator
 separator = ttk.Separator(root)
@@ -384,27 +474,27 @@ bum_visual_t = my_canvas.create_text(30, 200, text="Die bump map visual input:",
 # ------------------------Die bump visual parameters input --------------------------#
 x1y1_i = ttk.Entry(root, width=20)
 x1y1_i_w = my_canvas.create_window(150, 230, anchor="nw", window=x1y1_i)
-x1y1_i.bind('<FocusIn>', x1y1_guide)
-x1y1_i.bind('<FocusOut>', un_guide)
+x1y1_i.bind('<FocusIn>', lambda event: guide(x1y1_guide))
+# x1y1_i.bind('<FocusOut>', un_guide)
 
 
 x2y2_i = ttk.Entry(root, width=20)
 my_canvas.create_window(300, 230, anchor="nw", window=x2y2_i)
 
-x2y2_i.bind('<FocusIn>', x2y2_guide)
-x2y2_i.bind('<FocusOut>', un_guide)
+x2y2_i.bind('<FocusIn>', lambda event: guide(x2y2_guide))
+# x2y2_i.bind('<FocusOut>', un_guide)
 
 Xget_i = ttk.Entry(root, width=20)
 Xget_i_w = my_canvas.create_window(150, 270, anchor="nw", window=Xget_i)
 
-Xget_i.bind('<FocusIn>', Xget_guide)
-Xget_i.bind('<FocusOut>', un_guide)
+Xget_i.bind('<FocusIn>', lambda event: guide(Xget_guide))
+# Xget_i.bind('<FocusOut>', un_guide)
 
 Yget_i = ttk.Entry(root, width=20)
 Yget_i_w = my_canvas.create_window(300, 270, anchor="nw", window=Yget_i)
 
-Yget_i.bind('<FocusIn>', Yget_guide)
-Yget_i.bind('<FocusOut>', un_guide)
+Yget_i.bind('<FocusIn>', lambda event: guide(Yget_guide))
+# Yget_i.bind('<FocusOut>', un_guide)
 
 # ------------------------Output table configure --------------------------#
 die_tb_out_t = my_canvas.create_text(500, 200, text="Die table out \nconfig:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
@@ -413,34 +503,34 @@ die_tb_out_t = my_canvas.create_text(500, 200, text="Die table out \nconfig:", a
 out_tb_sheet = ttk.Entry(root)
 out_tb_sheet_w = my_canvas.create_window(600, 195, anchor="nw", window=out_tb_sheet, width=275)
 
-out_tb_sheet.bind('<FocusIn>', outtb_s_guide)
-out_tb_sheet.bind('<FocusOut>', un_guide)
+out_tb_sheet.bind('<FocusIn>', lambda event: guide(outtb_s_guide))
+# out_tb_sheet.bind('<FocusOut>', un_guide)
 
 out_name_in = ttk.Entry(root, width=20)
 out_name_in_w = my_canvas.create_window(600, 230, anchor="nw", window=out_name_in)
 
-out_name_in.bind('<FocusIn>', out_name_in_guide)
-out_name_in.bind('<FocusOut>', un_guide)
+out_name_in.bind('<FocusIn>', lambda event: guide(out_name_in_guide))
+# out_name_in.bind('<FocusOut>', un_guide)
 out_name2_in = ttk.Entry(root, width=20)
 out_name2_in_w = my_canvas.create_window(750, 230, anchor="nw", window=out_name2_in)
 
-out_name2_in.bind('<FocusIn>', out_name2_in_guide)
-out_name2_in.bind('<FocusOut>', un_guide)
+out_name2_in.bind('<FocusIn>', lambda event: guide(out_name2_in_guide))
+# out_name2_in.bind('<FocusOut>', un_guide)
 
 
 out_col_i = ttk.Entry(root, width=20)
 out_col_i_w = my_canvas.create_window(600, 270, anchor="nw", window=out_col_i)
 
-out_col_i.bind('<FocusIn>', out_col_in_guide)
-out_col_i.bind('<FocusOut>', un_guide)
+out_col_i.bind('<FocusIn>', lambda event: guide(out_col_in_guide))
+# out_col_i.bind('<FocusOut>', un_guide)
 
 
 
 out_col_wsr_i = ttk.Entry(root)
 out_col_wsr_w = my_canvas.create_window(750, 270, anchor="nw", window=out_col_wsr_i)
 
-out_col_wsr_i.bind('<FocusIn>', out_col_wsr_i_guide)
-out_col_wsr_i.bind('<FocusOut>', un_guide)
+out_col_wsr_i.bind('<FocusIn>', lambda event: guide(out_col_wsr_i_guide))
+# out_col_wsr_i.bind('<FocusOut>', un_guide)
 
 
 #------------------------------------Dummybup at 4 corners for Advance package-----------------------------------------------------#
@@ -451,26 +541,26 @@ my_canvas.create_text(245, 330, text="Corner 1 config", anchor="nw",font=("Helve
 cor1_x1y1 = ttk.Entry(root, width=20)
 cor1_x1y1_w = my_canvas.create_window(150, 350, anchor="nw", window=cor1_x1y1)
 
-cor1_x1y1.bind('<FocusIn>', dummystart_guide)
-cor1_x1y1.bind('<FocusOut>', un_guide)
+cor1_x1y1.bind('<FocusIn>', lambda event: guide(dummystart_guide))
+# cor1_x1y1.bind('<FocusOut>', un_guide)
 
 cor1_x2y2 = ttk.Entry(root, width=20)
 cor1_x2y2_w = my_canvas.create_window(300, 350, anchor="nw", window=cor1_x2y2)
 
-cor1_x2y2.bind('<FocusIn>', dummyend_guide)
-cor1_x2y2.bind('<FocusOut>', un_guide)
+cor1_x2y2.bind('<FocusIn>', lambda event: guide(dummyend_guide))
+# cor1_x2y2.bind('<FocusOut>', un_guide)
 
 cor1_Xget = ttk.Entry(root,width=20)
 cor1_Xget_w = my_canvas.create_window(150, 380, anchor="nw", window=cor1_Xget)
 
-cor1_Xget.bind('<FocusIn>', dummy_Xget_guide)
-cor1_Xget.bind('<FocusOut>', un_guide)
+cor1_Xget.bind('<FocusIn>', lambda event: guide(dummy_Xget_guide))
+# cor1_Xget.bind('<FocusOut>', un_guide)
 
 cor1_Yget = ttk.Entry(root, width=20)
 cor1_Yget_w = my_canvas.create_window(300, 380, anchor="nw", window=cor1_Yget)
 
-cor1_Yget.bind('<FocusIn>', dummy_Yget_guide)
-cor1_Yget.bind('<FocusOut>', un_guide)
+cor1_Yget.bind('<FocusIn>', lambda event: guide(dummy_Yget_guide))
+# cor1_Yget.bind('<FocusOut>', un_guide)
 #---------------------------------------------------------------------------------------------------------#
 
 my_canvas.create_text(670, 330, text="Corner 2 config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="black")
@@ -478,26 +568,26 @@ my_canvas.create_text(670, 330, text="Corner 2 config", anchor="nw",font=("Helve
 cor2_x1y1 = ttk.Entry(root, width=20)
 cor2_x1y1_w = my_canvas.create_window(600, 350, anchor="nw", window=cor2_x1y1)
 
-cor2_x1y1.bind('<FocusIn>', dummystart_guide)
-cor2_x1y1.bind('<FocusOut>', un_guide)
+cor2_x1y1.bind('<FocusIn>', lambda event: guide(dummystart_guide))
+# cor2_x1y1.bind('<FocusOut>', un_guide)
 
 cor2_x2y2 = ttk.Entry(root, width=20)
 cor2_x2y2_w = my_canvas.create_window(750, 350, anchor="nw", window=cor2_x2y2)
 
-cor2_x2y2.bind('<FocusIn>', dummyend_guide)
-cor2_x2y2.bind('<FocusOut>', un_guide)
+cor2_x2y2.bind('<FocusIn>', lambda event: guide(dummyend_guide))
+# cor2_x2y2.bind('<FocusOut>', un_guide)
 
 cor2_Xget = ttk.Entry(root, width=20)
 cor2_Xget_w = my_canvas.create_window(600, 380, anchor="nw", window=cor2_Xget)
 
-cor2_Xget.bind('<FocusIn>', dummy_Xget_guide)
-cor2_Xget.bind('<FocusOut>', un_guide)
+cor2_Xget.bind('<FocusIn>', lambda event: guide(dummy_Xget_guide))
+# cor2_Xget.bind('<FocusOut>', un_guide)
 
 cor2_Yget = ttk.Entry(root, width=20)
 cor2_Yget_w = my_canvas.create_window(750, 380, anchor="nw", window=cor2_Yget)
 
-cor2_Yget.bind('<FocusIn>', dummy_Yget_guide)
-cor2_Yget.bind('<FocusOut>', un_guide)
+cor2_Yget.bind('<FocusIn>', lambda event: guide(dummy_Yget_guide))
+# cor2_Yget.bind('<FocusOut>', un_guide)
 
 #--------------------------------------------------------------------------------------------------------#
 
@@ -505,26 +595,26 @@ my_canvas.create_text(245, 410, text="Corner 3 config", anchor="nw",font=("Helve
 cor3_x1y1 = ttk.Entry(root, width=20)
 cor3_x1y1_w = my_canvas.create_window(150, 430, anchor="nw", window=cor3_x1y1)
 
-cor3_x1y1.bind('<FocusIn>', dummystart_guide)
-cor3_x1y1.bind('<FocusOut>', un_guide)
+cor3_x1y1.bind('<FocusIn>', lambda event: guide(dummystart_guide))
+# cor3_x1y1.bind('<FocusOut>', un_guide)
 
 cor3_x2y2 = ttk.Entry(root, width=20)
 cor3_x2y2_w = my_canvas.create_window(300, 430, anchor="nw", window=cor3_x2y2)
 
-cor3_x2y2.bind('<FocusIn>', dummyend_guide)
-cor3_x2y2.bind('<FocusOut>', un_guide)
+cor3_x2y2.bind('<FocusIn>', lambda event: guide(dummyend_guide))
+# cor3_x2y2.bind('<FocusOut>', un_guide)
 
 cor3_Xget = ttk.Entry(root)
 cor3_Xget_w = my_canvas.create_window(150, 460, anchor="nw", window=cor3_Xget)
 
-cor3_Xget.bind('<FocusIn>', dummy_Xget_guide)
-cor3_Xget.bind('<FocusOut>', un_guide)
+cor3_Xget.bind('<FocusIn>', lambda event: guide(dummy_Xget_guide))
+# cor3_Xget.bind('<FocusOut>', un_guide)
 
 cor3_Yget = ttk.Entry(root)
 cor3_Yget_w = my_canvas.create_window(300, 460, anchor="nw", window=cor3_Yget)
 
-cor3_Yget.bind('<FocusIn>', dummy_Yget_guide)
-cor3_Yget.bind('<FocusOut>', un_guide)
+cor3_Yget.bind('<FocusIn>', lambda event: guide(dummy_Yget_guide))
+# cor3_Yget.bind('<FocusOut>', un_guide)
 
 #--------------------------------------------------------------------------------------------------------#
 
@@ -532,26 +622,26 @@ my_canvas.create_text(670, 410, text="Corner 4 config", anchor="nw",font=("Helve
 cor4_x1y1 = ttk.Entry(root, width=20)
 cor4_x1y1_w = my_canvas.create_window(600, 430, anchor="nw", window=cor4_x1y1)
 
-cor4_x1y1.bind('<FocusIn>', dummystart_guide)
-cor4_x1y1.bind('<FocusOut>', un_guide)
+cor4_x1y1.bind('<FocusIn>', lambda event: guide(dummystart_guide))
+# cor4_x1y1.bind('<FocusOut>', un_guide)
 
 cor4_x2y2 = ttk.Entry(root, width=20)
 cor4_x2y2_w = my_canvas.create_window(750, 430, anchor="nw", window=cor4_x2y2)
 
-cor4_x2y2.bind('<FocusIn>', dummyend_guide)
-cor4_x2y2.bind('<FocusOut>', un_guide)
+cor4_x2y2.bind('<FocusIn>', lambda event: guide(dummyend_guide))
+# cor4_x2y2.bind('<FocusOut>', un_guide)
 
 cor4_Xget = ttk.Entry(root, width=20)
 cor4_Xget_w = my_canvas.create_window(600, 460, anchor="nw", window=cor4_Xget)
 
-cor4_Xget.bind('<FocusIn>', dummy_Xget_guide)
-cor4_Xget.bind('<FocusOut>', un_guide)
+cor4_Xget.bind('<FocusIn>', lambda event: guide(dummy_Xget_guide))
+# cor4_Xget.bind('<FocusOut>', un_guide)
 
 cor4_Yget = ttk.Entry(root, width=20)
 cor4_Yget_w = my_canvas.create_window(750, 460, anchor="nw", window=cor4_Yget)
 
-cor4_Yget.bind('<FocusIn>', dummy_Yget_guide)
-cor4_Yget.bind('<FocusOut>', un_guide)
+cor4_Yget.bind('<FocusIn>', lambda event: guide(dummy_Yget_guide))
+# cor4_Yget.bind('<FocusOut>', un_guide)
 
 # ---------------------------------------INTERPOSER DIE-------------------------------------------------
 interopser = ttk.Checkbutton(root, text="Interposer Die generator", variable=isIntp, onvalue=1, offvalue=0,command= intp_toggle)
@@ -561,14 +651,14 @@ int_size_t = my_canvas.create_text(280, 540, text="Die/Chip size input:", anchor
 xwidth_i = ttk.Entry(root)
 xwidth_i_w = my_canvas.create_window(150, 560, anchor="nw", window=xwidth_i, width= 170)
 
-xwidth_i.bind('<FocusIn>', xwidth_i_guide)
-xwidth_i.bind('<FocusOut>', un_guide)
+xwidth_i.bind('<FocusIn>', lambda event: guide(xwidth_i_guide))
+# xwidth_i.bind('<FocusOut>', un_guide)
 
 yheight_i = ttk.Entry(root, width=20)
 yheight_w = my_canvas.create_window(340, 560, anchor="nw", window=yheight_i, width=170)
 
-yheight_i.bind('<FocusIn>', yheight_i_guide)
-yheight_i.bind('<FocusOut>', un_guide)
+yheight_i.bind('<FocusIn>', lambda event: guide(yheight_i_guide))
+# yheight_i.bind('<FocusOut>', un_guide)
 
 
 int_s_loc_t = my_canvas.create_text(620, 540, text="OUT DIE sheet/location:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
@@ -576,14 +666,14 @@ int_s_loc_t = my_canvas.create_text(620, 540, text="OUT DIE sheet/location:", an
 intp_sheet = ttk.Entry(root)
 intp_sheet_w = my_canvas.create_window(520, 560, anchor="nw", window=intp_sheet, width=170)
 
-intp_sheet.bind('<FocusIn>', intp_sheet_guide)
-intp_sheet.bind('<FocusOut>', un_guide)
+intp_sheet.bind('<FocusIn>', lambda event: guide(intp_sheet_guide))
+# intp_sheet.bind('<FocusOut>', un_guide)
 
 int_tb_loc = ttk.Entry(root)
 int_tb_locc_w = my_canvas.create_window(710, 560, anchor="nw", window=int_tb_loc, width=170)
 
-int_tb_loc.bind('<FocusIn>', int_tb_guide)
-int_tb_loc.bind('<FocusOut>', un_guide)
+int_tb_loc.bind('<FocusIn>', lambda event: guide(int_tb_guide))
+# int_tb_loc.bind('<FocusOut>', un_guide)
 
 # my_canvas.create_text(30, 595, text="Die/Chip Offset:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 int_die_cnt_t = my_canvas.create_text(60, 600, text="Die count:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
@@ -597,40 +687,40 @@ int_die_name_t = my_canvas.create_text(60, 635, text="Die name:", anchor="nw",fo
 Die1_name = ttk.Entry(root)
 Die1_name_w = my_canvas.create_window(150, 630, anchor="nw", window=Die1_name, width= 360)
 
-Die1_name.bind('<FocusIn>', Die1_name_guide)
-Die1_name.bind('<FocusOut>', un_guide)
+Die1_name.bind('<FocusIn>', lambda event: guide(Die1_name_guide))
+# Die1_name.bind('<FocusOut>', un_guide)
 
 Die2_name = ttk.Entry(root)
 Die2_name_w = my_canvas.create_window(520, 630, anchor="nw", window=Die2_name, width=360)
 
-Die2_name.bind('<FocusIn>', Die2_name_guide)
-Die2_name.bind('<FocusOut>', un_guide)
+Die2_name.bind('<FocusIn>', lambda event: guide(Die2_name_guide))
+# Die2_name.bind('<FocusOut>', un_guide)
 
 int_xo_t = my_canvas.create_text(60, 675, text="X offset:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 Die1_xoffset_i = ttk.Entry(root)
 Die1_xoffset_w = my_canvas.create_window(150, 670, anchor="nw", window=Die1_xoffset_i, width=360)
 
-Die1_xoffset_i.bind('<FocusIn>', Die1_xoffset_i_guide)
-Die1_xoffset_i.bind('<FocusOut>', un_guide)
+Die1_xoffset_i.bind('<FocusIn>', lambda event: guide(Die1_xoffset_i_guide))
+# Die1_xoffset_i.bind('<FocusOut>', un_guide)
 
 int_yo_t = my_canvas.create_text(60, 715, text="Y offset:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 Die1_yoffset_i = ttk.Entry(root, width=20)
 Die1_yoffset_w = my_canvas.create_window(150, 710, anchor="nw", window=Die1_yoffset_i, width=360)
 
-Die1_yoffset_i.bind('<FocusIn>', Die1_yoffset_i_guide)
-Die1_yoffset_i.bind('<FocusOut>', un_guide)
+Die1_yoffset_i.bind('<FocusIn>', lambda event: guide(Die1_yoffset_i_guide))
+# Die1_yoffset_i.bind('<FocusOut>', un_guide)
 
 Die2_xoffset_i = ttk.Entry(root)
 Die2_xoffset_w = my_canvas.create_window(520, 670, anchor="nw", window=Die2_xoffset_i, width=360)
 
-Die2_xoffset_i.bind('<FocusIn>', Die2_xoffset_i_guide)
-Die2_xoffset_i.bind('<FocusOut>', un_guide)
+Die2_xoffset_i.bind('<FocusIn>', lambda event: guide(Die2_xoffset_i_guide))
+# Die2_xoffset_i.bind('<FocusOut>', un_guide)
 
 Die2_yoffset_i = ttk.Entry(root, width=20)
 Die2_yoffset_w = my_canvas.create_window(520, 710, anchor="nw", window=Die2_yoffset_i, width=360)
 
-Die2_yoffset_i.bind('<FocusIn>', Die2_yoffset_i_guide)
-Die2_yoffset_i.bind('<FocusOut>', un_guide)
+Die2_yoffset_i.bind('<FocusIn>', lambda event: guide(Die2_yoffset_i_guide))
+# Die2_yoffset_i.bind('<FocusOut>', un_guide)
 
 
 separator1 = ttk.Separator(root)
@@ -681,8 +771,9 @@ def getstring(string: str,c1: str, c2: str):
 def get_params_and_generate():
     # popup("Generating...")
     # button['state'] = tk.DISABLED
-   
-
+    entry_enable(text)
+    text_delete()
+    
     mynotif("Processing the input parameter...")
     button['text']="Generating..."
     
@@ -780,49 +871,49 @@ def get_params_and_generate():
             }
 
         }
-    
-    with open(".ploctablebgen_params_saved.txt",'w') as params_saved:
-        params_saved.writelines(excel_path+"\n")
-        params_saved.writelines(bump_visual_sheet+"\n")
-        params_saved.writelines(package+"\n")
-        params_saved.writelines(str(tc_sr["isTC"])+"\n")
-        params_saved.writelines(str(tc_sr["sr_w"])+"\n")
-        params_saved.writelines(die_coor['window1'] +" "+ die_coor['window2'] +" "+ die_coor['xcoor']+" "+die_coor['ycoor'] + "\n")
-        params_saved.writelines(cor1_x1y1.get() +" "+ cor1_x2y2.get() +" "+ cor1_Xget.get() +" "+ cor1_Yget.get() +" "+
-                                cor2_x1y1.get() +" "+ cor2_x2y2.get() +" "+ cor2_Xget.get() +" "+ cor2_Yget.get() +" "+
-                                cor3_x1y1.get() +" "+ cor3_x2y2.get() +" "+ cor3_Xget.get() +" "+ cor3_Yget.get() +" "+
-                                cor4_x1y1.get() +" "+ cor4_x2y2.get() +" "+ cor4_Xget.get() +" "+ cor4_Yget.get()
-                                  + "\n")
-        params_saved.writelines(die_table['sheet'] +"\n")
-        params_saved.writelines(die_table['name'] + "\n")
-        params_saved.writelines(die_table['name_wsr']+"\n")
-        params_saved.writelines(die_table['location']+"\n")
-       
-        params_saved.writelines(str(int_gen) + "\n")
-        params_saved.writelines(die_params["chip_width"] + " " + die_params['chip_height'] +"\n")
-        params_saved.writelines(str(int_die_cnt) + "\n")
-      
-
-        params_saved.writelines(int_die_tb['Die1_name'] + "\n")
-        params_saved.writelines(int_die_tb['Die2_name'] + "\n")
+    global temp_file, tmp_flag
+    if(tmp_flag == 0):
+        with open(temp_file,'w') as params_saved:
+            params_saved.writelines(excel_path+"\n")
+            params_saved.writelines(bump_visual_sheet+"\n")
+            params_saved.writelines(package+"\n")
+            params_saved.writelines(str(tc_sr["isTC"])+"\n")
+            params_saved.writelines(str(tc_sr["sr_w"])+"\n")
+            params_saved.writelines(die_coor['window1'] +" "+ die_coor['window2'] +" "+ die_coor['xcoor']+" "+die_coor['ycoor'] + "\n")
+            params_saved.writelines(cor1_x1y1.get() +" "+ cor1_x2y2.get() +" "+ cor1_Xget.get() +" "+ cor1_Yget.get() +" "+
+                                    cor2_x1y1.get() +" "+ cor2_x2y2.get() +" "+ cor2_Xget.get() +" "+ cor2_Yget.get() +" "+
+                                    cor3_x1y1.get() +" "+ cor3_x2y2.get() +" "+ cor3_Xget.get() +" "+ cor3_Yget.get() +" "+
+                                    cor4_x1y1.get() +" "+ cor4_x2y2.get() +" "+ cor4_Xget.get() +" "+ cor4_Yget.get()
+                                    + "\n")
+            params_saved.writelines(die_table['sheet'] +"\n")
+            params_saved.writelines(die_table['name'] + "\n")
+            params_saved.writelines(die_table['name_wsr']+"\n")
+            params_saved.writelines(die_table['location']+"\n")
         
-        params_saved.writelines(die_params['die1_xoffset'] + "\n")
-        params_saved.writelines(die_params['die2_xoffset'] + "\n")
-        params_saved.writelines(die_params['die1_yoffset'] + "\n")
-        params_saved.writelines(die_params['die2_yoffset'] + "\n")
-        params_saved.writelines(int_die_tb['sheet'] + "\n")
-        params_saved.writelines(int_die_tb['int_tb_location'] + "\n")
-        params_saved.writelines(theme_combo.get() + "\n")
+            params_saved.writelines(str(int_gen) + "\n")
+            params_saved.writelines(die_params["chip_width"] + " " + die_params['chip_height'] +"\n")
+            params_saved.writelines(str(int_die_cnt) + "\n")
+        
+
+            params_saved.writelines(int_die_tb['Die1_name'] + "\n")
+            params_saved.writelines(int_die_tb['Die2_name'] + "\n")
+            
+            params_saved.writelines(die_params['die1_xoffset'] + "\n")
+            params_saved.writelines(die_params['die2_xoffset'] + "\n")
+            params_saved.writelines(die_params['die1_yoffset'] + "\n")
+            params_saved.writelines(die_params['die2_yoffset'] + "\n")
+            params_saved.writelines(int_die_tb['sheet'] + "\n")
+            params_saved.writelines(int_die_tb['int_tb_location'] + "\n")
+            params_saved.writelines(theme_combo.get() + "\n")
         
     print("Package: " + package)
     if (package == "A-CoWoS"):
-        # print(1)
-        
-         #---Dummy Bump visual view parameter---#
-        
+        text_delete()
+        mynotif("Package type: A-CoWoS")
         package_type = 1
     elif(package == "S-Organic"):
-        # dmbump_frame.state = tk.DISABLED
+        text_delete()
+        mynotif("Package type: S-Organic")
         package_type = 0
         
     else:
@@ -839,13 +930,14 @@ def get_params_and_generate():
 def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, die_coor, dummybump, die_params, int_die_tb, int_gen, int_die_cnt, tc_sr):
 
 
-    mynotif("")
+    
     root.update_idletasks()
     mynotif("Loading the ploc file...")
     root.update_idletasks()
     try:
         # wb_d = load_workbook(excel_path, data_only=True)
         print("Opening excel file...")
+        mynotif("Opening excel file...")
         wb_f = load_workbook(excel_path)
         print(wb_f)   
     except:
@@ -867,30 +959,30 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
             wsdiebump_f = wb_f[die_table['sheet']]
         else:
             msg_ws = messagebox.askquestion('Create Sheet', 'The ' + die_table['sheet'] + ' doesn\'t exist. Do you want to create it?',icon='question')
-            mynotif("")
+            # mynotif("")
             mynotif("The " + die_table['sheet'] + " doesn't exist.")
             if(msg_ws == 'yes'):
-                mynotif("")
+                # mynotif("")
                 mynotif('Creating the sheet...')
                 wsdiebump_f = wb_f.create_sheet(die_table['sheet'])
             else:
-                mynotif("")
+                # mynotif("")
                 progress_bar(0)
                 return
         if(int_gen == 1):
             if int_die_tb['sheet'] in sheet_list:
                 wsintbump_f = wb_f[int_die_tb['sheet']]
             else:
-                mynotif("")
+                # mynotif("")
                 mynotif("The " + int_die_tb['sheet'] + " doesn't exist.")
                 msg_ws = messagebox.askquestion('Create Sheet', 'The ' + int_die_tb['sheet'] + ' doesn\'t exist. Do you want to create it?', icon='question')
             
                 if(msg_ws == 'yes'):
                     wsintbump_f = wb_f.create_sheet(int_die_tb['sheet'])
-                    mynotif("")
+                    # mynotif("")
                     mynotif('Creating the sheet...')
                 else:
-                    mynotif("")
+                    # mynotif("")
                     progress_bar(0)
                     return
             
@@ -974,7 +1066,8 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
             if(len(die1_list) != int(int_die_cnt)/2 or len(die2_list) != int(int_die_cnt)/2 or len(die1_xoffset_list) != int(int_die_cnt)/2 or len(die2_xoffset_list) != int(int_die_cnt)/2 or len(die1_yoffset_list) != int(int_die_cnt)/2 or len(die2_yoffset_list) != int(int_die_cnt)/2):
                 show_error('The input die parameters incorrect. Please re-check it')
                 int_input_correct = 0
-                mynotif("")
+                mynotif('The input die parameters incorrect. Please re-check it')
+                # mynotif("")
                 progress_bar(0)
                 return
             else:
@@ -1038,9 +1131,10 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
         if (package_type == 1):
             
             print("Generate for Advance Package")
+            mynotif("Generate for Advance Package")
             dm_bump_coor= []
             dm_cnt=0
-            mynotif("")
+            # mynotif("")
             root.update_idletasks()
             mynotif("Generating Dummy bump...")
             root.update_idletasks()
@@ -1064,6 +1158,7 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
                         if (wsvisual_f[col_dm + str(dummyrow1)].value != None):
                             
                             print("Processing for Dummy bump at: " + col_dm + str(dummyrow1))
+                            mynotif("Processing for Dummy bump at: " + col_dm + str(dummyrow1))
                             # Gen dummy bump table
                             wsdiebump_f[get_column_letter(die_tb_x)+str(r_die)].value = f"='{bump_visual_sheet}'!{col_dm + xcoor_dm}"
                             wsdiebump_f[get_column_letter(die_tb_x + 1)+str(r_die)].value = f"='{bump_visual_sheet}'!{ycoor_dm + str(dummyrow1)}"
@@ -1110,7 +1205,7 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
             #---------Create Die bump exclued dummy bump at 4 corner-----------#
 
             match = 0
-            mynotif("")
+            # mynotif("")
             root.update_idletasks()
             mynotif("Generating Die bump...")
             root.update_idletasks()
@@ -1130,6 +1225,7 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
                         i += 1
                     if (match == 0 and wsvisual_f[col_l + str(row)].value != None):
                         print("Processing for Die bump at: " + col_l + str(row))
+                        mynotif("Processing for Die bump at: " + col_l + str(row))
                         #  get the X value from Visual bump sheet
                         if (wsvisual_f[col_l + str(row)].value != None):
                         
@@ -1186,6 +1282,7 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
                         #print(col_l)
                         if (wsvisual_f[col_l + str(row)].value != None):
                             print("Processing for Die bump at: " + col_l + str(row))
+                            mynotif("Processing for Die bump at: " + col_l + str(row))
                             #  get the X value from Visual bump sheet
                         
                             wsdiebump_f[get_column_letter(die_tb_x)+str(r_die)].value = f"='{bump_visual_sheet}'!{col_l + str(die_coor['xcoor'])}"
@@ -1236,12 +1333,13 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
         
         progress_bar(80)   
         print("Saving excel...") 
+        mynotif("Saving excel file...")
         wb_f.save(excel_path)
         progress_bar(100)
-        mynotif("Generated")
+        mynotif("Successed!!!")
         print("Completed!!!")
         popup("PLOC generated successful!!!")
-        mynotif("")
+        entry_disable(text)
         
     except (ValueError):
         print ("Wrong input, Please check and regenerate")
@@ -1308,11 +1406,19 @@ button = tk.Button(root, text="Generate",font = mediumFont, foreground='white', 
 
 button_w = my_canvas.create_window(300, 860, anchor="nw", window=button)
 
+text = tk.Text(my_canvas,width = 50, height = 100,bd=5,relief='groove', wrap='word', font=('arial',10), highlightthickness=2 ) #yscrollcommand=scroll_y.set
+scroll_y = ttk.Scrollbar(text)
+my_canvas.create_window(600,80, anchor='nw', window=text, height=100, width=280)
+
+text.config(yscrollcommand=scroll_y.set)
+scroll_y.pack(side=RIGHT, fill=Y)
+scroll_y.config(command=text.yview)
 
 # Get saved params
 def get_saved_params():
+    global temp_file
     try:
-        with open(".ploctablebgen_params_saved.txt",'r') as params_saved:
+        with open(temp_file,'r') as params_saved:
             line1 = [line.rstrip() for line in params_saved]
             params = {
             'excel_path' : line1[0],
@@ -1439,6 +1545,7 @@ def get_saved_params():
         Die2_yoffset_i.insert(0, "97.9849999999997")
         int_die_num_combo.current(0)
         package_combo.current(0)
+    mynotif("\n\nINFO: This field is for showing the information or guidance")
 get_saved_params()
 
 entry_disable(cor1_x1y1, cor1_x2y2, cor1_Xget, cor1_Yget,
@@ -1449,6 +1556,7 @@ entry_disable(cor1_x1y1, cor1_x2y2, cor1_Xget, cor1_Yget,
 entry_disable(sheete_i, sheete_t)
 entry_disable(srw_i, out_name2_in, out_col_wsr_i)
 entry_disable(xwidth_i, yheight_i, Die1_xoffset_i, Die1_yoffset_i, Die2_xoffset_i, Die2_yoffset_i, intp_sheet, Die1_name, Die2_name, int_tb_loc, int_die_num_combo)
+# my_canvas.itemconfigure(out_col_i_w, bac )
 sheet_t['text']= "Bump sheet:"
 mynotif("")
 root.mainloop()

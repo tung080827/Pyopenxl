@@ -23,9 +23,18 @@ import os
 import win32com.client
 from pathlib import Path  # core library
 from time import sleep
-
+import tempfile
 
 # excel_file = r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Test_adp.xlsx"
+
+try:
+    temp_file =  os.path.join(tempfile.gettempdir(), ".ploctablebgen_params_saved.txt")
+    print(temp_file)
+    tmp_flag = 0
+except:
+    messagebox.showerror("Can not find the User Temp dir")
+    tmp_flag = 1
+
 img_list = ["owl.png", "mountain.png","whale2.png", "penguin.png","sunset1.png", "circuit1.png", "fight.png", "pug.png", "penguin.png", "whale2.png", "elephant_grey.png", "snowman.png", "bee4.png", "elephant.png", "bee2.png", "fox.png", "beach.png", "frog.png", "cow.png", "forest.png", "owlpink2.png", "dinosaurs.png", "sand1.png", "green.png", "pig.png", "discord1.png" ]
 
 lable_bg_list = ["#F0F0F0","#EDEDED","#EBECEE","#F0F0F0","#F0F0F0","#FCFCFC","#EFF0F1","#EFF0F1","#EFF0F1","#EAECEF","#EFF0F1","#EFF0F1","#FECDD9","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1","#E6EBEF"]
@@ -76,7 +85,7 @@ stfont= ("Franklin Gothic Medium", 10, 'underline', "italic")
 # Create lists for the Comboboxes
 theme_list = ["adapta", "aquativo", "arc", "black","blue", "breeze", "clearlooks", "elegance", "equilux", "itft1", "keramik", "keramik_alt", "kroc", "plastik", "radiance", "ubuntu", "scidblue", "scidgreen", "scidgrey", "scidmint", "scidpink", "scidpurple", "scidsand", "smog", "winxpblue", "yaru" ]
 
-colour_list = ["#09a5e8", "#292b33", "#1583eb", "#292a2b","#1a7cad", "#0664bd", "#8baac7", "#59564f", "#40454a", "#7aa7f5", "#7795b4", "#7795b4", "#ebab0c", "#0c99eb", "#eb830c", "#eb830c", "#0937ab", "#37ed80", "#707371", "#479403", "#d12a9f", "#9b34eb", "#787122", "#118cbd", "#ece9d8", "#924d8b" ]
+colour_list = ["#09a5e8", "#292b33", "#1583eb", "#292a2b","#1a7cad", "#0664bd", "#8baac7", "#59564f", "#40454a", "#7aa7f5", "#7795b4", "#7795b4", "#ebab0c", "#0c99eb", "#eb830c", "#eb830c", "#0937ab", "#37ed80", "#707371", "#479403", "#d12a9f", "#9b34eb", "#787122", "#118cbd", "#505257", "#924d8b" ]
 # Create control variables
 a = tk.BooleanVar()
 b = tk.BooleanVar(value=True)
@@ -122,11 +131,11 @@ def change_colour(index):
         my_canvas.itemconfig(t, fill = colour_list[index])
     for l in entry_list:
         l.config(background = colour_list[index])
-    frame.configure(highlightbackground=colour_list[index], foreground=colour_list[index], bg=lable_bg_list[index], text=" This frame is for showing guidance")
+
+    text.configure(foreground=colour_list[index],bg=lable_bg_list[index], highlightbackground=colour_list[index])
     global bgm
     p = os.path.join(img_path, img_list[index])
     bgm = PhotoImage(file = p)
-
     my_canvas.itemconfigure(bg_img, image=bgm)
 
 def enable(children):
@@ -144,13 +153,17 @@ def entry_enable(*entries):
 
 def intp_toggle():
     
-        # if(entry['state'] == 'disable'):
+    entry_enable(text)
+    text_delete()
     if(isIntp.get() == 1):
         entry_enable(DieL_begincell_i, DieL_endcell_i, DieR_begincell_i, DieR_endcell_i, dietb_sheet, DieL_name, DieR_name)
         print("Gen interposer Die table: ON")
+        myguide(text, "Gen interposer Die table: ON")
     elif(isIntp.get() == 0):
         entry_disable(DieL_begincell_i, DieL_endcell_i, DieR_begincell_i, DieR_endcell_i, dietb_sheet, DieL_name, DieR_name)
         print("Gen interposer Die table: OFF")
+        myguide(text, "Gen interposer Die table: OFF")
+    entry_disable(text)
 def progress_bar(value):
     progress['value'] = value
     root.update_idletasks()
@@ -165,8 +178,7 @@ def choosetheme(event):
 myLabel = ttk.Label(root,text="----")
 myLabel_w =my_canvas.create_window(80,770,anchor="nw", window=myLabel)
 
-frame = tk.Label(root, bg="#c9f2dc", font=("Courier New", 10), foreground="#f2a50a", highlightthickness=2)
-my_canvas.create_window(300, 80, window=frame, anchor="nw", width= 400, height=100)
+
 
 def popup(notif):
     messagebox.showinfo("Notification", notif)
@@ -175,69 +187,108 @@ def progress_bar(value):
     root.update_idletasks()
 def get_num_intdie(event):
     pass
+def text_delete():
+    text.delete("1.0","end")
 def mynotif(content):
-    if(content == ""):
-        myLabel.configure(text="", anchor='w')
-    else:
-        myLabel.configure(text=content, anchor='w')
-        # myLabel = ttk.Label(root,text=content)
-        # myLabel_w =my_canvas.create_window(80,750,anchor="nw", window=myLabel)
-        # myLabel.grid(row=5, column=0, columnspan=2, padx=(20, 10), pady=(20, 10), sticky="nsew")
+    text.insert(tk.END,content+"\n")
+    text.see("end")
 def process_notify(content):    
-        mynotif("")
-        root.update_idletasks()
-        mynotif(content)
-        root.update_idletasks()
+    root.update_idletasks()
+    mynotif(content)
+    root.update_idletasks()
 # ------------------------------------------------------------------------------------------------------------------------------------------------
 
 def myguide(entries, content):
-    if(content == ""):
-        entries.configure(text="")
-       
-    else:
-        entries.configure(text=content)
+    entries.insert(tk.END, content)
 
 def handle_click(event):
    pass
-    
-def ball_sheet_guide(event):
-     myguide(frame, "INFO:" + "Ball sheet name    \n\n - Example:   BGA           ")
-def un_guide(event):
-     myguide(frame,"")
+def guide(gui_list):
+    entry_enable(text)
+    text_delete()
+    for gui in gui_list:
+       myguide(text,gui)
+    entry_disable(text)
 
-def ball_begin_cell_guide(event):
-     myguide(frame, "INFO:" + "Ball table begin cell\n\n - Example:   CU100       ")
-def mapping_sheet_guide(event):
-     myguide(frame, "INFO:" + "Mapping sheet name          \n\n - Example:   DIE_Mapping           ")
-def mapping_begin_cell_guide(event):
-     myguide(frame, "INFO:" + "Mapping table begin cell\n\n - Example:   CU100       ")
-def ball_end_cell_guide(event):
-    myguide(frame, "INFO:" + "Ball table end cell\n\n - Example:   CU100       ")
-def adp_tb_guide(event):
-    myguide(frame, "INFO:" + "This field to define the\n   ADP Netlist table name    ")
-def adp_tb_loc_guide(event):
-    myguide(frame, "INFO:" + "This field to define the \n  ADP table location.\n  Ex: A10 ")
-def mapping_end_cell_in_guide(event):
-    myguide(frame, "INFO:" + "Mapping table begin cell\n\n - Example:   CU100     ")
+ball_sheet_guide = [
+    "INFO: Ball sheet name which contains Ball table\n\n ",
+    "      * Example: BGA "
+ ]
+ball_begin_cell_guide = [
+    "INFO: Ball table begin cell\n\n ",
+    "      * Example:   A0           "
+]   
+mapping_sheet_guide = [
+    "INFO: Mapping sheet name which contains Mapping table\n\n ",
+    "      * Example: DIE_Mapping "
+]
+mapping_begin_cell_guide = [
+    "INFO: Mapping table begin cell\n\n ",
+    "      * Example:   A0           "
+]
+ball_end_cell_guide = [
+    "INFO: Ball table end cell\n\n ",
+    "      * Example:   A0           "
+]
+adp_tb_guide = [
+    "INFO: This field to define the ADP Netlist table name\n\n ",
+    "      *Example: APD NETLIST  "
+]
+adp_tb_loc_guide = [
+    "INFO: This field to define the ADP table location.\n\n ",
+    "      * Example:   A0           "
+]
+mapping_end_cell_in_guide = [
+    "INFO: Mapping table end cell\n\n ",
+    "      * Example:   C1000           "
+]
+DieL_begincell_i_guide = [
+    "INFO: List of Left Die table begin cell.  \n",
+    "      - The names are separated by spaces.\n\n ",
+    "      - Example: A10  H10 G10  "
+]
+DieL_endcell_i_guide = [
+    "INFO: List of Left Die table end cell.  \n",
+    "      - The names are separated by spaces.\n\n ",
+    "      - Example: C998 K999 N100  "
+]
+DieR_begincell_i_guide = [
+    "INFO: List of Right Die table begin cell.  \n",
+    "      - The names are separated by spaces.\n\n ",
+    "      - Example: A10  H10 G10  "
+]
+DieR_endcell_i_guide = [
+    "INFO: List of Right Die table end cell.  \n",
+    "      - The names are separated by spaces.\n\n ",
+    "      - Example: C998 K999 N100  "
+]
+dietb_sheet_guide = [
+    "INFO: Die tables sheet name\n\n ",
+    "      * Example:   Die_table           "
+]
+DieL_name_guide = [
+    "INFO: Name list of Left Die. (Die Flipped then Rotate -90) \n",
+    "      - Die name MUST NOT contain spaces character\n",
+    "      - The dies name are separated by spaces.\n\n ",
+    "      - Example: DIE1 DIE2 DIE3 DIE4  "
+]
+DieR_name_guide = [
+    "INFO: Name list of Right Die. (Die Flipped then Rotate +90) \n",
+    "      - Die name MUST NOT contain spaces character\n",
+    "      - The dies name are separated by spaces.\n\n ",
+    "      - Example: DIE5 DIE6 DIE7 DIE8  "
+]
+int_tb_guide = [
+    "INFO: This field to define the\n  first output table cell. \n  ",
+    "The next tables placed away \n1 column from previous table\n\n",
+    "      * Example:   O64           "
+]
+srw_i_guide = [
+    "INFO: This field to define the width of sealring.\n\n",
+    "      * Example: 21.6 \n",
+    "Note: Normally, TSMC use 21.6, SS/GF use 14.04 \n\n"
+]   
 
-def DieL_begincell_i_guide(event):
-     myguide(frame, "INFO:" + "List of Left Die table begin cell\n\n - Example:   A10  H10 G10       ")  
-def DieL_endcell_i_guide(event):
-     myguide(frame, "INFO:" + "List of Left Die table end cell\n\n - Example:   C998 K999 N100       ")
-def DieR_begincell_i_guide(event):
-     myguide(frame, "INFO:" + "List of Right Die table begin cell\n\n - Example:   A10  H10 G10       ")
-def DieR_endcell_i_guide(event):
-     myguide(frame, "INFO:" + "List of Right Die table end cell\n\n - Example:   A10  H10 G10     ")
-def dietb_sheet_guide(event):
-     myguide(frame, "INFO:" + "Die tables sheet name         \n\n - Example:    Die_table           ")
-def DieL_name_guide(event):
-     myguide(frame, "INFO:" + "Name list of left Die.\n (Die Flipped + Rotate -90)\n- Die name MUST NOT contain spaces character\n- The dies name are separated by spaces     ")
-def DieR_name_guide(event):
-     myguide(frame, "INFO:" + "Name list of right Die.\n (Die Flipped + Rotate +90)\n- Die name MUST NOT contain spaces character\n- The dies name are separated by spaces     ")
-def int_tb_guide(event):
-    myguide(frame, "INFO:" + "This field to define the\n  first output table cell. \n The next tables placed away \n1 column from previous table \n\n - Example: O64 ")
-def srw_i_guide(event):
-    myguide(frame, "INFO:" + "This field to define the\n  width of sealring . \n - TSMC: 21.6, SS/GF: 14.04 \n\n")
         
 xfont = ("System", 12, "bold", 'underline', 'italic')
 theme_combo_t = ttk.Label(root,text="Choose theme:",border=20, font=xfont, background='#b434eb', borderwidth=3)
@@ -268,40 +319,40 @@ ball_in_t = my_canvas.create_text(30, 200, text="Ball Table inputs", anchor="nw"
 ball_sheet_i = ttk.Entry(root, width=20)
 my_canvas.create_window(150, 200, anchor="nw", window=ball_sheet_i, width=225)
 
-ball_sheet_i.bind('<FocusIn>', ball_sheet_guide)
-ball_sheet_i.bind('<FocusOut>', un_guide)
+ball_sheet_i.bind('<FocusIn>', lambda event: guide(ball_sheet_guide))
+# ball_sheet_i.bind('<FocusOut>', un_guide)
 
 
 ball_begin_cell_i = ttk.Entry(root, width=20)
 my_canvas.create_window(400, 200, anchor="nw", window=ball_begin_cell_i, width=225)
 
-ball_begin_cell_i.bind('<FocusIn>', ball_begin_cell_guide)
-ball_begin_cell_i.bind('<FocusOut>', un_guide)
+ball_begin_cell_i.bind('<FocusIn>',  lambda event: guide(ball_begin_cell_guide))
+# ball_begin_cell_i.bind('<FocusOut>', un_guide)
 
 ball_end_cell = ttk.Entry(root)
 ball_end_cell_w = my_canvas.create_window(650, 200, anchor="nw", window=ball_end_cell, width=225)
 
-ball_end_cell.bind('<FocusIn>', ball_end_cell_guide)
-ball_end_cell.bind('<FocusOut>', un_guide)
+ball_end_cell.bind('<FocusIn>',  lambda event: guide(ball_end_cell_guide))
+# ball_end_cell.bind('<FocusOut>', un_guide)
 
 mapingtb_t = my_canvas.create_text(30, 260, text="Mapping table\n inputs", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 mapping_sheet_i = ttk.Entry(root, width=20)
 mapping_sheet_i_w = my_canvas.create_window(150, 260, anchor="nw", window=mapping_sheet_i, width=225)
 
-mapping_sheet_i.bind('<FocusIn>', mapping_sheet_guide)
-mapping_sheet_i.bind('<FocusOut>', un_guide)
+mapping_sheet_i.bind('<FocusIn>',  lambda event: guide(mapping_sheet_guide))
+# mapping_sheet_i.bind('<FocusOut>', un_guide)
 
 mapping_begin_cell_i = ttk.Entry(root, width=20)
 mapping_begin_cell_i_w = my_canvas.create_window(400, 260, anchor="nw", window=mapping_begin_cell_i, width=225)
 
-mapping_begin_cell_i.bind('<FocusIn>', mapping_begin_cell_guide)
-mapping_begin_cell_i.bind('<FocusOut>', un_guide)
+mapping_begin_cell_i.bind('<FocusIn>',  lambda event: guide(mapping_begin_cell_guide))
+# mapping_begin_cell_i.bind('<FocusOut>', un_guide)
 
 mapping_end_cell_i = ttk.Entry(root, width=20)
 mapping_end_cell_i_w = my_canvas.create_window(650, 260, anchor="nw", window=mapping_end_cell_i, width=225)
 
-mapping_end_cell_i.bind('<FocusIn>', mapping_end_cell_in_guide)
-mapping_end_cell_i.bind('<FocusOut>', un_guide)
+mapping_end_cell_i.bind('<FocusIn>',  lambda event: guide(mapping_end_cell_in_guide))
+# mapping_end_cell_i.bind('<FocusOut>', un_guide)
 
 adptb_t = my_canvas.create_text(30, 310, text="Die to gen ADP inputs", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
@@ -313,8 +364,8 @@ die_tb_t = my_canvas.create_text(60, 340, text="DIE table\nsheet:", anchor="nw",
 dietb_sheet = ttk.Entry(root)
 dietb_sheet_w = my_canvas.create_window(150, 340, anchor="nw", window=dietb_sheet, width=360)
 
-dietb_sheet.bind('<FocusIn>', dietb_sheet_guide)
-dietb_sheet.bind('<FocusOut>', un_guide)
+dietb_sheet.bind('<FocusIn>',  lambda event: guide(dietb_sheet_guide))
+# dietb_sheet.bind('<FocusOut>', un_guide)
 
 
 
@@ -327,16 +378,16 @@ die_name_t = my_canvas.create_text(60, 410, text="Die name:", anchor="nw",font=(
 DieL_name = ttk.Entry(root)
 DieL_name_w = my_canvas.create_window(150, 410, anchor="nw", window=DieL_name, width= 360)
 
-DieL_name.bind('<FocusIn>', DieL_name_guide)
-DieL_name.bind('<FocusOut>', un_guide)
+DieL_name.bind('<FocusIn>',  lambda event: guide(DieL_name_guide))
+# DieL_name.bind('<FocusOut>', un_guide)
 
 
 
 DieR_name = ttk.Entry(root)
 DieR_name_w = my_canvas.create_window(520, 410, anchor="nw", window=DieR_name, width=360)
 
-DieR_name.bind('<FocusIn>', DieR_name_guide)
-DieR_name.bind('<FocusOut>', un_guide)
+DieR_name.bind('<FocusIn>',  lambda event: guide(DieR_name_guide))
+# DieR_name.bind('<FocusOut>', un_guide)
 
 
 
@@ -344,41 +395,41 @@ die_begin_t = my_canvas.create_text(60, 450, text="Begin cell:", anchor="nw",fon
 DieL_begincell_i = ttk.Entry(root)
 DieL_begincell_w = my_canvas.create_window(150, 450, anchor="nw", window=DieL_begincell_i, width=360)
 
-DieL_begincell_i.bind('<FocusIn>', DieL_begincell_i_guide)
-DieL_begincell_i.bind('<FocusOut>', un_guide)
+DieL_begincell_i.bind('<FocusIn>',  lambda event: guide(DieL_begincell_i_guide))
+# DieL_begincell_i.bind('<FocusOut>', un_guide)
 
 die_end_t = my_canvas.create_text(60, 490, text="End cell:", anchor="nw",font=("Helvetica", 10, 'underline', 'bold'), fill="#003feb")
 DieL_endcell_i = ttk.Entry(root, width=20)
 DieL_endcell_w = my_canvas.create_window(150, 490, anchor="nw", window=DieL_endcell_i, width=360)
 
-DieL_endcell_i.bind('<FocusIn>', DieL_endcell_i_guide)
-DieL_endcell_i.bind('<FocusOut>', un_guide)
+DieL_endcell_i.bind('<FocusIn>',  lambda event: guide(DieL_endcell_i_guide))
+# DieL_endcell_i.bind('<FocusOut>', un_guide)
 
 DieR_begincell_i = ttk.Entry(root)
 DieR_begincell_w = my_canvas.create_window(520, 450, anchor="nw", window=DieR_begincell_i, width=360)
 
-DieR_begincell_i.bind('<FocusIn>', DieR_begincell_i_guide)
-DieR_begincell_i.bind('<FocusOut>', un_guide)
+DieR_begincell_i.bind('<FocusIn>',  lambda event: guide(DieR_begincell_i_guide))
+# DieR_begincell_i.bind('<FocusOut>', un_guide)
 
 DieR_endcell_i = ttk.Entry(root, width=20)
 DieR_endcell_w = my_canvas.create_window(520, 490, anchor="nw", window=DieR_endcell_i, width=360)
 
-DieR_endcell_i.bind('<FocusIn>', DieR_endcell_i_guide)
-DieR_endcell_i.bind('<FocusOut>', un_guide)
+DieR_endcell_i.bind('<FocusIn>',  lambda event: guide(DieR_endcell_i_guide))
+# DieR_endcell_i.bind('<FocusOut>', un_guide)
 
 adp_tb_out_t = my_canvas.create_text(30, 550, text="ADP Table config\nsheet/location:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
 adp_tb = ttk.Entry(root, width=20)
 adp_tb_w = my_canvas.create_window(150, 555, anchor="nw", window=adp_tb, width=360)
 
-adp_tb.bind('<FocusIn>', adp_tb_guide)
-adp_tb.bind('<FocusOut>', un_guide)
+adp_tb.bind('<FocusIn>',  lambda event: guide(adp_tb_guide))
+# adp_tb.bind('<FocusOut>', un_guide)
 
 adp_tb_loc = ttk.Entry(root, width=20)
 adp_tb_loc_w = my_canvas.create_window(520, 555, anchor="nw", window=adp_tb_loc, width=360)
 
-adp_tb_loc.bind('<FocusIn>', adp_tb_loc_guide)
-adp_tb_loc.bind('<FocusOut>', un_guide)
+adp_tb_loc.bind('<FocusIn>',  lambda event: guide(adp_tb_loc_guide))
+# adp_tb_loc.bind('<FocusOut>', un_guide)
 
 
 
@@ -463,26 +514,28 @@ def get_config():
         "tb_loc": str(adp_tb_loc.get())
        
     }
-    with open(".adp_params_saved.txt",'w') as params_saved:
-            params_saved.writelines(theme_combo.get() +"\n")
-            params_saved.writelines(input_params['excel_file'] +"\n")
-            params_saved.writelines(input_params['ball_tb_sheet'] +"\n")
-            params_saved.writelines(input_params['ball_tb_begin_cell'] +"\n")
-            params_saved.writelines(input_params['ball_tb_end_cell'] +"\n")
-            params_saved.writelines(input_params['mapping_sheet'] +"\n")
-            params_saved.writelines(input_params['mapping_begin_cell'] +"\n")
-            params_saved.writelines(input_params['mapping_end_cell'] +"\n")
-            params_saved.writelines(die_params['die_sheet'] +"\n")
-            
-            
-            params_saved.writelines(' '.join(die_params['diel_list']) +"\n")
-            params_saved.writelines(' '.join(die_params['dier_list']) +"\n")
-            params_saved.writelines(' '.join(die_params['diel_begin_list']) +"\n")
-            params_saved.writelines(' '.join(die_params['diel_end_list']) +"\n")
-            params_saved.writelines(' '.join(die_params['dier_begin_list']) +"\n")
-            params_saved.writelines(' '.join(die_params['dier_end_list']) +"\n")
-            params_saved.writelines(out_put['sheet'] +"\n")
-            params_saved.writelines(out_put['tb_loc'] +"\n")
+    global tmp_flag, temp_file
+    if(tmp_flag == 0):
+        with open(temp_file,'w') as params_saved:
+                params_saved.writelines(theme_combo.get() +"\n")
+                params_saved.writelines(input_params['excel_file'] +"\n")
+                params_saved.writelines(input_params['ball_tb_sheet'] +"\n")
+                params_saved.writelines(input_params['ball_tb_begin_cell'] +"\n")
+                params_saved.writelines(input_params['ball_tb_end_cell'] +"\n")
+                params_saved.writelines(input_params['mapping_sheet'] +"\n")
+                params_saved.writelines(input_params['mapping_begin_cell'] +"\n")
+                params_saved.writelines(input_params['mapping_end_cell'] +"\n")
+                params_saved.writelines(die_params['die_sheet'] +"\n")
+                
+                
+                params_saved.writelines(' '.join(die_params['diel_list']) +"\n")
+                params_saved.writelines(' '.join(die_params['dier_list']) +"\n")
+                params_saved.writelines(' '.join(die_params['diel_begin_list']) +"\n")
+                params_saved.writelines(' '.join(die_params['diel_end_list']) +"\n")
+                params_saved.writelines(' '.join(die_params['dier_begin_list']) +"\n")
+                params_saved.writelines(' '.join(die_params['dier_end_list']) +"\n")
+                params_saved.writelines(out_put['sheet'] +"\n")
+                params_saved.writelines(out_put['tb_loc'] +"\n")
           
 
 
@@ -523,6 +576,7 @@ def copy_table(cell):
                        
         else:
             print("Stop the process")
+            mynotif("Stop the process")
             return
     wstmp_create = wb_tempsheet.create_sheet(wstmp_create_name) 
     cell_list = wb_tempsheet.sheetnames
@@ -568,6 +622,7 @@ def gen(adp, die, mapping, mapping_prefix, ball, last_ball):
             adp['sheet'][adp['Pad_stack'] + str(adp['r'])].value = die['name'] + "_" + die['Pad_stack'] 
             adp['sheet'][adp['rotation'] + str(adp['r'])].value = 0
             print("Processing for: " + die['sheet_d'][die['net_name'] + str(i)].value)
+            mynotif("Processing for: " + die['sheet_d'][die['net_name'] + str(i)].value)
             #------------------------------Die2Die Connections--------------------------------------------
             if(str(die['sheet_d'][die['net_name'] + str(i)].value).find("BP_") != -1 and str(die['sheet_d'][die['net_name'] + str(i)].value).find("ATO") == -1 and str(die['sheet_d'][die['net_name'] + str(i)].value).find("DTO") == -1 and str(die['sheet_d'][die['net_name'] + str(i)].value).find("ZN") == -1):
                 adp['sheet'][adp['resdef'] + str(adp['r'])].value = "BUMP"
@@ -823,8 +878,10 @@ def gen(adp, die, mapping, mapping_prefix, ball, last_ball):
         return adp,mapping,ball,last_ball
 
 def gen_apd():
+    entry_enable(text)
+    text_delete()
     print("Getting config...")
-    mynotif("Generating...")
+    mynotif("Getting config...")
     params = get_config()
     die_params = params[0]
     input_params = params[1]
@@ -851,6 +908,7 @@ def gen_apd():
 
  
     print("Loading workbook")
+    mynotif("Loading workbook...")
     try:
         wb_d = load_workbook(input_params['excel_file'], data_only=True)
         wb_f = load_workbook(input_params['excel_file'])
@@ -1021,14 +1079,17 @@ def gen_apd():
         }
         mapping_prefix = die_L['name']
         print("Processing for: L:" + Die_L_name + "  R:" + Die_R_name )
+        mynotif("Processing for: L:" + Die_L_name + "  R:" + Die_R_name)
         get_gen = gen(adp,die_L,mapping,mapping_prefix,ball,last_ball)
         adp = get_gen[0]
         mapping = get_gen[1]
         ball = get_gen[2]
         last_ball = get_gen[3]
         print(ball)
+      
         print(last_ball)
         print(len(ball['list_compared']))
+
         get_gen = gen(adp,die_R,mapping,mapping_prefix,ball,last_ball)
         adp = get_gen[0]
         mapping = get_gen[1]
@@ -1039,6 +1100,7 @@ def gen_apd():
     print(ball['list_row'])
     # for m in range (ball['begin_row'], ball['end_row'] + 1):
     print("Processing unmap Ball...")
+    mynotif("Processing unmap Ball...")
     for m in ball['list_row']:
         adp['sheet'][adp['resdef'] + str(adp['r'])].value = "BGA"
         if(str(ball['sheet_d'][ball['net_col']+ str(m)].value).find("VSS") != -1):
@@ -1061,11 +1123,13 @@ def gen_apd():
             # print(ball['end_row']) 
     progress_bar(80)
     print("Saving excel file...")
+    mynotif("Saving excel file...")
     wb_f.save(input_params['excel_file'])
     progress_bar(100)
     popup("ADP Nestlist generated successful!!!")
     print("Successful!!!")
     mynotif("Successful!!!")
+    entry_disable(text)
     
 
 progress = ttk.Progressbar(root, orient = 'horizontal',
@@ -1102,9 +1166,18 @@ button = tk.Button(root, text="Generate",font = mediumFont, foreground='white', 
 
 button_w = my_canvas.create_window(300, 860, anchor="nw", window=button)
 
+text = tk.Text(my_canvas,width = 50, height = 100,bd=5,relief='groove', wrap='word', font=('arial',10), highlightthickness=2 ) #yscrollcommand=scroll_y.set
+scroll_y = ttk.Scrollbar(text)
+my_canvas.create_window(300,80, anchor='nw', window=text, height=100, width=400)
+
+text.config(yscrollcommand=scroll_y.set)
+scroll_y.pack(side=RIGHT, fill=Y)
+scroll_y.config(command=text.yview)
+
 def get_saved_params():
+    global temp_file
     try:
-        with open(".adp_params_saved.txt",'r') as params_saved:
+        with open(temp_file,'r') as params_saved:
             line1 = [line.rstrip() for line in params_saved]
             params = {
                 'theme_combo': line1[0],
@@ -1165,7 +1238,7 @@ def get_saved_params():
         DieR_endcell_i.insert(0, "Z791 AH791")
         adp_tb.insert(0, "APD")
         adp_tb_loc.insert(0, "P4")
-
+    mynotif("\n\nINFO: This field is for showing the information or guidance")
 get_saved_params()
 
 root.mainloop()
