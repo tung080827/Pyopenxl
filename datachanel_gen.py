@@ -38,7 +38,7 @@ root.option_add("*tearOff", False) # This is always a good idea
 
 # bg = ImageTk.PhotoImage(file=r".\bg3_1.png")
 try:
-    temp_file =  os.path.join(tempfile.gettempdir(), ".ploctablebgen_params_saved.txt")
+    temp_file =  os.path.join(tempfile.gettempdir(), ".datachannelgen_params_saved.txt")
     print(temp_file)
     tmp_flag = 0
 except:
@@ -51,7 +51,7 @@ img_path = r".\img\resize1000x1000"
 # bg = ImageTk.PhotoImage(file=r".\img\mountain.png")
 bgm = PhotoImage(file=img_path + r"\frog.png")
 
-img_list = ["owl.png", "mountain.png","whale2.png", "penguin.png","sunset1.png", "circuit1.png", "fight.png", "pug.png", "penguin.png", "whale2.png", "elephant_grey.png", "snowman.png", "bee4.png", "elephant.png", "bee2.png", "fox.png", "beach.png", "frog.png", "cow.png", "forest.png", "owlpink2.png", "dinosaurs.png", "sand1.png", "green.png", "pig.png", "discord1.png" ]
+img_list = ["owl.png", "mountain.png","car.png", "penguin.png","sunset1.png", "flower3.png", "kid.png", "pug.png", "cat.png", "whale2.png", "elephant_grey.png", "snowman.png", "bee4.png", "elephant.png", "bee2.png", "fox.png", "beach.png", "frog.png", "cow.png", "forest.png", "owlpink2.png", "girl.png", "sand1.png", "baby2.png", "pig.png", "discord1.png" ]
 
 lable_bg_list = ["#F0F0F0","#EDEDED","#EBECEE","#F0F0F0","#F0F0F0","#FCFCFC","#EFF0F1","#EFF0F1","#EFF0F1","#EAECEF","#EFF0F1","#EFF0F1","#FECDD9","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1","#E6EBEF"]
 # Define Canvas
@@ -76,19 +76,27 @@ isIntp = tk.IntVar()
 ismapgen = tk.IntVar()
 def change_colour(index):
     listchange =[out_t,in_t,in_out_t]
-    entry_list = [button, theme_combo_t,excel_t]
+    entry_list1 = [button, theme_combo_t,excel_t]
     #  sheet_t, theme_combo_t,excel_t, pkg_t
     for t in listchange:
         my_canvas.itemconfig(t, fill = colour_list[index])
-    for l in entry_list:
+    for l in entry_list1:
         l.config(background = colour_list[index])
     text.configure(foreground=colour_list[index],bg=lable_bg_list[index], highlightbackground=colour_list[index])
+    global entry_list
+    if (index == 8):
+        excel_i.configure(foreground="white")
+        for ent in entry_list:
+            ent.configure(foreground="white")
+    else:
+        excel_i.configure(foreground="black")
+        for ent in entry_list:
+            ent.configure(foreground="black")
     global bgm
     p = os.path.join(img_path, img_list[index])
     pic = Image.open(p)
     picrsz = pic.resize((800,800)) 
     bgm = ImageTk.PhotoImage(picrsz)
-
     my_canvas.itemconfigure(bg_img, image=bgm)
 def text_delete():
    text.delete("1.0","end")
@@ -132,41 +140,41 @@ map_s_guide = [
 ]
 map_loc_guide = [
     "INFO: This field to define the output mapping table location.  \n\n",
-    "      - Example: O64 "
+    "      * Example: O64 "
 ]
 x2y2_guide = [
     "INFO: Reference channel visual window end cell.  \n\n",
-    "      - Example: CU100  "
+    "      * Example: CU100  "
 ]
 out_name_in_guide = [
     "INFO: This field to define the output table name.  \n\n",
-    "      - Example: Mapping  "
+    "      * Example: Mapping  "
 ]
 out_visual_loc_guide = [
     "INFO: This field to define the output bump visual location.  \n\n",
-    "      - Example: D10  "
+    "      * Example: D10  "
 ]
 outtb_s_guide = [
     "INFO: This field to define Sheet to put channels bump visual.  \n\n",
-    "      - Example: Bump coordination  "
+    "      * Example: Bump coordination  "
 ]
 bit_num_guide = [
     "INFO: Number of bit of each channel.  \n\n",
-    "      - Example: 16  "
+    "      * Example: 16  "
 ]
 DieL_name_guide = [
     "INFO: Name list of Left Die. (Die Flipped + Rotate -90) \n",
-    "      - The dies name are separated by spaces. \n",
-    "      - Example: DIE1 DIE2 DIE3 DIE4  "
+    "- The dies name are separated by spaces. \n",
+    "      * Example: DIE1 DIE2 DIE3 DIE4  "
 ]
 DieR_name_guide = [
     "INFO: Name list of Right Die. (Die Flipped then Rotate +90) \n",
-    "      - The dies name are separated by spaces. \n",
-    "      - Example: DIE5 DIE6 DIE7 DIE8  "
+    "- The dies name are separated by spaces. \n",
+    "      * Example: DIE5 DIE6 DIE7 DIE8  "
 ]
 sheet_guide = [
     "INFO: This field to define Sheet of reference channel bump visual.  \n\n",
-    "      - Example: Bump coordination  "
+    "      * Example: Bump coordination  "
 ]
 def get_ch_seq(event):
     if (ch_combo.get()=="Left to Right"):
@@ -557,7 +565,7 @@ def gen_datachanel(input_params, output_params, mapping_tb_out):
             wsi_f = wb_f[wsi_name]
         else:
             msg_ws = messagebox.showerror('Create Sheet', 'The sheet:' + wsi_name + ' doesn\'t exist.')
-            mynotif("")
+            
             mynotif("The " + wsi_name + " doesn't exist.")
         
             mynotif("Error!!!")
@@ -568,16 +576,16 @@ def gen_datachanel(input_params, output_params, mapping_tb_out):
             
             wso_f = wb_f[wso_name]
         else:
-            mynotif("")
+          
             mynotif("The " + wso_name + " doesn't exist.")
             msg_ws = messagebox.askquestion('Create Sheet', 'The sheet' + wso_name + ' doesn\'t exist. Do you want to create it?', icon='question')
         
             if(msg_ws == 'yes'):
                 wso_f = wb_f.create_sheet(wso_name)
-                mynotif("")
+                mynotif("Creating sheet...")
                 mynotif('Creating the sheet...')
             else:
-                mynotif("")
+                mynotif("Aborted!!!")
                 progress_bar(0)
                 return
 
@@ -791,8 +799,7 @@ my_canvas.create_window(150,80, anchor='nw', window=text, height=100, width=500)
 text.config(yscrollcommand=scroll_y.set)
 scroll_y.pack(side=RIGHT, fill=Y)
 scroll_y.config(command=text.yview)
-# frame = tk.Label(root, bg="#c9f2dc", font=("Courier New", 10), foreground="#f2a50a", highlightthickness=2)
-# my_canvas.create_window(150, 80, window=frame, anchor="nw", width= 500, height=100)
+entry_list = [ch_combo,ch_seq_combo,sheet_i,bit_num_i,x1y1_i,x2y2_i,out_tb_sheet,out_col_i,die_L_list,die_R_list,map_tb_sheet,map_loc_i]
 def get_saved_params():
     global temp_file
     try:
@@ -851,6 +858,9 @@ def get_saved_params():
     myguide(text, "INFO: This field is for showing information or guidence")
 
 get_saved_params()
+
+for ent in entry_list:
+    ent.configure(justify='center')
 entry_disable(die_R_list, die_L_list, map_tb_sheet, map_loc_i)
 root.mainloop()
 

@@ -28,14 +28,14 @@ import tempfile
 # excel_file = r"C:\Users\sytung\OneDrive - Synopsys, Inc\Desktop\py\Test_adp.xlsx"
 
 try:
-    temp_file =  os.path.join(tempfile.gettempdir(), ".ploctablebgen_params_saved.txt")
+    temp_file =  os.path.join(tempfile.gettempdir(), ".adptablebgen_params_saved.txt")
     print(temp_file)
     tmp_flag = 0
 except:
     messagebox.showerror("Can not find the User Temp dir")
     tmp_flag = 1
 
-img_list = ["owl.png", "mountain.png","whale2.png", "penguin.png","sunset1.png", "circuit1.png", "fight.png", "pug.png", "penguin.png", "whale2.png", "elephant_grey.png", "snowman.png", "bee4.png", "elephant.png", "bee2.png", "fox.png", "beach.png", "frog.png", "cow.png", "forest.png", "owlpink2.png", "dinosaurs.png", "sand1.png", "baby2.png", "pig.png", "discord1.png" ]
+img_list = img_list = ["owl.png", "mountain.png","car.png", "penguin.png","sunset1.png", "flower3.png", "kid.png", "pug.png", "cat.png", "whale2.png", "elephant_grey.png", "snowman.png", "bee4.png", "elephant.png", "bee2.png", "fox.png", "beach.png", "frog.png", "cow.png", "forest.png", "owlpink2.png", "girl.png", "sand1.png", "baby2.png", "pig.png", "discord1.png" ]
 
 lable_bg_list = ["#F0F0F0","#EDEDED","#EBECEE","#F0F0F0","#F0F0F0","#FCFCFC","#EFF0F1","#EFF0F1","#EFF0F1","#EAECEF","#EFF0F1","#EFF0F1","#FECDD9","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1","#E6EBEF"]
 
@@ -125,14 +125,23 @@ def round_rectangle(x1, y1, x2, y2, radius=25, **kwargs):
     return my_canvas.create_polygon(points, **kwargs, smooth=True)
 def change_colour(index):
     listchange =[ball_in_t,mapingtb_t,adptb_t,die_tb_t,die_l_t,die_r_t,die_name_t,die_begin_t,die_end_t, adp_tb_out_t]
-    entry_list = [button,theme_combo_t,excel_t]
+    entry_list1 = [button,theme_combo_t,excel_t]
     #  sheet_t, theme_combo_t,excel_t, pkg_t
     for t in listchange:
         my_canvas.itemconfig(t, fill = colour_list[index])
-    for l in entry_list:
+    for l in entry_list1:
         l.config(background = colour_list[index])
 
     text.configure(foreground=colour_list[index],bg=lable_bg_list[index], highlightbackground=colour_list[index])
+    global entry_list
+    if (index == 8):
+        for ent in entry_list:
+            ent.configure(foreground="white")
+        excel_i.configure(foreground="white")
+    else:
+        for ent in entry_list:
+            ent.configure(foreground="black")
+        excel_i.configure(foreground="black")
     global bgm
     p = os.path.join(img_path, img_list[index])
     bgm = PhotoImage(file = p)
@@ -244,23 +253,23 @@ mapping_end_cell_in_guide = [
 ]
 DieL_begincell_i_guide = [
     "INFO: List of Left Die table begin cell.  \n",
-    "      - The names are separated by spaces.\n\n ",
-    "      - Example: A10  H10 G10  "
+    "- The names are separated by spaces.\n\n ",
+    "      * Example: A10  H10 G10  "
 ]
 DieL_endcell_i_guide = [
     "INFO: List of Left Die table end cell.  \n",
-    "      - The names are separated by spaces.\n\n ",
-    "      - Example: C998 K999 N100  "
+    "- The names are separated by spaces.\n\n ",
+    "      * Example: C998 K999 N100  "
 ]
 DieR_begincell_i_guide = [
     "INFO: List of Right Die table begin cell.  \n",
-    "      - The names are separated by spaces.\n\n ",
-    "      - Example: A10  H10 G10  "
+    "- The names are separated by spaces.\n\n ",
+    "      * Example: A10  H10 G10  "
 ]
 DieR_endcell_i_guide = [
     "INFO: List of Right Die table end cell.  \n",
-    "      - The names are separated by spaces.\n\n ",
-    "      - Example: C998 K999 N100  "
+    "- The names are separated by spaces.\n\n ",
+    "      * Example: C998 K999 N100  "
 ]
 dietb_sheet_guide = [
     "INFO: Die tables sheet name\n\n ",
@@ -268,25 +277,26 @@ dietb_sheet_guide = [
 ]
 DieL_name_guide = [
     "INFO: Name list of Left Die. (Die Flipped then Rotate -90) \n",
-    "      - Die name MUST NOT contain spaces character\n",
-    "      - The dies name are separated by spaces.\n\n ",
-    "      - Example: DIE1 DIE2 DIE3 DIE4  "
+    "- Die name MUST NOT contain spaces character\n",
+    "- The dies name are separated by spaces.\n\n ",
+    "      * Example: DIE1 DIE2 DIE3 DIE4  "
 ]
 DieR_name_guide = [
     "INFO: Name list of Right Die. (Die Flipped then Rotate +90) \n",
-    "      - Die name MUST NOT contain spaces character\n",
-    "      - The dies name are separated by spaces.\n\n ",
-    "      - Example: DIE5 DIE6 DIE7 DIE8  "
+    "- Die name MUST NOT contain spaces character\n",
+    "- The dies name are separated by spaces.\n\n ",
+    "      * Example: DIE5 DIE6 DIE7 DIE8  "
 ]
 int_tb_guide = [
     "INFO: This field to define the\n  first output table cell. \n  ",
-    "The next tables placed away \n1 column from previous table\n\n",
+    "- The next tables placed away \n1 column from previous table\n\n",
     "      * Example:   O64           "
 ]
 srw_i_guide = [
     "INFO: This field to define the width of sealring.\n\n",
-    "      * Example: 21.6 \n",
-    "Note: Normally, TSMC use 21.6, SS/GF use 14.04 \n\n"
+    "Note: Normally: \n",
+    "          + TSMC:  21.6",
+    "          + SS/GF: 14.04 \n\n"
 ]   
 
         
@@ -926,11 +936,11 @@ def gen_apd():
             
         if(msg_ws == 'yes'):
             ws_adp_f = wb_f.create_sheet(apd_sheet)
-            # mynotif("")
-            # mynotif('Creating the sheet...')
+            mynotif("Creating sheet..")
+            mynotif('Creating the sheet...')
         else:
-            # mynotif("")
-            # progress_bar(0)
+            mynotif("Aborted!")
+            progress_bar(0)
             return
             
 
@@ -1174,6 +1184,9 @@ text.config(yscrollcommand=scroll_y.set)
 scroll_y.pack(side=RIGHT, fill=Y)
 scroll_y.config(command=text.yview)
 
+entry_list=[ball_sheet_i,ball_begin_cell_i,ball_end_cell,mapping_sheet_i,mapping_begin_cell_i,mapping_end_cell_i,dietb_sheet,
+            DieL_name,DieR_name,DieL_begincell_i,DieL_endcell_i,DieR_begincell_i,DieR_endcell_i,adp_tb,adp_tb_loc]
+
 def get_saved_params():
     global temp_file
     try:
@@ -1241,4 +1254,6 @@ def get_saved_params():
     mynotif("\n\nINFO: This field is for showing the information or guidance")
 get_saved_params()
 
+for ent in entry_list:
+    ent.configure(justify='center')
 root.mainloop()

@@ -60,7 +60,7 @@ bgm = PhotoImage(file=img_path + r"\frog.png")
 # bg4 = PhotoImage(file= r".\img\internet.png").subsample(2,2)
 # bg5 = PhotoImage(file= r".\img\rocket.png").zoom(2,2)
 open_imag = PhotoImage(file = r".\open-folder.png")
-img_list = ["owl.png", "mountain.png","whale2.png", "penguin.png","sunset1.png", "circuit1.png", "fight.png", "pug.png", "penguin.png", "whale2.png", "elephant_grey.png", "snowman.png", "bee4.png", "elephant.png", "bee2.png", "fox.png", "beach.png", "frog.png", "cow.png", "forest.png", "owlpink2.png", "cat2.png", "sand1.png", "baby2.png", "pig.png", "discord1.png" ]
+img_list = ["owl.png", "mountain.png","car.png", "penguin.png","sunset1.png", "flower3.png", "kid.png", "pug.png", "cat.png", "whale2.png", "elephant_grey.png", "snowman.png", "bee4.png", "elephant.png", "bee2.png", "fox.png", "beach.png", "frog.png", "cow.png", "forest.png", "owlpink2.png", "girl.png", "sand1.png", "baby2.png", "pig.png", "discord1.png" ]
 
 lable_bg_list = ["#F0F0F0","#EDEDED","#EBECEE","#F0F0F0","#F0F0F0","#FCFCFC","#EFF0F1","#EFF0F1","#EFF0F1","#EAECEF","#EFF0F1","#EFF0F1","#FECDD9","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1","#E6EBEF"]
 
@@ -138,15 +138,23 @@ def round_rectangle(x1, y1, x2, y2, radius=25, **kwargs):
     return my_canvas.create_polygon(points, **kwargs, smooth=True)
 def change_colour(index):
     listchange =[bum_visual_t,die_tb_out_t,die_dumy_t,int_size_t,int_s_loc_t,int_die_cnt_t,int_die_name_t,int_xo_t,int_yo_t]
-    entry_list = [button,sheet_t, theme_combo_t,excel_t, pkg_t]
+    entry_list1 = [button,sheet_t, theme_combo_t,excel_t, pkg_t]
     #  sheet_t, theme_combo_t,excel_t, pkg_t
     for t in listchange:
         my_canvas.itemconfig(t, fill = colour_list[index])
-    for l in entry_list:
+    for l in entry_list1:
         l.config(background = colour_list[index])
     
     text.configure(foreground=colour_list[index],bg=lable_bg_list[index], highlightbackground=colour_list[index])
-
+    global entry_list
+    if (index == 8):
+        excel_i.configure(foreground="white")
+        for ent in entry_list:
+            ent.configure(foreground="white")
+    else:
+        excel_i.configure(foreground="black")
+        for ent in entry_list:
+            ent.configure(foreground="black")
     global bgm
     p = os.path.join(img_path, img_list[index])
     bgm = PhotoImage(file = p)
@@ -1552,8 +1560,16 @@ def get_saved_params():
         int_die_num_combo.current(0)
         package_combo.current(0)
     mynotif("\n\nINFO: This field is for showing the information or guidance")
+
+entry_list=[sheet_i,x1y1_i,x2y2_i, Xget_i, Yget_i, out_tb_sheet,out_name_in,out_name2_in,out_col_i,cor1_x1y1,cor1_x2y2,cor1_Xget,cor1_Yget,
+                cor2_x1y1,cor2_x2y2,cor2_Xget,cor2_Yget,cor3_x1y1,cor3_x2y2,cor3_Xget,cor3_Yget,cor4_x1y1,cor4_x2y2,cor4_Xget,cor4_Yget,
+                xwidth_i,yheight_i,intp_sheet,int_tb_loc,Die1_name,Die2_name,Die1_xoffset_i,Die1_yoffset_i,Die2_xoffset_i,Die2_yoffset_i,
+                srw_i,package_combo,int_die_num_combo]
 get_saved_params()
 
+
+for ent in entry_list:
+    ent.configure(justify='center')
 entry_disable(cor1_x1y1, cor1_x2y2, cor1_Xget, cor1_Yget,
             cor2_x1y1, cor2_x2y2, cor2_Xget, cor2_Yget,
             cor3_x1y1, cor3_x2y2, cor3_Xget, cor3_Yget,
