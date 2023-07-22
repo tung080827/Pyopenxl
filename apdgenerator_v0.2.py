@@ -35,7 +35,7 @@ except:
     messagebox.showerror("Can not find the User Temp dir")
     tmp_flag = 1
 
-img_list = ["owl.png", "mountain.png","whale2.png", "penguin.png","sunset1.png", "circuit1.png", "fight.png", "pug.png", "penguin.png", "whale2.png", "elephant_grey.png", "snowman.png", "bee4.png", "elephant.png", "bee2.png", "fox.png", "beach.png", "frog.png", "cow.png", "forest.png", "owlpink2.png", "dinosaurs.png", "sand1.png", "green.png", "pig.png", "discord1.png" ]
+img_list = ["owl.png", "mountain.png","whale2.png", "penguin.png","sunset1.png", "circuit1.png", "fight.png", "pug.png", "penguin.png", "whale2.png", "elephant_grey.png", "snowman.png", "bee4.png", "elephant.png", "bee2.png", "fox.png", "beach.png", "frog.png", "cow.png", "forest.png", "owlpink2.png", "dinosaurs.png", "sand1.png", "baby2.png", "pig.png", "discord1.png" ]
 
 lable_bg_list = ["#F0F0F0","#EDEDED","#EBECEE","#F0F0F0","#F0F0F0","#FCFCFC","#EFF0F1","#EFF0F1","#EFF0F1","#EAECEF","#EFF0F1","#EFF0F1","#FECDD9","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1","#E6EBEF"]
 

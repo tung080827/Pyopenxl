@@ -60,7 +60,7 @@ bgm = PhotoImage(file=img_path + r"\frog.png")
 # bg4 = PhotoImage(file= r".\img\internet.png").subsample(2,2)
 # bg5 = PhotoImage(file= r".\img\rocket.png").zoom(2,2)
 open_imag = PhotoImage(file = r".\open-folder.png")
-img_list = ["owl.png", "mountain.png","whale2.png", "penguin.png","sunset1.png", "circuit1.png", "fight.png", "pug.png", "penguin.png", "whale2.png", "elephant_grey.png", "snowman.png", "bee4.png", "elephant.png", "bee2.png", "fox.png", "beach.png", "frog.png", "cow.png", "forest.png", "owlpink2.png", "dinosaurs.png", "sand1.png", "green.png", "pig.png", "discord1.png" ]
+img_list = ["owl.png", "mountain.png","whale2.png", "penguin.png","sunset1.png", "circuit1.png", "fight.png", "pug.png", "penguin.png", "whale2.png", "elephant_grey.png", "snowman.png", "bee4.png", "elephant.png", "bee2.png", "fox.png", "beach.png", "frog.png", "cow.png", "forest.png", "owlpink2.png", "cat2.png", "sand1.png", "baby2.png", "pig.png", "discord1.png" ]
 
 lable_bg_list = ["#F0F0F0","#EDEDED","#EBECEE","#F0F0F0","#F0F0F0","#FCFCFC","#EFF0F1","#EFF0F1","#EFF0F1","#EAECEF","#EFF0F1","#EFF0F1","#FECDD9","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1","#E6EBEF"]
 
@@ -286,12 +286,12 @@ x2y2_guide =  [
 ]
 Xget_guide = [
     "INFO: Row contains X axis value which is X location of Bump. \n",
-    "      - Must be interger   \n\n",
+    "- Must be interger   \n\n",
     "      * Example:   8       "
 ]
 Yget_guide = [
     "INFO: Row contains Y axis value which is Y location of Bump.\n", 
-    "      - Must be Excel column format\n\n",
+    "- Must be Excel column format\n\n",
     "      * Example: CU " 
 ]
 outtb_s_guide = [
@@ -304,12 +304,12 @@ out_name_in_guide = [
 ]
 out_name2_in_guide = [
     "INFO: This field to define the output table name for bump without sealring.\n",
-    "      - This field will be used when TC option is turned on\n\n",
+    "- This field will be used when TC option is turned on\n\n",
     "      * Example: DieX without sealring "
 ]
 out_col_in_guide = [
     "INFO: This field to define the first output table location. \n",
-    "      - The next tables placed away 2 column from previous table \n\n ",
+    "- The next tables placed away 2 column from previous table \n\n ",
     "      * Example: O64 "
 ]
 out_col_wsr_i_guide = [
@@ -326,77 +326,83 @@ dummyend_guide = [
 ]
 dummy_Xget_guide = [
     "INFO: Row contains X axis value which is X location of Bump. \n",
-    "      - Must be interger   \n\n",
+    "- Must be interger   \n\n",
     "      * Example:   8       "
 ]
 dummy_Yget_guide = [
     "INFO: Row contains Y axis value which is Y location of Bump.\n",
-    "      - Must be Excel column format\n\n",
+    "- Must be Excel column format\n\n",
     "      * Example: CU "
 ]
 xwidth_i_guide = [
-    "INFO: Width of Die/chip. \n\n",
-    "      - This param used for Flip, Rotate die/chip to put on PKG  "
+    "INFO: Width of Die/chip. \n",
+    "- This param used for Flip, Rotate die/chip to put on PKG  "
 ]
 yheight_i_guide = [
-    "INFO: Height of Die/chip. \n\n",
-    "      - This param used for Flip, Rotate die/chip to put on PKG  "
+    "INFO: Height of Die/chip. \n",
+    "- This param used for Flip, Rotate die/chip to put on PKG  "
 ]
 Die1_xoffset_i_guide = [
     "INFO: List X Offset of Die Left/Up(Chip Left/Up). \n ",
-    "      - This param used for Die/chip placement on PKG  "
+    "- This param used for Die/chip placement on PKG \n ",
+    "- The offset values are separated by spaces.\n ",
 ]
 Die1_yoffset_i_guide = [
     "INFO: List Y Offset of Die Left/Up(Chip Left/Up). \n ",
-    "      - This param used for Die/chip placement on PKG  "
+    "- This param used for Die/chip placement on PKG \n",
+    "- The offset values are separated by spaces.\n ",
 ]
 Die2_xoffset_i_guide = [
     "INFO: List X Offset of Die Right/Down(Chip Right/Down). \n",
-    "      - This param used for Die/chip placement on PKG  "
+    "- This param used for Die/chip placement on PKG \n ",
+    "- The offset values are separated by spaces.\n ",
 ]
 Die2_yoffset_i_guide = [
     "INFO: List Y Offset of Die Right/Down(Chip Right/Down). \n",
-    "      - This param used for Die/chip placement on PKG  "
+    "- This param used for Die/chip placement on PKG \n ",
+    "- The offset values are separated by spaces.\n ",
 ]
 intp_sheet_guide = [
     "INFO: Name of interposer sheet to put interposer Die table \n\n ",
     "      * Example: Packge_substrates "
 ]
 Die1_name_guide = [
-    "INFO: List Name of interposer Die Left/Up which is outcome of Die Flipped then Rotate -90\n ",
-    "      - The dies name are separated by spaces.\n ",
+    "INFO: List Name of interposer Die Left/Up which is outcome of Die Flipped then Rotate -90 degree\n ",
+    "- The dies name are separated by spaces.\n ",
     "NOTE: The Die name is mapping between Die Left/Up and Die Right/Down. \n",
-    "For example:\n",
-    "       Die Right list name: DIE5 DIE6 DIE7 DIE8, and\n",
-    "       Die Left list name: DIE1 DIE2 DIE3 DIE4, and\n",
-    "               (DIE1 <=> DIE5) \n",
-    "               (DIE2 <=> DIE6) \n",
-    "               (DIE3 <=> DIE7) \n",
-    "               (DIE4 <=> DIE7)"
+    "  For example:\n",
+    "   + Die Right list name: DIE5 DIE6 DIE7 DIE8, and\n",
+    "   + Die Left list name: DIE1 DIE2 DIE3 DIE4 then:\n",
+    "               DIE1 <=> DIE5 \n",
+    "               DIE2 <=> DIE6 \n",
+    "               DIE3 <=> DIE7 \n",
+    "               DIE4 <=> DIE8"
 ]
 Die2_name_guide = [
-    "INFO: List Name of interposer Die Right/Down which is outcome of Die Flipped then Rotate +90\n ",
-    "      - The dies name are separated by spaces.\n ",
+    "INFO: List Name of interposer Die Right/Down which is outcome of Die Flipped then Rotate +90 degree\n ",
+    "- The dies name are separated by spaces.\n ",
     "NOTE: The Die name is mapping between Die Left/Up and Die Right/Down. \n",
-    "For example:\n",
-    "       Die Left list name: DIE1 DIE2 DIE3 DIE4, and\n",
-    "       Die Right list name: DIE5 DIE6 DIE7 DIE8, and\n",
-    "               (DIE1 <=> DIE5) \n",
-    "               (DIE2 <=> DIE6) \n",
-    "               (DIE3 <=> DIE7) \n",
-    "               (DIE4 <=> DIE7)"
+    "   For example:\n",
+    "    + Die Left list name: DIE1 DIE2 DIE3 DIE4, and\n",
+    "    + Die Right list name: DIE5 DIE6 DIE7 DIE8, then:\n",
+    "               DIE1 <=> DIE5 \n",
+    "               DIE2 <=> DIE6 \n",
+    "               DIE3 <=> DIE7 \n",
+    "               DIE4 <=> DIE8"
 ]
 int_tb_guide = [
     "INFO: This field to define the first output table cell. \n ",
-    "       - The next tables placed away 1 column from previous table \n\n ",
+    "- The next tables placed away 1 column from previous table \n\n ",
     "       * Example: O64 "
 ]
 srw_i_guide = [
     "INFO: This field to define the width of sealring.\n\n",
-    "Note: Normally, TSMC is 21.6, SS/GF is 14.04 \n\n"
+    "Normally:\n"
+            "+ TSMC: 21.6\n"
+            "+ SS/GF is 14.04 \n"
 ]
 vssheet_gui = [
-    "INFO: Name of bump visual sheet to generate Bump coordinate table\n\n ",
+    "INFO: Name of bump visual sheet to generate Bump/Ball coordinate table\n\n ",
     "      * Example: N3P_CoWoS"
 ]
 
