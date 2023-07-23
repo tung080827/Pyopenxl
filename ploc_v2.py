@@ -19,7 +19,7 @@ from tkinter.font import Font as tkfont
 from tkinter import filedialog
 from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection
 import os
-import win32com.client
+# import win32com.client
 from pathlib import Path  
 
 import tempfile
@@ -32,10 +32,11 @@ root = ThemedTk()
 
 
 root.title("PLOC TABLE GENERATOR")
-root.geometry("1000x1000+30+100")
-root.resizable(width=False, height=False)
-root.iconbitmap(r".\mylogo.ico")
+root.geometry("1000x1000")
+root.resizable(width=True, height=True)
+root.iconbitmap(r"./mylogo.ico")
 root.option_add("*tearOff", False) # This is always a good idea
+
 # theme_list = ["adapta", "aquativo", "arc", "black","blue", "breeze", "clearlooks", "elegance", "equilux", "itft1", "keramik", "keramik_alt", "kroc", "plastik", "radiance", "ubuntu", "scidblue", "scidgreen", "scidgrey", "scidmint", "scidpink", "scidpurple", "scidsand", "smog", "winxpblue", "yaru" ]
 
 # temp_dir = tempfile.gettempdir()
@@ -46,9 +47,9 @@ try:
 except:
     messagebox.showerror("Can not found the User Temp dir")
     tmp_flag = 1
-img_path = r".\img\resize1000x1000"
+img_path = r"./img/resize1000x1000"
 # bg = ImageTk.PhotoImage(file=r".\img\mountain.png")
-bgm = PhotoImage(file=img_path + r"\frog.png")
+bgm = PhotoImage(file=img_path + r"/frog.png")
 # bg2 = PhotoImage(file = r".\img\resize1000x1000\bee.png")
 # bg3 = PhotoImage(file = r".\img\resize1000x1000\owl.png")
 # bg4 = PhotoImage(file = r".\img\resize1000x1000\mountain.png")
@@ -59,15 +60,21 @@ bgm = PhotoImage(file=img_path + r"\frog.png")
 # bg3 = PhotoImage(file= r".\img\gear.png").subsample(2,2)
 # bg4 = PhotoImage(file= r".\img\internet.png").subsample(2,2)
 # bg5 = PhotoImage(file= r".\img\rocket.png").zoom(2,2)
-open_imag = PhotoImage(file = r".\open-folder.png")
+open_imag = PhotoImage(file = r"./open-folder.png")
 img_list = ["owl.png", "mountain.png","car.png", "penguin.png","sunset1.png", "flower3.png", "kid.png", "pug.png", "cat.png", "whale2.png", "elephant_grey.png", "snowman.png", "bee4.png", "elephant.png", "bee2.png", "fox.png", "beach.png", "frog.png", "cow.png", "forest.png", "owlpink2.png", "girl.png", "sand1.png", "baby2.png", "pig.png", "discord1.png" ]
 
 lable_bg_list = ["#F0F0F0","#EDEDED","#EBECEE","#F0F0F0","#F0F0F0","#FCFCFC","#EFF0F1","#EFF0F1","#EFF0F1","#EAECEF","#EFF0F1","#EFF0F1","#FECDD9","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1", "#EFF0F1","#EFF0F1","#E6EBEF"]
 
-# Define Canvas
-my_canvas = tk.Canvas(root, width=1200, height=800, bd=0, highlightthickness=0)
-my_canvas.pack(fill="both", expand=True)
+def on_vertical(event):
+    my_canvas.yview_scroll(-1 * event.delta, 'units')
 
+def on_horizontal(event):
+    my_canvas.xview_scroll(-1 * event.delta, 'units')
+
+# Define Canvas
+my_canvas = tk.Canvas(root, width=1200, height=800, bd=0, highlightthickness=0,relief='groove',scrollregion=(0,0,800,1200))
+my_canvas.pack(fill="both", expand=True)
+my_canvas.bind_all('<MouseWheel>', on_vertical)
 # Put the image on the canvas
 bg_img = my_canvas.create_image(0,0, image=bgm, anchor="nw")
 
@@ -424,10 +431,10 @@ def guide(gui_list):
         
 xfont = ("System", 12, "bold", 'underline', 'italic')
 theme_combo_t = ttk.Label(root,text="Choose theme:",border=20, font=xfont, background='#b434eb', borderwidth=3)
-theme_combo_t_w = my_canvas.create_window(750, 15, window=theme_combo_t)
+theme_combo_t_w = my_canvas.create_window(750, 15, window=theme_combo_t,width=120)
 
-theme_combo = ttk.Combobox(root, state="readonly", values=theme_list, width=15)
-theme_combo_w = my_canvas.create_window(870,15, window=theme_combo)
+theme_combo = ttk.Combobox(root, state="readonly", values=theme_list)
+theme_combo_w = my_canvas.create_window(870,15, window=theme_combo,width=100)
 theme_combo.current(0)
 theme_combo.bind('<<ComboboxSelected>>', choosetheme)
 
@@ -435,30 +442,30 @@ theme_combo.bind('<<ComboboxSelected>>', choosetheme)
 pfont= ("Rosewood Std Regular", 12, "bold", 'underline' )
 excel_t = ttk.Label(root,text="PLOC path:",border=20,font=pfont, borderwidth=5)
 excel_t_w = my_canvas.create_window(30,40, anchor="nw", window=excel_t)
-excel_i = ttk.Entry(root, width=115)
+excel_i = ttk.Entry(root, width=20)
 
-excel_i_w = my_canvas.create_window(150,40, anchor="nw", window=excel_i)
+excel_i_w = my_canvas.create_window(150,40, anchor="nw", window=excel_i,width=700)
 
 # -------------------------excel sheet_name input--------------------------#
 sheet_t = ttk.Label(root,text="Sheet name:",border=20,font=pfont, borderwidth=3)
 sheet_t_w = my_canvas.create_window(30,80, anchor="nw", window=sheet_t)
-sheet_i = ttk.Entry(root, background="#217346", width=20)
+sheet_i = ttk.Entry(root, background="#217346")
 
-sheet_i_w = my_canvas.create_window(150,80, anchor="nw", window=sheet_i)
+sheet_i_w = my_canvas.create_window(150,80, anchor="nw", window=sheet_i, width=140)
 sheet_i.bind('<FocusIn>', lambda event: guide(vssheet_gui))
 # sheet_i.bind('<FocusOut>', un_guide)
 # -------------------------excel sheet_name input--------------------------#
 sheete_t = ttk.Label(root,text="C4 sheet:",border=20,font=pfont, borderwidth=3)
 sheete_t_w = my_canvas.create_window(300,80, anchor="nw", window=sheete_t)
-sheete_i = ttk.Entry(root, background="#217346", width=20)
+sheete_i = ttk.Entry(root, background="#217346")
 
-sheete_i_w = my_canvas.create_window(400,80, anchor="nw", window=sheete_i)
+sheete_i_w = my_canvas.create_window(400,80, anchor="nw", window=sheete_i,width=140)
 
 # -------------------------pkg type input--------------------------#
 pkg_t = ttk.Label(root,text="Package type:",border=20,font=pfont, borderwidth=3)
 pkg_t_w = my_canvas.create_window(30,120, anchor="nw", window=pkg_t)
-package_combo = ttk.Combobox(root, state="readonly", values=package_list, width=17)
-package_combo_w = my_canvas.create_window(150,120, anchor="nw", window=package_combo)
+package_combo = ttk.Combobox(root, state="readonly", values=package_list)
+package_combo_w = my_canvas.create_window(150,120, anchor="nw", window=package_combo,width=140)
 
 package_combo.bind('<<ComboboxSelected>>', choosemode)
 # -------------------------sealring option input--------------------------#
@@ -470,8 +477,8 @@ sr_opt_w =my_canvas.create_window(300, 120, anchor="nw", window=sr_opt)
 
 # -------------------------foundary selection --------------------------#
 
-srw_i = ttk.Entry(root, width=20)
-my_canvas.create_window(400, 120, anchor="nw", window=srw_i)
+srw_i = ttk.Entry(root)
+my_canvas.create_window(400, 120, anchor="nw", window=srw_i,width=140)
 
 srw_i.bind('<FocusIn>', lambda event: guide(srw_i_guide))
 # srw_i.bind('<FocusOut>', un_guide)
@@ -486,26 +493,26 @@ bum_visual_t = my_canvas.create_text(30, 200, text="Die bump map visual input:",
 
 
 # ------------------------Die bump visual parameters input --------------------------#
-x1y1_i = ttk.Entry(root, width=20)
-x1y1_i_w = my_canvas.create_window(150, 230, anchor="nw", window=x1y1_i)
+x1y1_i = ttk.Entry(root)
+x1y1_i_w = my_canvas.create_window(150, 230, anchor="nw", window=x1y1_i,width=140)
 x1y1_i.bind('<FocusIn>', lambda event: guide(x1y1_guide))
 # x1y1_i.bind('<FocusOut>', un_guide)
 
 
-x2y2_i = ttk.Entry(root, width=20)
-my_canvas.create_window(300, 230, anchor="nw", window=x2y2_i)
+x2y2_i = ttk.Entry(root)
+my_canvas.create_window(300, 230, anchor="nw", window=x2y2_i,width=140)
 
 x2y2_i.bind('<FocusIn>', lambda event: guide(x2y2_guide))
 # x2y2_i.bind('<FocusOut>', un_guide)
 
-Xget_i = ttk.Entry(root, width=20)
-Xget_i_w = my_canvas.create_window(150, 270, anchor="nw", window=Xget_i)
+Xget_i = ttk.Entry(root)
+Xget_i_w = my_canvas.create_window(150, 270, anchor="nw", window=Xget_i,width=140)
 
 Xget_i.bind('<FocusIn>', lambda event: guide(Xget_guide))
 # Xget_i.bind('<FocusOut>', un_guide)
 
-Yget_i = ttk.Entry(root, width=20)
-Yget_i_w = my_canvas.create_window(300, 270, anchor="nw", window=Yget_i)
+Yget_i = ttk.Entry(root)
+Yget_i_w = my_canvas.create_window(300, 270, anchor="nw", window=Yget_i,width=140)
 
 Yget_i.bind('<FocusIn>', lambda event: guide(Yget_guide))
 # Yget_i.bind('<FocusOut>', un_guide)
@@ -515,25 +522,25 @@ die_tb_out_t = my_canvas.create_text(500, 200, text="Die table out \nconfig:", a
 # my_canvas.create_text(680, 200, text="Sheet:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
 out_tb_sheet = ttk.Entry(root)
-out_tb_sheet_w = my_canvas.create_window(600, 195, anchor="nw", window=out_tb_sheet, width=275)
+out_tb_sheet_w = my_canvas.create_window(600, 195, anchor="nw", window=out_tb_sheet, width=290)
 
 out_tb_sheet.bind('<FocusIn>', lambda event: guide(outtb_s_guide))
 # out_tb_sheet.bind('<FocusOut>', un_guide)
 
-out_name_in = ttk.Entry(root, width=20)
-out_name_in_w = my_canvas.create_window(600, 230, anchor="nw", window=out_name_in)
+out_name_in = ttk.Entry(root)
+out_name_in_w = my_canvas.create_window(600, 230, anchor="nw", window=out_name_in,width=140)
 
 out_name_in.bind('<FocusIn>', lambda event: guide(out_name_in_guide))
 # out_name_in.bind('<FocusOut>', un_guide)
-out_name2_in = ttk.Entry(root, width=20)
-out_name2_in_w = my_canvas.create_window(750, 230, anchor="nw", window=out_name2_in)
+out_name2_in = ttk.Entry(root)
+out_name2_in_w = my_canvas.create_window(750, 230, anchor="nw", window=out_name2_in,width=140)
 
 out_name2_in.bind('<FocusIn>', lambda event: guide(out_name2_in_guide))
 # out_name2_in.bind('<FocusOut>', un_guide)
 
 
-out_col_i = ttk.Entry(root, width=20)
-out_col_i_w = my_canvas.create_window(600, 270, anchor="nw", window=out_col_i)
+out_col_i = ttk.Entry(root)
+out_col_i_w = my_canvas.create_window(600, 270, anchor="nw", window=out_col_i,width=140)
 
 out_col_i.bind('<FocusIn>', lambda event: guide(out_col_in_guide))
 # out_col_i.bind('<FocusOut>', un_guide)
@@ -541,7 +548,7 @@ out_col_i.bind('<FocusIn>', lambda event: guide(out_col_in_guide))
 
 
 out_col_wsr_i = ttk.Entry(root)
-out_col_wsr_w = my_canvas.create_window(750, 270, anchor="nw", window=out_col_wsr_i)
+out_col_wsr_w = my_canvas.create_window(750, 270, anchor="nw", window=out_col_wsr_i,width=140)
 
 out_col_wsr_i.bind('<FocusIn>', lambda event: guide(out_col_wsr_i_guide))
 # out_col_wsr_i.bind('<FocusOut>', un_guide)
@@ -552,26 +559,26 @@ out_col_wsr_i.bind('<FocusIn>', lambda event: guide(out_col_wsr_i_guide))
 die_dumy_t = my_canvas.create_text(30, 310, text="Die Bummy bump input:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
 my_canvas.create_text(245, 330, text="Corner 1 config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="black")
-cor1_x1y1 = ttk.Entry(root, width=20)
-cor1_x1y1_w = my_canvas.create_window(150, 350, anchor="nw", window=cor1_x1y1)
+cor1_x1y1 = ttk.Entry(root)
+cor1_x1y1_w = my_canvas.create_window(150, 350, anchor="nw", window=cor1_x1y1,width=140)
 
 cor1_x1y1.bind('<FocusIn>', lambda event: guide(dummystart_guide))
 # cor1_x1y1.bind('<FocusOut>', un_guide)
 
-cor1_x2y2 = ttk.Entry(root, width=20)
-cor1_x2y2_w = my_canvas.create_window(300, 350, anchor="nw", window=cor1_x2y2)
+cor1_x2y2 = ttk.Entry(root)
+cor1_x2y2_w = my_canvas.create_window(300, 350, anchor="nw", window=cor1_x2y2,width=140)
 
 cor1_x2y2.bind('<FocusIn>', lambda event: guide(dummyend_guide))
 # cor1_x2y2.bind('<FocusOut>', un_guide)
 
-cor1_Xget = ttk.Entry(root,width=20)
-cor1_Xget_w = my_canvas.create_window(150, 380, anchor="nw", window=cor1_Xget)
+cor1_Xget = ttk.Entry(root)
+cor1_Xget_w = my_canvas.create_window(150, 380, anchor="nw", window=cor1_Xget,width=140)
 
 cor1_Xget.bind('<FocusIn>', lambda event: guide(dummy_Xget_guide))
 # cor1_Xget.bind('<FocusOut>', un_guide)
 
-cor1_Yget = ttk.Entry(root, width=20)
-cor1_Yget_w = my_canvas.create_window(300, 380, anchor="nw", window=cor1_Yget)
+cor1_Yget = ttk.Entry(root)
+cor1_Yget_w = my_canvas.create_window(300, 380, anchor="nw", window=cor1_Yget,width=140)
 
 cor1_Yget.bind('<FocusIn>', lambda event: guide(dummy_Yget_guide))
 # cor1_Yget.bind('<FocusOut>', un_guide)
@@ -579,26 +586,26 @@ cor1_Yget.bind('<FocusIn>', lambda event: guide(dummy_Yget_guide))
 
 my_canvas.create_text(670, 330, text="Corner 2 config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="black")
 
-cor2_x1y1 = ttk.Entry(root, width=20)
-cor2_x1y1_w = my_canvas.create_window(600, 350, anchor="nw", window=cor2_x1y1)
+cor2_x1y1 = ttk.Entry(root)
+cor2_x1y1_w = my_canvas.create_window(600, 350, anchor="nw", window=cor2_x1y1,width=140)
 
 cor2_x1y1.bind('<FocusIn>', lambda event: guide(dummystart_guide))
 # cor2_x1y1.bind('<FocusOut>', un_guide)
 
-cor2_x2y2 = ttk.Entry(root, width=20)
-cor2_x2y2_w = my_canvas.create_window(750, 350, anchor="nw", window=cor2_x2y2)
+cor2_x2y2 = ttk.Entry(root)
+cor2_x2y2_w = my_canvas.create_window(750, 350, anchor="nw", window=cor2_x2y2,width=140)
 
 cor2_x2y2.bind('<FocusIn>', lambda event: guide(dummyend_guide))
 # cor2_x2y2.bind('<FocusOut>', un_guide)
 
-cor2_Xget = ttk.Entry(root, width=20)
-cor2_Xget_w = my_canvas.create_window(600, 380, anchor="nw", window=cor2_Xget)
+cor2_Xget = ttk.Entry(root)
+cor2_Xget_w = my_canvas.create_window(600, 380, anchor="nw", window=cor2_Xget, width=140)
 
 cor2_Xget.bind('<FocusIn>', lambda event: guide(dummy_Xget_guide))
 # cor2_Xget.bind('<FocusOut>', un_guide)
 
-cor2_Yget = ttk.Entry(root, width=20)
-cor2_Yget_w = my_canvas.create_window(750, 380, anchor="nw", window=cor2_Yget)
+cor2_Yget = ttk.Entry(root)
+cor2_Yget_w = my_canvas.create_window(750, 380, anchor="nw", window=cor2_Yget,width=140)
 
 cor2_Yget.bind('<FocusIn>', lambda event: guide(dummy_Yget_guide))
 # cor2_Yget.bind('<FocusOut>', un_guide)
@@ -606,26 +613,26 @@ cor2_Yget.bind('<FocusIn>', lambda event: guide(dummy_Yget_guide))
 #--------------------------------------------------------------------------------------------------------#
 
 my_canvas.create_text(245, 410, text="Corner 3 config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="black")
-cor3_x1y1 = ttk.Entry(root, width=20)
-cor3_x1y1_w = my_canvas.create_window(150, 430, anchor="nw", window=cor3_x1y1)
+cor3_x1y1 = ttk.Entry(root)
+cor3_x1y1_w = my_canvas.create_window(150, 430, anchor="nw", window=cor3_x1y1,width=140)
 
 cor3_x1y1.bind('<FocusIn>', lambda event: guide(dummystart_guide))
 # cor3_x1y1.bind('<FocusOut>', un_guide)
 
-cor3_x2y2 = ttk.Entry(root, width=20)
-cor3_x2y2_w = my_canvas.create_window(300, 430, anchor="nw", window=cor3_x2y2)
+cor3_x2y2 = ttk.Entry(root)
+cor3_x2y2_w = my_canvas.create_window(300, 430, anchor="nw", window=cor3_x2y2,width=140)
 
 cor3_x2y2.bind('<FocusIn>', lambda event: guide(dummyend_guide))
 # cor3_x2y2.bind('<FocusOut>', un_guide)
 
 cor3_Xget = ttk.Entry(root)
-cor3_Xget_w = my_canvas.create_window(150, 460, anchor="nw", window=cor3_Xget)
+cor3_Xget_w = my_canvas.create_window(150, 460, anchor="nw", window=cor3_Xget,width=140)
 
 cor3_Xget.bind('<FocusIn>', lambda event: guide(dummy_Xget_guide))
 # cor3_Xget.bind('<FocusOut>', un_guide)
 
 cor3_Yget = ttk.Entry(root)
-cor3_Yget_w = my_canvas.create_window(300, 460, anchor="nw", window=cor3_Yget)
+cor3_Yget_w = my_canvas.create_window(300, 460, anchor="nw", window=cor3_Yget,width=140)
 
 cor3_Yget.bind('<FocusIn>', lambda event: guide(dummy_Yget_guide))
 # cor3_Yget.bind('<FocusOut>', un_guide)
@@ -633,26 +640,26 @@ cor3_Yget.bind('<FocusIn>', lambda event: guide(dummy_Yget_guide))
 #--------------------------------------------------------------------------------------------------------#
 
 my_canvas.create_text(670, 410, text="Corner 4 config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="black")
-cor4_x1y1 = ttk.Entry(root, width=20)
-cor4_x1y1_w = my_canvas.create_window(600, 430, anchor="nw", window=cor4_x1y1)
+cor4_x1y1 = ttk.Entry(root)
+cor4_x1y1_w = my_canvas.create_window(600, 430, anchor="nw", window=cor4_x1y1,width=140)
 
 cor4_x1y1.bind('<FocusIn>', lambda event: guide(dummystart_guide))
 # cor4_x1y1.bind('<FocusOut>', un_guide)
 
-cor4_x2y2 = ttk.Entry(root, width=20)
-cor4_x2y2_w = my_canvas.create_window(750, 430, anchor="nw", window=cor4_x2y2)
+cor4_x2y2 = ttk.Entry(root)
+cor4_x2y2_w = my_canvas.create_window(750, 430, anchor="nw", window=cor4_x2y2,width=140)
 
 cor4_x2y2.bind('<FocusIn>', lambda event: guide(dummyend_guide))
 # cor4_x2y2.bind('<FocusOut>', un_guide)
 
-cor4_Xget = ttk.Entry(root, width=20)
-cor4_Xget_w = my_canvas.create_window(600, 460, anchor="nw", window=cor4_Xget)
+cor4_Xget = ttk.Entry(root)
+cor4_Xget_w = my_canvas.create_window(600, 460, anchor="nw", window=cor4_Xget,width=140)
 
 cor4_Xget.bind('<FocusIn>', lambda event: guide(dummy_Xget_guide))
 # cor4_Xget.bind('<FocusOut>', un_guide)
 
-cor4_Yget = ttk.Entry(root, width=20)
-cor4_Yget_w = my_canvas.create_window(750, 460, anchor="nw", window=cor4_Yget)
+cor4_Yget = ttk.Entry(root)
+cor4_Yget_w = my_canvas.create_window(750, 460, anchor="nw", window=cor4_Yget,width=140)
 
 cor4_Yget.bind('<FocusIn>', lambda event: guide(dummy_Yget_guide))
 # cor4_Yget.bind('<FocusOut>', un_guide)
@@ -668,7 +675,7 @@ xwidth_i_w = my_canvas.create_window(150, 560, anchor="nw", window=xwidth_i, wid
 xwidth_i.bind('<FocusIn>', lambda event: guide(xwidth_i_guide))
 # xwidth_i.bind('<FocusOut>', un_guide)
 
-yheight_i = ttk.Entry(root, width=20)
+yheight_i = ttk.Entry(root)
 yheight_w = my_canvas.create_window(340, 560, anchor="nw", window=yheight_i, width=170)
 
 yheight_i.bind('<FocusIn>', lambda event: guide(yheight_i_guide))
@@ -678,13 +685,13 @@ yheight_i.bind('<FocusIn>', lambda event: guide(yheight_i_guide))
 int_s_loc_t = my_canvas.create_text(620, 540, text="OUT DIE sheet/location:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
 intp_sheet = ttk.Entry(root)
-intp_sheet_w = my_canvas.create_window(520, 560, anchor="nw", window=intp_sheet, width=170)
+intp_sheet_w = my_canvas.create_window(530, 560, anchor="nw", window=intp_sheet, width=170)
 
 intp_sheet.bind('<FocusIn>', lambda event: guide(intp_sheet_guide))
 # intp_sheet.bind('<FocusOut>', un_guide)
 
 int_tb_loc = ttk.Entry(root)
-int_tb_locc_w = my_canvas.create_window(710, 560, anchor="nw", window=int_tb_loc, width=170)
+int_tb_locc_w = my_canvas.create_window(720, 560, anchor="nw", window=int_tb_loc, width=170)
 
 int_tb_loc.bind('<FocusIn>', lambda event: guide(int_tb_guide))
 # int_tb_loc.bind('<FocusOut>', un_guide)
@@ -692,8 +699,8 @@ int_tb_loc.bind('<FocusIn>', lambda event: guide(int_tb_guide))
 # my_canvas.create_text(30, 595, text="Die/Chip Offset:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 int_die_cnt_t = my_canvas.create_text(60, 600, text="Die count:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
-int_die_num_combo = ttk.Combobox(root, state="readonly", values=int_couple_number, width=22)
-int_die_num_combo_w = my_canvas.create_window(230,610, window=int_die_num_combo)
+int_die_num_combo = ttk.Combobox(root, state="readonly", values=int_couple_number)
+int_die_num_combo_w = my_canvas.create_window(235,610, window=int_die_num_combo,width=170)
 
 int_die_num_combo.bind('<<ComboboxSelected>>', get_num_intdie)
 
@@ -705,7 +712,7 @@ Die1_name.bind('<FocusIn>', lambda event: guide(Die1_name_guide))
 # Die1_name.bind('<FocusOut>', un_guide)
 
 Die2_name = ttk.Entry(root)
-Die2_name_w = my_canvas.create_window(520, 630, anchor="nw", window=Die2_name, width=360)
+Die2_name_w = my_canvas.create_window(530, 630, anchor="nw", window=Die2_name, width=360)
 
 Die2_name.bind('<FocusIn>', lambda event: guide(Die2_name_guide))
 # Die2_name.bind('<FocusOut>', un_guide)
@@ -725,13 +732,13 @@ Die1_yoffset_i.bind('<FocusIn>', lambda event: guide(Die1_yoffset_i_guide))
 # Die1_yoffset_i.bind('<FocusOut>', un_guide)
 
 Die2_xoffset_i = ttk.Entry(root)
-Die2_xoffset_w = my_canvas.create_window(520, 670, anchor="nw", window=Die2_xoffset_i, width=360)
+Die2_xoffset_w = my_canvas.create_window(530, 670, anchor="nw", window=Die2_xoffset_i, width=360)
 
 Die2_xoffset_i.bind('<FocusIn>', lambda event: guide(Die2_xoffset_i_guide))
 # Die2_xoffset_i.bind('<FocusOut>', un_guide)
 
 Die2_yoffset_i = ttk.Entry(root, width=20)
-Die2_yoffset_w = my_canvas.create_window(520, 710, anchor="nw", window=Die2_yoffset_i, width=360)
+Die2_yoffset_w = my_canvas.create_window(530, 710, anchor="nw", window=Die2_yoffset_i, width=360)
 
 Die2_yoffset_i.bind('<FocusIn>', lambda event: guide(Die2_yoffset_i_guide))
 # Die2_yoffset_i.bind('<FocusOut>', un_guide)
@@ -1415,10 +1422,13 @@ def hihi():
 browse_btn = ttk.Button(root, text="Open File", image=open_imag, command=open_file)
 browse_btn_w = my_canvas.create_window(865, 40, anchor="nw", window=browse_btn)
 # button = tk.Button(root, text="Generate",font=("System", 14, 'underline', 'bold'), foreground='white', background='#9b34eb', command=get_path, width=40)
-button = tk.Button(root, text="Generate",font = mediumFont, foreground='white', background='#9b34eb', command=get_params_and_generate, width=40)
-# button = ttk.Button(root, text="Generate", command=get_path, width=80)
+button = tk.Button(root, text="Generate",font = mediumFont, foreground='white', background='#9b34eb', command=get_params_and_generate)
 
-button_w = my_canvas.create_window(300, 860, anchor="nw", window=button)
+button_w = my_canvas.create_window(300, 860, anchor="nw", window=button,width=300)
+
+scroll_win = ttk.Scrollbar(my_canvas,command=my_canvas.yview)
+my_canvas.config(yscrollcommand=scroll_win.set)
+scroll_win.pack(side=RIGHT,fill=Y)
 
 text = tk.Text(my_canvas,width = 50, height = 100,bd=5,relief='groove', wrap='word', font=('arial',10), highlightthickness=2 ) #yscrollcommand=scroll_y.set
 scroll_y = ttk.Scrollbar(text)
