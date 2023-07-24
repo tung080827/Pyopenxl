@@ -36,6 +36,9 @@ root.geometry("1000x1000")
 root.resizable(width=True, height=True)
 root.iconbitmap(r"./mylogo.ico")
 root.option_add("*tearOff", False) # This is always a good idea
+img_path = r"./img/resize1000x1000"
+bgm = PhotoImage(file=img_path + r"/frog.png")
+
 
 # theme_list = ["adapta", "aquativo", "arc", "black","blue", "breeze", "clearlooks", "elegance", "equilux", "itft1", "keramik", "keramik_alt", "kroc", "plastik", "radiance", "ubuntu", "scidblue", "scidgreen", "scidgrey", "scidmint", "scidpink", "scidpurple", "scidsand", "smog", "winxpblue", "yaru" ]
 
@@ -47,9 +50,9 @@ try:
 except:
     messagebox.showerror("Can not found the User Temp dir")
     tmp_flag = 1
-img_path = r"./img/resize1000x1000"
+
 # bg = ImageTk.PhotoImage(file=r".\img\mountain.png")
-bgm = PhotoImage(file=img_path + r"/frog.png")
+
 # bg2 = PhotoImage(file = r".\img\resize1000x1000\bee.png")
 # bg3 = PhotoImage(file = r".\img\resize1000x1000\owl.png")
 # bg4 = PhotoImage(file = r".\img\resize1000x1000\mountain.png")
@@ -74,9 +77,25 @@ def on_horizontal(event):
 # Define Canvas
 my_canvas = tk.Canvas(root, width=1200, height=800, bd=0, highlightthickness=0,relief='groove',scrollregion=(0,0,800,1200))
 my_canvas.pack(fill="both", expand=True)
-my_canvas.bind_all('<MouseWheel>', on_vertical)
+my_canvas.bind_all('<Shift-MouseWheel>', on_vertical)
 # Put the image on the canvas
 bg_img = my_canvas.create_image(0,0, image=bgm, anchor="nw")
+def on_window_resize(event):
+    global bgm
+    width = event.width
+    height = event.height
+    print(f"Window resized to {width}x{height}")
+    #Load an image in the script
+    img= (Image.open(r"./img/resize1000x1000/penguin.png"))
+
+    #Resize the Image using resize method
+    resized_image= img.resize((width,height), Image.LANCZOS)
+    bgm= ImageTk.PhotoImage(resized_image)
+
+    my_canvas.itemconfigure(bg_img, image=bgm)
+    reponsive(int((width-1000)/2),int((height-1000)/2))
+    
+root.bind("<Configure>", on_window_resize)
 
 # Make the app responsive
 # root.columnconfigure(index=0, weight=1)
@@ -166,6 +185,8 @@ def change_colour(index):
     p = os.path.join(img_path, img_list[index])
     bgm = PhotoImage(file = p)
     my_canvas.itemconfigure(bg_img, image=bgm)
+
+
 
 def enable(children):
    for child in children:
@@ -269,8 +290,8 @@ def choosemode(event):
         popup("The EMIB package type have not developed yet, Please use S-Organic to gen 2 times (for C4 and uBump) instead!")
     entry_disable(text)
     
-myLabel = ttk.Label(root,text="---")
-myLabel_w =my_canvas.create_window(80,770,anchor="nw", window=myLabel)
+# myLabel = ttk.Label(root,text="---")
+# myLabel_w =my_canvas.create_window(80,770,anchor="nw", window=myLabel)
 
 
 def get_num_intdie(event):
@@ -478,7 +499,7 @@ sr_opt_w =my_canvas.create_window(300, 120, anchor="nw", window=sr_opt)
 # -------------------------foundary selection --------------------------#
 
 srw_i = ttk.Entry(root)
-my_canvas.create_window(400, 120, anchor="nw", window=srw_i,width=140)
+sr_i_w = my_canvas.create_window(400, 120, anchor="nw", window=srw_i,width=140)
 
 srw_i.bind('<FocusIn>', lambda event: guide(srw_i_guide))
 # srw_i.bind('<FocusOut>', un_guide)
@@ -500,7 +521,7 @@ x1y1_i.bind('<FocusIn>', lambda event: guide(x1y1_guide))
 
 
 x2y2_i = ttk.Entry(root)
-my_canvas.create_window(300, 230, anchor="nw", window=x2y2_i,width=140)
+x2y2_i_w = my_canvas.create_window(300, 230, anchor="nw", window=x2y2_i,width=140)
 
 x2y2_i.bind('<FocusIn>', lambda event: guide(x2y2_guide))
 # x2y2_i.bind('<FocusOut>', un_guide)
@@ -558,7 +579,7 @@ out_col_wsr_i.bind('<FocusIn>', lambda event: guide(out_col_wsr_i_guide))
 
 die_dumy_t = my_canvas.create_text(30, 310, text="Die Bummy bump input:", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="#b434eb")
 
-my_canvas.create_text(245, 330, text="Corner 1 config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="black")
+cor1_text_w = my_canvas.create_text(245, 330, text="Corner 1 config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="black")
 cor1_x1y1 = ttk.Entry(root)
 cor1_x1y1_w = my_canvas.create_window(150, 350, anchor="nw", window=cor1_x1y1,width=140)
 
@@ -584,7 +605,7 @@ cor1_Yget.bind('<FocusIn>', lambda event: guide(dummy_Yget_guide))
 # cor1_Yget.bind('<FocusOut>', un_guide)
 #---------------------------------------------------------------------------------------------------------#
 
-my_canvas.create_text(670, 330, text="Corner 2 config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="black")
+cor2_text_w = my_canvas.create_text(670, 330, text="Corner 2 config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="black")
 
 cor2_x1y1 = ttk.Entry(root)
 cor2_x1y1_w = my_canvas.create_window(600, 350, anchor="nw", window=cor2_x1y1,width=140)
@@ -612,7 +633,7 @@ cor2_Yget.bind('<FocusIn>', lambda event: guide(dummy_Yget_guide))
 
 #--------------------------------------------------------------------------------------------------------#
 
-my_canvas.create_text(245, 410, text="Corner 3 config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="black")
+cor3_text_w = my_canvas.create_text(245, 410, text="Corner 3 config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="black")
 cor3_x1y1 = ttk.Entry(root)
 cor3_x1y1_w = my_canvas.create_window(150, 430, anchor="nw", window=cor3_x1y1,width=140)
 
@@ -639,7 +660,7 @@ cor3_Yget.bind('<FocusIn>', lambda event: guide(dummy_Yget_guide))
 
 #--------------------------------------------------------------------------------------------------------#
 
-my_canvas.create_text(670, 410, text="Corner 4 config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="black")
+cor4_text_w = my_canvas.create_text(670, 410, text="Corner 4 config", anchor="nw",font=("Helvetica", 10, 'italic', 'underline', 'bold'), fill="black")
 cor4_x1y1 = ttk.Entry(root)
 cor4_x1y1_w = my_canvas.create_window(600, 430, anchor="nw", window=cor4_x1y1,width=140)
 
@@ -756,7 +777,7 @@ separator2 = ttk.Separator(root)
 
 #--------------------------------------------------------------------------------------------------------#
 
-my_canvas.create_text(880,980, text= "Internal contact: sytung@synopsys.com" ,font=("Helvetica", 8, 'underline'), fill="grey")
+source_w = my_canvas.create_text(880,980, text= "Internal contact: sytung@synopsys.com" ,font=("Helvetica", 8, 'underline'), fill="grey")
 
 def open_file():
 	# global my_image
@@ -1220,8 +1241,6 @@ def generate_bump_table(excel_path, bump_visual_sheet, package_type, die_table, 
                                     tbidx2 += 8
                                 
                                 r_int += 1
-                            
-                            
 
             #---------Create Die bump exclued dummy bump at 4 corner-----------#
 
@@ -1422,7 +1441,7 @@ def hihi():
 browse_btn = ttk.Button(root, text="Open File", image=open_imag, command=open_file)
 browse_btn_w = my_canvas.create_window(865, 40, anchor="nw", window=browse_btn)
 # button = tk.Button(root, text="Generate",font=("System", 14, 'underline', 'bold'), foreground='white', background='#9b34eb', command=get_path, width=40)
-button = tk.Button(root, text="Generate",font = mediumFont, foreground='white', background='#9b34eb', command=get_params_and_generate)
+button = tk.Button(root, text="Generate",font = mediumFont, foreground='black', background='green', command=get_params_and_generate)
 
 button_w = my_canvas.create_window(300, 860, anchor="nw", window=button,width=300)
 
@@ -1432,7 +1451,7 @@ scroll_win.pack(side=RIGHT,fill=Y)
 
 text = tk.Text(my_canvas,width = 50, height = 100,bd=5,relief='groove', wrap='word', font=('arial',10), highlightthickness=2 ) #yscrollcommand=scroll_y.set
 scroll_y = ttk.Scrollbar(text)
-my_canvas.create_window(600,80, anchor='nw', window=text, height=100, width=280)
+text_w = my_canvas.create_window(600,80, anchor='nw', window=text, height=100, width=280)
 
 text.config(yscrollcommand=scroll_y.set)
 scroll_y.pack(side=RIGHT, fill=Y)
@@ -1570,6 +1589,29 @@ def get_saved_params():
         int_die_num_combo.current(0)
         package_combo.current(0)
     mynotif("\n\nINFO: This field is for showing the information or guidance")
+def reponsive(x,y):
+    windows_list = [theme_combo_t_w,theme_combo_w, excel_t_w, excel_i_w,
+                    sheet_t_w,sheete_i_w,pkg_t_w,package_combo_w,
+                    sr_opt_w,sr_i_w,separator_w,bum_visual_t,
+                    x1y1_i_w,x2y2_i_w,Xget_i_w,Yget_i_w,
+                    out_tb_sheet_w,out_name_in_w,out_name2_in_w,out_col_i_w,out_col_wsr_w,
+                    cor1_x1y1_w,cor1_x2y2_w,cor1_Xget_w,cor1_Yget_w,
+                    cor2_x1y1_w,cor2_x2y2_w,cor2_Xget_w,cor2_Yget_w,
+                    cor3_x1y1_w,cor3_x2y2_w,cor3_Xget_w,cor3_Yget_w,
+                    cor4_x1y1_w,cor4_x2y2_w,cor4_Xget_w,cor4_Yget_w,
+                    interopser_w,xwidth_i_w,yheight_w,intp_sheet_w,
+                    int_tb_locc_w,int_die_num_combo_w,Die1_name_w,Die2_name_w,
+                    Die1_xoffset_w,Die1_yoffset_w,Die2_xoffset_w,Die2_yoffset_w,
+                    progress_w,browse_btn_w,button_w,text_w,
+                    die_tb_out_t,die_dumy_t,cor1_text_w,cor2_text_w,cor3_text_w,cor4_text_w,
+                    int_s_loc_t,int_die_cnt_t,int_die_name_t,int_xo_t,int_yo_t,source_w
+                    
+                    ]
+    for windw in windows_list:
+        my_canvas.move(windw,x,y)
+   
+ 
+
 
 entry_list=[sheet_i,x1y1_i,x2y2_i, Xget_i, Yget_i, out_tb_sheet,out_name_in,out_name2_in,out_col_i,cor1_x1y1,cor1_x2y2,cor1_Xget,cor1_Yget,
                 cor2_x1y1,cor2_x2y2,cor2_Xget,cor2_Yget,cor3_x1y1,cor3_x2y2,cor3_Xget,cor3_Yget,cor4_x1y1,cor4_x2y2,cor4_Xget,cor4_Yget,
