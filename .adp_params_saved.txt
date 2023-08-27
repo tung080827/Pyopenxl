@@ -1,0 +1,17 @@
+scidgrey
+C:/Users/sytung/OneDrive - Synopsys, Inc/Desktop/py/Test3.xlsx
+BGA
+AQ1
+AT1297
+UCIe_Mapping_connection
+F1
+G178
+Package_substrate
+DIE3 DIE4 DIE1 DIE2
+DIE7 DIE8 DIE5 DIE6
+T19 AB19 AJ19 AR19
+V791 AD791 AL791 AT791
+X19 AF19 AN19 AV19
+Z791 AH791 AP791 AX791
+APD4
+D4

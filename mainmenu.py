@@ -12,19 +12,22 @@ import getcolumn
 from array import *
 import tkinter as tk
 from tkinter import *
-from ttkthemes import ThemedTk, THEMES
+# from ttkthemes import ThemedTk, THEMES
 from PIL import Image
 from PIL import ImageTk, Image
 from tkinter.font import Font
 from tkinter import filedialog
 import gui_function as gui
 import subprocess
+import ttkbootstrap as ttk
 # from subprocess import call
 
 
-root = ThemedTk()
+
+# root = ThemedTk()
+root = ttk.Window(themename='united')
 # my_canvas=tk.Canvas(root)
-root.set_theme("scidpurple")
+# root.set_theme("scidpurple")
 
 root.title("PLOC SCRIPT MENU")
 root.geometry("600x800+30+100")
@@ -53,11 +56,11 @@ def get_ploc_app():
     subprocess.call([r'.\ploctablegenerator\ploctablegenerator.exe'])
     # call(["python", 'ploc_v2.py'])
 def get_ch_app():
-    subprocess.call([r'.\channelmappinggen\channelmappinggen.exe'])
+    subprocess.call([r'.\datachanel_genv2\datachanel_genv2.exe'])
     #  call(["python", 'datachanel_gen.py'])
-def get_adp_app():
-    subprocess.call([r'.\apdgenerator\apdgenerator.exe'])
-    #  call(["python", 'apdgenerator_v0.2.py'])
+# def get_adp_app():
+#     subprocess.call([r'.\apdgenerator\apdgenerator.exe'])
+#     #  call(["python", 'apdgenerator_v0.2.py'])
 
 # browse_btn = ttk.Button(root, text="Open File", image=open_imag, command=open)
 # browse_btn_w = my_canvas.create_window(865, 40, anchor="nw", window=browse_btn)
@@ -72,10 +75,10 @@ button_datach_map = tk.Button(root, text="GENERATE DATA CHANNEL AND MAPPING TABL
 
 my_canvas.create_window(100, 300, anchor="nw", window=button_datach_map, width=400)
 
-button_adp = tk.Button(root, text="GENERATE ADP NETLIST", foreground='white', background='#9b34eb',font=stfont, command=get_adp_app, width=40)
+# button_adp = tk.Button(root, text="GENERATE ADP NETLIST", foreground='white', background='#9b34eb',font=stfont, command=get_adp_app, width=40)
 # button = ttk.Button(root, text="Generate", command=get_path, width=80)
 
-my_canvas.create_window(100, 400, anchor="nw", window=button_adp, width=400)
+# my_canvas.create_window(100, 400, anchor="nw", window=button_adp, width=400)
 
 
 

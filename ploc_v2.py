@@ -82,8 +82,12 @@ my_canvas.bind_all('<Shift-MouseWheel>', on_vertical)
 bg_img = my_canvas.create_image(0,0, image=bgm, anchor="nw")
 def on_window_resize(event):
     global bgm
-    width = event.width
-    height = event.height
+    # width = event.width
+    # height = event.height
+    width = root.winfo_width()
+    height = root.winfo_height()
+    
+    
     print(f"Window resized to {width}x{height}")
     #Load an image in the script
     img= (Image.open(r"./img/resize1000x1000/penguin.png"))
@@ -93,7 +97,7 @@ def on_window_resize(event):
     bgm= ImageTk.PhotoImage(resized_image)
 
     my_canvas.itemconfigure(bg_img, image=bgm)
-    reponsive(int((width-1000)/2),int((height-1000)/2))
+    # reponsive(int((width-1000)/2),int((height-1000)/2))
     
 root.bind("<Configure>", on_window_resize)
 
