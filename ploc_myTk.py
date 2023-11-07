@@ -213,7 +213,7 @@ class Tkentry():
             self,
            
             canvas : tk.Canvas,
-            TkTextbox : TkTextbox,
+            # TkTextbox : TkTextbox,
             guide_text: list,
             x = 0,
             y = 0,
@@ -589,6 +589,5 @@ class TKcheckbtn():
         if(h!=0):
             self.canvas.itemconfig(self.place,height=(self.h/self.winy)*h)
             self.new_h = h 
-    def get_state(self):
-        
+    def get_state(self):        
         return self.var.get()

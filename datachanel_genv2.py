@@ -350,19 +350,19 @@ text_box = TkTextbox(canvas=my_canvas,x=400,y=80,w=300, h=100, win_defaultx=800,
 text_box.add_new_text("This tool used for Ploc data channel genetation based on standard data channel.\nAnd generate Mapping table")
 text_box.textbox.config(foreground='#F75726', font=tkfont(family="Courier", size="10"))
 
-p_excel_e = Tkentry(canvas=my_canvas,x=150,y=50,w=550,TkTextbox=text_box,guide_text=excel_g, win_defaultx=800, win_defaulty=800, justify='left')
-v_refsheet_e = Tkentry(canvas=my_canvas,x=150,y=250,w=140,TkTextbox=text_box,guide_text=v_refsheet_g,win_defaultx=800, win_defaulty=800, justify='center')
-pwr_list_e = Tkentry(canvas=my_canvas,x=150,y=370,w=290,TkTextbox=text_box,guide_text=pwr_list_g,win_defaultx=800, win_defaulty=800, justify='center')
-bus_char_e = Tkentry(canvas=my_canvas,x=300,y=330,w=140,TkTextbox=text_box,guide_text=bus_char_g,win_defaultx=800, win_defaulty=800, justify='center')
-ref_cell_start_e = Tkentry(canvas=my_canvas,x=150,y=290,w=140,TkTextbox=text_box,guide_text=ref_cell_start_g,win_defaultx=800, win_defaulty=800, justify='center')
-ref_cell_end_e = Tkentry(canvas=my_canvas,x=150,y=330,w=140,TkTextbox=text_box,guide_text=ref_cell_end_g,win_defaultx=800, win_defaulty=800, justify='center')
-ch_o_sheet_e = Tkentry(canvas=my_canvas,x=500,y=250,w=140,TkTextbox=text_box,guide_text=ch_o_sheet_g,win_defaultx=800, win_defaulty=800, justify='center')
-ch_o_loc_e = Tkentry(canvas=my_canvas,x=500,y=290,w=140,TkTextbox=text_box,guide_text=ch_o_loc_e,win_defaultx=800, win_defaulty=800, justify='center')
-die_L_list_e = Tkentry(canvas=my_canvas,x=150,y=505,w=290,TkTextbox=text_box,guide_text=die_L_list_g,win_defaultx=800, win_defaulty=800, justify='center')
-die_R_list_e = Tkentry(canvas=my_canvas,x=150,y=575,w=290,TkTextbox=text_box,guide_text=die_R_list_g,win_defaultx=800, win_defaulty=800, justify='center')
-map_tb_sheet_e = Tkentry(canvas=my_canvas,x=500,y=505,w=140,TkTextbox=text_box,guide_text=map_tb_sheet_g,win_defaultx=800, win_defaulty=800, justify='center')
-map_tb_loc_e = Tkentry(canvas=my_canvas,x=500,y=575,w=140,TkTextbox=text_box,guide_text=map_tb_loc_g,win_defaultx=800, win_defaulty=800, justify='center')
-map_char_e = Tkentry(canvas=my_canvas,x=260,y=435,w=180,TkTextbox=text_box,guide_text=map_char_g,win_defaultx=800, win_defaulty=800, justify='center')
+p_excel_e = Tkentry(canvas=my_canvas,x=150,y=50,w=550,guide_text=excel_g, win_defaultx=800, win_defaulty=800, justify='left')
+v_refsheet_e = Tkentry(canvas=my_canvas,x=150,y=250,w=140,guide_text=v_refsheet_g,win_defaultx=800, win_defaulty=800, justify='center')
+pwr_list_e = Tkentry(canvas=my_canvas,x=150,y=370,w=290,guide_text=pwr_list_g,win_defaultx=800, win_defaulty=800, justify='center')
+bus_char_e = Tkentry(canvas=my_canvas,x=300,y=330,w=140,guide_text=bus_char_g,win_defaultx=800, win_defaulty=800, justify='center')
+ref_cell_start_e = Tkentry(canvas=my_canvas,x=150,y=290,w=140,guide_text=ref_cell_start_g,win_defaultx=800, win_defaulty=800, justify='center')
+ref_cell_end_e = Tkentry(canvas=my_canvas,x=150,y=330,w=140,guide_text=ref_cell_end_g,win_defaultx=800, win_defaulty=800, justify='center')
+ch_o_sheet_e = Tkentry(canvas=my_canvas,x=500,y=250,w=140,guide_text=ch_o_sheet_g,win_defaultx=800, win_defaulty=800, justify='center')
+ch_o_loc_e = Tkentry(canvas=my_canvas,x=500,y=290,w=140,guide_text=ch_o_loc_e,win_defaultx=800, win_defaulty=800, justify='center')
+die_L_list_e = Tkentry(canvas=my_canvas,x=150,y=505,w=290,guide_text=die_L_list_g,win_defaultx=800, win_defaulty=800, justify='center')
+die_R_list_e = Tkentry(canvas=my_canvas,x=150,y=575,w=290,guide_text=die_R_list_g,win_defaultx=800, win_defaulty=800, justify='center')
+map_tb_sheet_e = Tkentry(canvas=my_canvas,x=500,y=505,w=140,guide_text=map_tb_sheet_g,win_defaultx=800, win_defaulty=800, justify='center')
+map_tb_loc_e = Tkentry(canvas=my_canvas,x=500,y=575,w=140,guide_text=map_tb_loc_g,win_defaultx=800, win_defaulty=800, justify='center')
+map_char_e = Tkentry(canvas=my_canvas,x=260,y=435,w=180,guide_text=map_char_g,win_defaultx=800, win_defaulty=800, justify='center')
 
 
 theme_cb = TkCombobox(canvas=my_canvas,x=675, y=15,w=70,win_defaultx=800, win_defaulty=800,values=theme_ls)
@@ -499,7 +499,10 @@ def get_bus(bumplist: list, power_list:list, buschar:str):
         cnt = 0
         templist = []
         for net in bumplist:
-            if str(net).find(s[2]) != -1:
+            s1 = getstring(net,buscharls[0], buscharls[1])
+            if s1[2] == s[2]:
+            # if str(net).find(s[2]) != -1:
+            # if str(s[2]).find(net) != -1:
                 cnt +=1
                 templist.append(net)
         netdict.__setitem__(s[2],cnt)
