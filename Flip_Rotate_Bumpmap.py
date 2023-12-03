@@ -90,16 +90,20 @@ def get_cell(range: str):
     cell_end = str(range)[idx+1:]
     return cell_begin, cell_end
 
-####################################################
-excel_path = r'C:\Users\sytung\Desktop\H140_Cayman.xlsx'
+########### Input parammeters #########################################
+
+excel_path = r'C:\Users\sytung\OneDrive - Synopsys, Inc\H140_Cayman_N3P_CoWos.xlsx'
 
 ref_map_range = "L10:AM103"
-ref_ws_name = 'BUMP_DIAMOND_UNIFORM_TOP_DIE'
-wb = load_workbook(excel_path, data_only= True)
-ref_ws = wb[ref_ws_name]
+ref_ws_name = 'BUMP_DIAMOND_UNIFORM_INT'
 
-out_map_loc = "BZ10"
-out_ws_name = "BUMP_DIAMOND_UNIFORM_TOP_DIE"
+out_map_loc = "BY10"
+out_ws_name = "BUMP_DIAMOND_UNIFORM_INT"
+option = "flip"
+
+####################################################
+wb = load_workbook(excel_path)
+ref_ws = wb[ref_ws_name]
 # out_ws =  wb[out_ws_name]
 if out_ws_name in wb.sheetnames:            
             out_ws = wb[out_ws_name]
@@ -129,14 +133,40 @@ x_len = ref_col_end - ref_col_begin + 1
 y_len = ref_row_end - ref_row_begin + 1
 print(f"row begin: {ref_row_begin},  row end: {ref_row_end}")
 print(f"col begin: {ref_col_begin},  col end: {ref_col_end}")
-
-out_r = out_row_begin
-out_c = out_col_begin + x_len
-for row in range(ref_row_begin, ref_row_end+ 1):
-    for col in range(ref_col_begin, ref_col_end + 1):
-        out_ws.cell(row=out_r, column=out_c).value = ref_ws.cell(row=row, column=col).value
-        out_c -= 1
+if option == "flip":
+    out_r = out_row_begin
     out_c = out_col_begin + x_len
-    out_r += 1
-               
+    for row in range(ref_row_begin, ref_row_end+ 1):
+        for col in range(ref_col_begin, ref_col_end + 1):
+            out_ws.cell(row=out_r, column=out_c).value = ref_ws.cell(row=row, column=col).value
+            out_c -= 1
+        out_c = out_col_begin + x_len
+        out_r += 1
+elif option == 'rotate(-90)':
+    out_r = out_row_begin + y_len
+    out_c = out_col_begin
+    for row in range(ref_row_begin, ref_row_end+ 1):
+        for col in range(ref_col_begin, ref_col_end + 1):
+            out_ws.cell(row=out_r, column=out_c).value = ref_ws.cell(row=row, column=col).value
+            out_r -= 1
+        out_r = out_row_begin + y_len
+        out_c += 1
+elif option == 'rotate(+90)':
+    out_r = out_row_begin
+    out_c = out_col_begin + y_len
+    for row in range(ref_row_begin, ref_row_end+ 1):
+        for col in range(ref_col_begin, ref_col_end + 1):
+            out_ws.cell(row=out_r, column=out_c).value = ref_ws.cell(row=row, column=col).value
+            out_r += 1
+        out_r = out_row_begin
+        out_c -= 1
+elif option == 'rotate(180)':
+    out_r = out_row_begin + y_len
+    out_c = out_col_begin + x_len
+    for row in range(ref_row_begin, ref_row_end+ 1):
+        for col in range(ref_col_begin, ref_col_end + 1):
+            out_ws.cell(row=out_r, column=out_c).value = ref_ws.cell(row=row, column=col).value
+            out_c -= 1
+        out_c = out_col_begin + x_len
+        out_r -= 1
 wb.save(excel_path)
