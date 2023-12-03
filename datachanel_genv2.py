@@ -68,6 +68,7 @@ img_ls = ["frog3.png", "owlpurple.png","fox.png", "car.png", "kid.png", "snowman
 # ch_number_ls = [1,2,3,4,5,6,7,8,9, 10, 11, 12, 13, 14, 15, 16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32]
 ch_number_ls = [2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32]
 ch_sequence_ls = ["Right to Left","Left to Right", "Center to Left first","Center to Right first", "Left Edge to Center first", "Right Edge to Center first"]
+orient_ls = ["NS", "EW"]
 
 # Create control variables
 
@@ -335,6 +336,16 @@ def choosetheme(combo_list: dict[str,TkCombobox], entry_list: dict[str, Tkentry]
             for e in ls:
                 if str(entry).find(e) != -1 :
                     entry_list[entry].set_fg('#A9A9A9')
+def choose_sequence(combo_list: dict[str,TkCombobox], entry_list: dict[str, Tkentry], text_list: dict[str, CanvasText], checkbutton_list : dict[str, TKcheckbtn]):
+    orient = combo_list['orient'].get_value()
+    global ch_sequence_ls
+    if orient == "NS":
+        ch_sequence_ls = ["Right to Left","Left to Right", "Center to Left first","Center to Right first", "Left Edge to Center first", "Right Edge to Center first"]
+
+    elif orient == "EW":
+        ch_sequence_ls = ["Top to Bot","Bot to Top", "Center to Bot first","Center to Top first", "Bot Edge to Center first", "Top Edge to Center first"]
+    combo_list['ch_seq'].combobox.config(values=ch_sequence_ls)
+    combo_list['ch_seq'].combobox.current(0)
 def progress_bar(bar: Tkprogressbar,value):
     bar.update(value)
     root.update_idletasks()
@@ -369,10 +380,14 @@ theme_cb = TkCombobox(canvas=my_canvas,x=675, y=15,w=70,win_defaultx=800, win_de
 theme_cb.combobox.bind('<<ComboboxSelected>>', lambda event: choosetheme(combo_ls, entry_ls, text_ls, chkbtn_ls))
 ch_cb = TkCombobox(canvas=my_canvas,x=300, y=250,win_defaultx=800, win_defaulty=800,values=ch_number_ls, is_bind=1, guidetext=ch_combo_g)
 ch_seq_cb = TkCombobox(canvas=my_canvas,x=300, y=290,win_defaultx=800, win_defaulty=800,values=ch_sequence_ls)
+orient_cb = TkCombobox(canvas=my_canvas,x=300, y=220,win_defaultx=800, win_defaulty=800,values=orient_ls)
+orient_cb.combobox.bind('<<ComboboxSelected>>', lambda event: choose_sequence(combo_ls, entry_ls, text_ls, chkbtn_ls))
 
 gen_map_ckbtn = TKcheckbtn(win=root,canvas=my_canvas,x=30, y=410,win_defaultx=800, win_defaulty=800,text= "Gen Mapping table?", anchor='sw')
 gen_map_noti = ["- Generate Die mapping table: ON ", "- Generate Die mapping table: OFF", "map_","die_"]
 gen_map_ckbtn.checkbtn.config(command= lambda : toggle(gen_map_ckbtn, combo_ls, entry_ls, textbox_ls, gen_map_noti))
+
+
 
 
 p_excel_t = CanvasText(canvas=my_canvas,x=30,y=55,win_defaultx=800, win_defaulty=800,text="PLOC file:",font=tkfont(family="Helvetica", size=11, slant='italic', underline=True, weight='bold'), fill='black', bgx=110, bgy= 24, bg_xo=6, bg_yo=6, isbg=True)
@@ -437,7 +452,8 @@ chkbtn_ls={
 combo_ls={
     'theme' :theme_cb,
     'ch' :ch_cb,
-    'ch_seq' : ch_seq_cb
+    'ch_seq' : ch_seq_cb,
+    'orient' : orient_cb
 }
 
 
@@ -536,6 +552,7 @@ def process(textbox: TkTextbox, entry_list: dict[str, Tkentry], checkbtn_list: d
             'DieR_name': input_got['die_R_list'],
             'gen_map': input_got['gen_map'],
             'map_char': input_got['map_char'],
+            'orient': input_got['orient']
         }
 
         output_params ={
@@ -590,6 +607,7 @@ def Right2left(textbox: TkTextbox, progressbar: Tkprogressbar,params):
     ch_end = params['ch_end']
     pwrlist = params['pwr_list']
     buschar = list(params['bus_char'])
+    orient = params['orient']
 
     signal_bus:dict = getbus_name_size(params)
     signalname = list(signal_bus.keys())
@@ -610,40 +628,77 @@ def Right2left(textbox: TkTextbox, progressbar: Tkprogressbar,params):
     powerlist = list(str(params['pwr_list']).split(" "))
     for pwr in powerlist:
         pwr_color.__setitem__(pwr, generate_color())
-
-    while(ch_end>=ch_begin):   
-        for col in range(col_begin, col_end + 1):
-            for row in range(row_begin, row_end + 1):       
-                col_l = get_column_letter(col)
-                cell_val = wsi_f[col_l + str(row)].value
- 
-                if (cell_val != None):
-                    wso_f[get_column_letter(c)+str(r)].alignment = Alignment(shrinkToFit=True, horizontal='center')
-                    wso_f[get_column_letter(c)+str(r)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
-                    if cell_val in pwrlist:
-                            wso_f[get_column_letter(c)+str(r)].value = cell_val
-                            wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=pwr_color[cell_val])
-                    else:
-                        index =  getstring(str(cell_val),buschar[0],buschar[1])
-                        if cell_val in singlebus:
-                            if(index[1]!= None):
-                                wso_f[get_column_letter(c)+str(r)].value = f"{str(cell_val).replace(index[1],'')}[{str(ch_end)}]"                                
-                            else:
-                                wso_f[get_column_letter(c)+str(r)].value = str(cell_val) + buschar[0] + str(ch_end) + buschar[1]
-                            wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=singlebus_color[cell_val])
+    if orient == "NS":
+        while(ch_end>=ch_begin):   
+            for col in range(col_begin, col_end + 1):
+                for row in range(row_begin, row_end + 1):       
+                    col_l = get_column_letter(col)
+                    cell_val = wsi_f[col_l + str(row)].value
+    
+                    if (cell_val != None):
+                        wso_f[get_column_letter(c)+str(r)].alignment = Alignment(shrinkToFit=True, horizontal='center')
+                        wso_f[get_column_letter(c)+str(r)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
+                        if cell_val in pwrlist:
+                                wso_f[get_column_letter(c)+str(r)].value = cell_val
+                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=pwr_color[cell_val])
                         else:
-                            bit_cnt = multibus[index[2]]
-                            wso_f[get_column_letter(c)+str(r)].value = str(cell_val).replace(index[1],'') + buschar[0] + str(ch_end * bit_cnt + int(index[0])) + buschar[1]
-                            wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=multibus_color[index[2]])
+                            index =  getstring(str(cell_val),buschar[0],buschar[1])
+                            if cell_val in singlebus:
+                                if(index[1]!= None):
+                                    wso_f[get_column_letter(c)+str(r)].value = f"{str(cell_val).replace(index[1],'')}[{str(ch_end)}]"                                
+                                else:
+                                    wso_f[get_column_letter(c)+str(r)].value = str(cell_val) + buschar[0] + str(ch_end) + buschar[1]
+                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=singlebus_color[cell_val])
+                            else:
+                                bit_cnt = multibus[index[2]]
+                                wso_f[get_column_letter(c)+str(r)].value = str(cell_val).replace(index[1],'') + buschar[0] + str(ch_end * bit_cnt + int(index[0])) + buschar[1]
+                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=multibus_color[index[2]])
+                        
+                    r += 1
+                    print("Processing at: "+col_l + str(row) )
                     
+                    mynotif(textbox,"Processing at: "+col_l + str(row))
+                c += 1
+                r = params['out_row']
+            ch_end -= 1
+        return c, singlebus, multibus
+    elif orient == "EW":
+        ew_ch = ch_begin
+        while(ch_end>=ch_begin): 
+            for row in range(row_begin, row_end + 1):
+                for col in range(col_begin, col_end + 1):       
+                    col_l = get_column_letter(col)
+                    cell_val = wsi_f[col_l + str(row)].value
+    
+                    if (cell_val != None):
+                        wso_f[get_column_letter(c)+str(r)].alignment = Alignment(shrinkToFit=True, horizontal='center')
+                        wso_f[get_column_letter(c)+str(r)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
+                        if cell_val in pwrlist:
+                                wso_f[get_column_letter(c)+str(r)].value = cell_val
+                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=pwr_color[cell_val])
+                        else:
+                            index =  getstring(str(cell_val),buschar[0],buschar[1])
+                            if cell_val in singlebus:
+                                if(index[1]!= None):
+                                    wso_f[get_column_letter(c)+str(r)].value = f"{str(cell_val).replace(index[1],'')}[{str(ew_ch)}]"                                
+                                else:
+                                    wso_f[get_column_letter(c)+str(r)].value = str(cell_val) + buschar[0] + str(ew_ch) + buschar[1]
+                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=singlebus_color[cell_val])
+                            else:
+                                bit_cnt = multibus[index[2]]
+                                wso_f[get_column_letter(c)+str(r)].value = str(cell_val).replace(index[1],'') + buschar[0] + str(ew_ch * bit_cnt + int(index[0])) + buschar[1]
+                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=multibus_color[index[2]])
+                        
+                    c += 1
+                    print("Processing at: "+col_l + str(row) )
+                    
+                    mynotif(textbox,"Processing at: "+col_l + str(row))
+                c = params['out_col']
                 r += 1
-                print("Processing at: "+col_l + str(row) )
-                
-                mynotif(textbox,"Processing at: "+col_l + str(row))
-            c += 1
-            r = params['out_row']
-        ch_end -= 1
-    return c, singlebus, multibus
+
+            ch_end -= 1
+            ew_ch += 1
+        return r, singlebus, multibus
 def Left2Right(textbox: TkTextbox, progressbar: Tkprogressbar,params: dict):
     ch_cnt = params['ch_cnt']   
     col_begin = params['col_begin']
@@ -658,6 +713,7 @@ def Left2Right(textbox: TkTextbox, progressbar: Tkprogressbar,params: dict):
     ch_end = params['ch_end']
     pwrlist = params['pwr_list']
     buschar = list(params['bus_char'])
+    orient = params['orient']
     signal_bus:dict = getbus_name_size(params)
     signalname = list(signal_bus.keys())
     singlebus:list =[]
@@ -677,13 +733,12 @@ def Left2Right(textbox: TkTextbox, progressbar: Tkprogressbar,params: dict):
     powerlist = list(str(params['pwr_list']).split(" "))
     for pwr in powerlist:
         pwr_color.__setitem__(pwr, generate_color())
-    for cnt in range(ch_begin,ch_end + 1):  
-        
+    if orient == "NS":
+        for cnt in range(ch_begin,ch_end + 1):             
             for col in range(col_begin, col_end + 1):
                 for row in range(row_begin, row_end + 1):       
                     col_l = get_column_letter(col)
-                    cell_val = wsi_f[col_l + str(row)].value
-    
+                    cell_val = wsi_f[col_l + str(row)].value    
                     if (cell_val != None):
                         wso_f[get_column_letter(c)+str(r)].alignment = Alignment(shrinkToFit=True, horizontal='center')
                         wso_f[get_column_letter(c)+str(r)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
@@ -708,7 +763,40 @@ def Left2Right(textbox: TkTextbox, progressbar: Tkprogressbar,params: dict):
                     mynotif(textbox,"Processing at: "+col_l + str(row))
                 c += 1
                 r = params['out_row']
-    return c, singlebus, multibus
+        return c, singlebus, multibus
+    elif orient == "EW":
+        ew_ch = ch_end
+        for cnt in range(ch_begin,ch_end + 1):          
+            for row in range(row_begin, row_end + 1):
+                for col in range(col_begin, col_end + 1):       
+                    col_l = get_column_letter(col)
+                    cell_val = wsi_f[col_l + str(row)].value
+                    if (cell_val != None):
+                        wso_f[get_column_letter(c)+str(r)].alignment = Alignment(shrinkToFit=True, horizontal='center')
+                        wso_f[get_column_letter(c)+str(r)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
+                        if cell_val in pwrlist:
+                            wso_f[get_column_letter(c)+str(r)].value = cell_val
+                            wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=pwr_color[cell_val])
+                        else:
+                            index =  getstring(str(cell_val),buschar[0],buschar[1])
+                            if cell_val in singlebus:
+                                if(index[1]!= None):
+                                    wso_f[get_column_letter(c)+str(r)].value = f"{str(cell_val).replace(index[1],'')}[{str(ew_ch)}]"
+                                else:
+                                    wso_f[get_column_letter(c)+str(r)].value = str(cell_val) + buschar[0] + str(ew_ch) + buschar[1]
+                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=singlebus_color[cell_val])
+                            else:
+                                bit_cnt = multibus[index[2]]
+                                wso_f[get_column_letter(c)+str(r)].value = str(cell_val).replace(index[1],'') + buschar[0] + str(ew_ch * bit_cnt + int(index[0])) + buschar[1]
+                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=multibus_color[index[2]])
+                        
+                    c += 1
+                    print("Processing at: "+col_l + str(row) )
+                    mynotif(textbox,"Processing at: "+col_l + str(row))
+                c = params['out_col']
+                r += 1
+            ew_ch -= 1
+        return r, singlebus, multibus
 
 def getbus_name_size(params: dict):
  
@@ -806,6 +894,7 @@ def gen_datachanel(textbox: TkTextbox, progressbar: Tkprogressbar,input_params, 
     pwr = input_params["pwr_list"]
     buschar = input_params["bus_char"]
     ch_seq = input_params["ch_seq"]
+    orient = input_params["orient"]
 
     params = {
         'ch_cnt': ch_cnt,
@@ -823,15 +912,15 @@ def gen_datachanel(textbox: TkTextbox, progressbar: Tkprogressbar,input_params, 
         'ch_end': ch_cnt,
         
         'signal_bus': None,
-        'ch_seq': ch_seq
-
+        'ch_seq': ch_seq,
+        'orient' : orient
     }
     ch = 0
     params['ch_begin'] = 0
     params['ch_end'] = ch_cnt
     # Left2Right(textbox, progressbar,params)
     # # Right2left(textbox, progressbar,params)
-    if(ch_seq == "Right to Left"):
+    if(ch_seq == "Right to Left" or ch_seq == "Top to Bot"):
         if((ch_cnt + 1)%2 != 0): # This feature used for odd number channels generation. But it is not permited as this time
             msg = messagebox.askquestion('Number channels choose', 'The number chanels is not even. Do you want to continue?', icon='question')
             if(msg == 'yes'):
@@ -847,7 +936,7 @@ def gen_datachanel(textbox: TkTextbox, progressbar: Tkprogressbar,input_params, 
             params['ch_begin'] = 0
             params['ch_end'] = ch_cnt
             params['signal_bus'] = Right2left(textbox, progressbar,params)
-    elif(ch_seq == "Left to Right"):
+    elif(ch_seq == "Left to Right" or ch_seq == "Bot to Top"):
         if((ch_cnt + 1)%2 != 0):
             msg = messagebox.askquestion('Number channels choose', 'The number chanels is not even. Do you want to continue?', icon='question')
             if(msg == 'yes'):
@@ -863,70 +952,114 @@ def gen_datachanel(textbox: TkTextbox, progressbar: Tkprogressbar,input_params, 
             params['ch_begin'] = 0
             params['ch_end'] = ch_cnt
             params['signal_bus'] = Left2Right(textbox, progressbar,params)
-    elif(ch_seq == "Center to Left first"):
+    elif(ch_seq == "Center to Left first" or ch_seq == "Center to Bot first"):
         if((ch_cnt + 1)%2 != 0): # This feature used for odd number channels generation. But it is not permited as this time
-            msg = messagebox.askquestion('Number channels choose', 'The number chanel is not even. Do you want to continue?', icon='question')
-            if(msg == 'yes'):
-                msg2 = messagebox.askquestion('Number channels', '\"Yes\" means Number of Left Channels is more than Right Channels\n \"No\" means Number of Right Channels is more than Left Channels', icon='question')
-                if (msg2 == 'yes'):
-                   center_nu=int((ch_cnt + 1)/2)
-                   params['ch_begin'] = 0
-                   params['ch_end'] = center_nu
-                   current_col = Right2left(textbox, progressbar, params)[0]
-                   params['out_col'] = current_col
-                   params['ch_begin'] = center_nu + 1
-                   params['ch_end'] = ch_cnt
-                   params['signal_bus'] = Left2Right(textbox, progressbar,params)
-                else:
-                   center_nu=int((ch_cnt + 1)/2 -1)
-                   params['ch_begin'] = 0
-                   params['ch_end'] = center_nu
-                   current_col = Right2left(textbox, progressbar,params)[0]
-                   params['out_col'] = current_col
-                   params['ch_begin'] = center_nu + 1
-                   params['ch_end'] = ch_cnt
-                   params['signal_bus'] = Left2Right(textbox, progressbar,params)    
-            else:
+            # msg = messagebox.askquestion('Number channels choose', 'The number chanel is not even. Do you want to continue?', icon='question')
+            # if(msg == 'yes'):
+            #     msg2 = messagebox.askquestion('Number channels', '\"Yes\" means Number of Left Channels is more than Right Channels\n \"No\" means Number of Right Channels is more than Left Channels', icon='question')
+            #     if (msg2 == 'yes'):
+            #        center_nu=int((ch_cnt + 1)/2)
+            #        params['ch_begin'] = 0
+            #        params['ch_end'] = center_nu
+            #     #    if NS
+            #     #    current_col = Right2left(textbox, progressbar, params)[0]
+            #     #    params['out_col'] = current_col
+            #        current_row = Right2left(textbox, progressbar, params)[0]
+            #        params['out_row'] = current_row
+            #        params['ch_begin'] = center_nu + 1
+            #        params['ch_end'] = ch_cnt
+            #        params['signal_bus'] = Left2Right(textbox, progressbar,params)
+            #     else:
+            #        center_nu=int((ch_cnt + 1)/2 -1)
+            #        params['ch_begin'] = 0
+            #        params['ch_end'] = center_nu
+            #     #    if NS
+            #     #    current_col = Right2left(textbox, progressbar,params)[0]
+            #     #    params['out_col'] = current_col
+            #        current_row = Right2left(textbox, progressbar, params)[0]
+            #        params['out_row'] = current_row
+            #        params['ch_begin'] = center_nu + 1
+            #        params['ch_end'] = ch_cnt
+            #        params['signal_bus'] = Left2Right(textbox, progressbar,params)    
+            # else:
                 mynotif(textbox, "Aborted!!")
                 print("Aborted!!")
                 progress_bar(progressbar,0)
                 return
         else:
             center_nu=int((ch_cnt + 1)/2 - 1)
-            params['ch_begin'] = 0
-            params['ch_end'] = center_nu
-            current_col = Right2left(textbox, progressbar,params)[0]
-            params['out_col'] = current_col
-            params['ch_begin'] = center_nu + 1
-            params['ch_end'] = ch_cnt
-            params['signal_bus'] = Left2Right(textbox, progressbar,params)
-    elif(ch_seq == "Center to Right first"):
+            
+            if params['orient'] == "NS":
+                params['ch_begin'] = 0
+                params['ch_end'] = center_nu
+                current_col = Right2left(textbox, progressbar,params)[0]
+                params['out_col'] = current_col
+                params['ch_begin'] = center_nu + 1
+                params['ch_end'] = ch_cnt
+                params['signal_bus'] = Left2Right(textbox, progressbar,params)
+            elif params['orient'] == "EW":
+                params['ch_begin'] = center_nu + 1
+                params['ch_end'] = ch_cnt
+                current_row = Left2Right(textbox, progressbar, params)[0]
+                params['out_row'] = current_row
+                params['ch_begin'] = 0
+                params['ch_end'] = center_nu
+                params['signal_bus'] = Right2left(textbox, progressbar,params)
+    elif(ch_seq == "Center to Right first" or ch_seq == "Center to Top first"):
             center_nu=int((ch_cnt + 1)/2 - 1)
-            params['ch_begin'] = center_nu + 1
-            params['ch_end'] = ch_cnt
-            current_col = Right2left(textbox, progressbar,params)[0]
-            params['out_col'] = current_col
-            params['ch_begin'] = 0
-            params['ch_end'] = center_nu
-            params['signal_bus'] = Left2Right(textbox, progressbar,params)
-    elif (ch_seq == "Left Edge to Center first"):
+
+            if params['orient'] == "NS":
+                params['ch_begin'] = center_nu + 1
+                params['ch_end'] = ch_cnt
+                current_col = Right2left(textbox, progressbar,params)[0]
+                params['out_col'] = current_col
+                params['ch_begin'] = 0
+                params['ch_end'] = center_nu
+                params['signal_bus'] = Left2Right(textbox, progressbar,params)
+            elif params['orient'] == "EW":
+                params['ch_begin'] = 0
+                params['ch_end'] = center_nu
+                current_row = Left2Right(textbox, progressbar, params)[0]
+                params['out_row'] = current_row
+                params['ch_begin'] = center_nu + 1
+                params['ch_end'] = ch_cnt
+                params['signal_bus'] = Right2left(textbox, progressbar,params)
+    elif (ch_seq == "Left Edge to Center first" or ch_seq == "Bot Edge to Center first"):
             center_nu=int((ch_cnt + 1)/2 - 1)
-            params['ch_begin'] = 0
-            params['ch_end'] = center_nu
-            current_col = Left2Right(textbox, progressbar,params)[0]
-            params['out_col'] = current_col
-            params['ch_begin'] = center_nu + 1
-            params['ch_end'] = ch_cnt
-            params['signal_bus'] = Right2left(textbox, progressbar,params)
-    elif (ch_seq == "Right Edge to Center first"):
+            if params['orient'] == "NS":
+                params['ch_begin'] = 0
+                params['ch_end'] = center_nu
+                current_col = Left2Right(textbox, progressbar,params)[0]
+                params['out_col'] = current_col
+                params['ch_begin'] = center_nu + 1
+                params['ch_end'] = ch_cnt
+                params['signal_bus'] = Right2left(textbox, progressbar,params)
+            if params['orient'] == "EW":
+                params['ch_begin'] = center_nu + 1
+                params['ch_end'] = ch_cnt
+                current_row = Right2left(textbox, progressbar,params)[0]
+                params['out_row'] = current_row
+                params['ch_begin'] = 0
+                params['ch_end'] = center_nu
+                params['signal_bus'] = Left2Right(textbox, progressbar,params)
+    elif (ch_seq == "Right Edge to Center first" or ch_seq == "Top Edge to Center first"):
             center_nu=int((ch_cnt + 1)/2 - 1)
-            params['ch_begin'] = center_nu + 1
-            params['ch_end'] = ch_cnt
-            current_col = Left2Right(textbox, progressbar,params)[0]
-            params['out_col'] = current_col
-            params['ch_begin'] = 0
-            params['ch_end'] = center_nu
-            params['signal_bus'] = Right2left(textbox, progressbar,params)
+            if params['orient'] == "NS":
+                params['ch_begin'] = center_nu + 1
+                params['ch_end'] = ch_cnt
+                current_col = Left2Right(textbox, progressbar,params)[0]
+                params['out_col'] = current_col
+                params['ch_begin'] = 0
+                params['ch_end'] = center_nu
+                params['signal_bus'] = Right2left(textbox, progressbar,params)
+            if params['orient'] == "EW":
+                params['ch_begin'] = 0
+                params['ch_end'] = center_nu
+                current_row = Right2left(textbox, progressbar,params)[0]
+                params['out_row'] = current_row
+                params['ch_begin'] = center_nu + 1
+                params['ch_end'] = ch_cnt
+                params['signal_bus'] = Left2Right(textbox, progressbar,params)
     mapgen = int(input_params['gen_map'])
     if(mapgen == 1):
         mapping_input = {

@@ -200,6 +200,7 @@ def mapping_connections(wb,textbox:TkTextbox, input_params:dict,mapping_tb_out:d
         multildict = _input_params['multi_bus']
         ch_seq = _input_params['ch_seq']
         ch_sequence = ["Right to Left","Left to Right", "Center to Left first","Center to Right first",  "Left Edge to Center first", "Right Edge to Center first"]
+        ch_sequence_ew = ["Top to Bot","Bot to Top", "Center to Bot first","Center to Top first", "Bot Edge to Center first", "Top Edge to Center first"]
         # bit_num = int(_input_params['bit_num'])
         r_d2d = row_d2d_begin
 
@@ -218,17 +219,17 @@ def mapping_connections(wb,textbox:TkTextbox, input_params:dict,mapping_tb_out:d
                         mapping_sheet[d1_col_l+str(r_d2d)].value = str(cell_val) + buschar[0] + str(ch_cnt) + buschar[1]
                         if(cell_val.find(mapchar[0]) != -1):
                             cell_val = cell_val.replace(mapchar[0],mapchar[0])
-                            if ch_seq == ch_sequence[0] or ch_seq == ch_sequence[1]:
+                            if ch_seq == ch_sequence[0] or ch_seq == ch_sequence[1] or ch_seq == ch_sequence_ew[0] or ch_seq == ch_sequence_ew[1]:
                                 mapping_sheet[d2_col_l+str(r_d2d)].value = str(cell_val) + buschar[0] + str(ch_cnt_down) + buschar[1]
-                            elif ch_seq == ch_sequence[2] or ch_seq == ch_sequence[3] or ch_seq == ch_sequence[4] or ch_seq == ch_sequence[5]:
+                            elif ch_seq == ch_sequence[2] or ch_seq == ch_sequence[3] or ch_seq == ch_sequence[4] or ch_seq == ch_sequence[5] or ch_seq == ch_sequence_ew[2] or ch_seq == ch_sequence_ew[3] or ch_seq == ch_sequence_ew[4] or ch_seq == ch_sequence_ew[5]:
                                 mapping_sheet[d2_col_l+str(r_d2d)].value = str(cell_val) + buschar[0] + str(ch_cnt + int(ch_num/2)) + buschar[1]
                             # elif ch_seq == ch_sequence[4] or ch_seq == ch_sequence[5]:
                             #     mapping_sheet[d2_col_l+str(r_d2d)].value = str(cell_val) + buschar[0] + str(ch_cnt + edge_gap) + buschar[1]
                         elif(cell_val.find(mapchar[1]) != -1):
                             cell_val = cell_val.replace(mapchar[1], mapchar[0])
-                            if ch_seq == ch_sequence[0] or ch_seq == ch_sequence[1]: 
+                            if ch_seq == ch_sequence[0] or ch_seq == ch_sequence[1] or ch_seq == ch_sequence_ew[0] or ch_seq == ch_sequence_ew[1]: 
                                 mapping_sheet[d2_col_l+str(r_d2d)].value = str(cell_val) + buschar[0] + str(ch_cnt_down) + buschar[1]
-                            elif ch_seq == ch_sequence[2] or ch_seq == ch_sequence[3] or ch_seq == ch_sequence[4] or ch_seq == ch_sequence[5]:
+                            elif ch_seq == ch_sequence[2] or ch_seq == ch_sequence[3] or ch_seq == ch_sequence[4] or ch_seq == ch_sequence[5] or ch_seq == ch_sequence_ew[2] or ch_seq == ch_sequence_ew[3] or ch_seq == ch_sequence_ew[4] or ch_seq == ch_sequence_ew[5]:
                                 mapping_sheet[d2_col_l+str(r_d2d)].value = str(cell_val) + buschar[0] + str(ch_cnt + int(ch_num/2)) + buschar[1]
                             # elif ch_seq == ch_sequence[4] or ch_seq == ch_sequence[5]:
                             #     mapping_sheet[d2_col_l+str(r_d2d)].value = str(cell_val) + buschar[0] + str(ch_cnt + edge_gap) + buschar[1]
@@ -238,17 +239,17 @@ def mapping_connections(wb,textbox:TkTextbox, input_params:dict,mapping_tb_out:d
                         mapping_sheet[d1_col_l+str(r_d2d)].value = str(cell_val).replace(index[1],'') + buschar[0] + str(ch_cnt * bit_num + int(index[0])) + buschar[1]
                         if(cell_val.find(mapchar[0]) != -1):
                             cell_val = cell_val.replace(mapchar[0],mapchar[1])
-                            if ch_seq == ch_sequence[0] or ch_seq == ch_sequence[1]:
+                            if ch_seq == ch_sequence[0] or ch_seq == ch_sequence[1] or ch_seq == ch_sequence_ew[0] or ch_seq == ch_sequence_ew[1]:
                                 mapping_sheet[d2_col_l+str(r_d2d)].value = str(cell_val).replace(index[1],'') + buschar[0] + str(ch_cnt_down * bit_num + int(index[0])) + buschar[1]
-                            elif ch_seq == ch_sequence[2] or ch_seq == ch_sequence[3] or ch_seq == ch_sequence[4] or ch_seq == ch_sequence[5]:
+                            elif ch_seq == ch_sequence[2] or ch_seq == ch_sequence[3] or ch_seq == ch_sequence[4] or ch_seq == ch_sequence[5] or ch_seq == ch_sequence_ew[2] or ch_seq == ch_sequence_ew[3] or ch_seq == ch_sequence_ew[4] or ch_seq == ch_sequence_ew[5]:
                                 mapping_sheet[d2_col_l+str(r_d2d)].value = str(cell_val).replace(index[1],'') + buschar[0] + str((ch_cnt + int(ch_num/2)) * bit_num + int(index[0])) + buschar[1]
                             # elif ch_seq == ch_sequence[4] or ch_seq == ch_sequence[5]:
                             #     mapping_sheet[d2_col_l+str(r_d2d)].value = str(cell_val).replace(index[1],'') + buschar[0] + str((ch_cnt + edge_gap) * bit_num + int(index[0])) + buschar[1]
                         elif(cell_val.find(mapchar[1]) != -1):
                             cell_val = cell_val.replace(mapchar[1],mapchar[0])
-                            if ch_seq == ch_sequence[0] or ch_seq == ch_sequence[1]:
+                            if ch_seq == ch_sequence[0] or ch_seq == ch_sequence[1] or ch_seq == ch_sequence_ew[0] or ch_seq == ch_sequence_ew[1]:
                                 mapping_sheet[d2_col_l+str(r_d2d)].value = str(cell_val).replace(index[1],'') + buschar[0] + str(ch_cnt_down * bit_num + int(index[0])) + buschar[1]
-                            elif ch_seq == ch_sequence[2] or ch_seq == ch_sequence[3] or ch_seq == ch_sequence[4] or ch_seq == ch_sequence[5]:
+                            elif ch_seq == ch_sequence[2] or ch_seq == ch_sequence[3] or ch_seq == ch_sequence[4] or ch_seq == ch_sequence[5] or ch_seq == ch_sequence_ew[2] or ch_seq == ch_sequence_ew[3] or ch_seq == ch_sequence_ew[4] or ch_seq == ch_sequence_ew[5]:
                                 mapping_sheet[d2_col_l+str(r_d2d)].value = str(cell_val).replace(index[1],'') + buschar[0] + str((ch_cnt + int(ch_num/2)) * bit_num + int(index[0])) + buschar[1]
                             # elif ch_seq == ch_sequence[4] or ch_seq == ch_sequence[5]:
                             #     mapping_sheet[d2_col_l+str(r_d2d)].value = str(cell_val).replace(index[1],'') + buschar[0] + str((ch_cnt + edge_gap) * bit_num + int(index[0])) + buschar[1]

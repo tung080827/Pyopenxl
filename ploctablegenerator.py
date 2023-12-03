@@ -898,7 +898,7 @@ def process_and_generate(entry_list: dict[str, Tkentry], checkbtn_list: dict[str
         # wb_d = load_workbook(excel_path, data_only=True)
         print("Opening excel file...")
         mynotif(textbox, "Opening excel file...")
-        wb_f = load_workbook(excel_path)
+        wb_f = load_workbook(excel_path, data_only= True)
         print(wb_f)   
     except:
         print("Wrong Ploc path or Ploc file is openning. Please recheck/close the PLOC file before generate :(")
