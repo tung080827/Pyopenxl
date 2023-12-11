@@ -92,14 +92,14 @@ def get_cell(range: str):
 
 ########### Input parammeters #########################################
 
-excel_path = r'C:\Users\sytung\OneDrive - Synopsys, Inc\H140_Cayman_N3P_CoWos.xlsx'
+excel_path = r'C:\Users\sytung\Desktop\Tung_temp.xlsx'
 
-ref_map_range = "L10:AM103"
-ref_ws_name = 'BUMP_DIAMOND_UNIFORM_INT'
+ref_map_range = "X26:AG80"
+ref_ws_name = 'Sheet2'
 
-out_map_loc = "BY10"
-out_ws_name = "BUMP_DIAMOND_UNIFORM_INT"
-option = "flip"
+out_map_loc = "K30"
+out_ws_name = "Sheet3"
+option = "rotate(-90)"
 
 ####################################################
 wb = load_workbook(excel_path)

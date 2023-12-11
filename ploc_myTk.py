@@ -214,7 +214,7 @@ class Tkentry():
            
             canvas : tk.Canvas,
             # TkTextbox : TkTextbox,
-            guide_text: list,
+            guide_text: list = "",
             x = 0,
             y = 0,
             w =100,

@@ -640,7 +640,7 @@ def Right2left(textbox: TkTextbox, progressbar: Tkprogressbar,params):
                         wso_f[get_column_letter(c)+str(r)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
                         if cell_val in pwrlist:
                                 wso_f[get_column_letter(c)+str(r)].value = cell_val
-                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=pwr_color[cell_val])
+                                # wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=pwr_color[cell_val])
                         else:
                             index =  getstring(str(cell_val),buschar[0],buschar[1])
                             if cell_val in singlebus:
@@ -648,11 +648,11 @@ def Right2left(textbox: TkTextbox, progressbar: Tkprogressbar,params):
                                     wso_f[get_column_letter(c)+str(r)].value = f"{str(cell_val).replace(index[1],'')}[{str(ch_end)}]"                                
                                 else:
                                     wso_f[get_column_letter(c)+str(r)].value = str(cell_val) + buschar[0] + str(ch_end) + buschar[1]
-                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=singlebus_color[cell_val])
+                                # wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=singlebus_color[cell_val])
                             else:
                                 bit_cnt = multibus[index[2]]
                                 wso_f[get_column_letter(c)+str(r)].value = str(cell_val).replace(index[1],'') + buschar[0] + str(ch_end * bit_cnt + int(index[0])) + buschar[1]
-                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=multibus_color[index[2]])
+                                # wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=multibus_color[index[2]])
                         
                     r += 1
                     print("Processing at: "+col_l + str(row) )
@@ -675,7 +675,7 @@ def Right2left(textbox: TkTextbox, progressbar: Tkprogressbar,params):
                         wso_f[get_column_letter(c)+str(r)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
                         if cell_val in pwrlist:
                                 wso_f[get_column_letter(c)+str(r)].value = cell_val
-                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=pwr_color[cell_val])
+                                # wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=pwr_color[cell_val])
                         else:
                             index =  getstring(str(cell_val),buschar[0],buschar[1])
                             if cell_val in singlebus:
@@ -683,11 +683,11 @@ def Right2left(textbox: TkTextbox, progressbar: Tkprogressbar,params):
                                     wso_f[get_column_letter(c)+str(r)].value = f"{str(cell_val).replace(index[1],'')}[{str(ew_ch)}]"                                
                                 else:
                                     wso_f[get_column_letter(c)+str(r)].value = str(cell_val) + buschar[0] + str(ew_ch) + buschar[1]
-                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=singlebus_color[cell_val])
+                                # wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=singlebus_color[cell_val])
                             else:
                                 bit_cnt = multibus[index[2]]
                                 wso_f[get_column_letter(c)+str(r)].value = str(cell_val).replace(index[1],'') + buschar[0] + str(ew_ch * bit_cnt + int(index[0])) + buschar[1]
-                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=multibus_color[index[2]])
+                                # wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=multibus_color[index[2]])
                         
                     c += 1
                     print("Processing at: "+col_l + str(row) )
@@ -744,7 +744,7 @@ def Left2Right(textbox: TkTextbox, progressbar: Tkprogressbar,params: dict):
                         wso_f[get_column_letter(c)+str(r)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
                         if cell_val in pwrlist:
                             wso_f[get_column_letter(c)+str(r)].value = cell_val
-                            wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=pwr_color[cell_val])
+                            # wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=pwr_color[cell_val])
                         else:
                             index =  getstring(str(cell_val),buschar[0],buschar[1])
                             if cell_val in singlebus:
@@ -752,11 +752,11 @@ def Left2Right(textbox: TkTextbox, progressbar: Tkprogressbar,params: dict):
                                     wso_f[get_column_letter(c)+str(r)].value = f"{str(cell_val).replace(index[1],'')}[{str(cnt)}]"
                                 else:
                                     wso_f[get_column_letter(c)+str(r)].value = str(cell_val) + buschar[0] + str(cnt) + buschar[1]
-                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=singlebus_color[cell_val])
+                                # wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=singlebus_color[cell_val])
                             else:
                                 bit_cnt = multibus[index[2]]
                                 wso_f[get_column_letter(c)+str(r)].value = str(cell_val).replace(index[1],'') + buschar[0] + str(cnt * bit_cnt + int(index[0])) + buschar[1]
-                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=multibus_color[index[2]])
+                                # wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=multibus_color[index[2]])
                         
                     r += 1
                     print("Processing at: "+col_l + str(row) )
@@ -776,7 +776,7 @@ def Left2Right(textbox: TkTextbox, progressbar: Tkprogressbar,params: dict):
                         wso_f[get_column_letter(c)+str(r)].border = Border(left=Side(style='thin'),right=Side(style='thin'),top=Side(style='thin'),bottom=Side(style='thin'))
                         if cell_val in pwrlist:
                             wso_f[get_column_letter(c)+str(r)].value = cell_val
-                            wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=pwr_color[cell_val])
+                            # wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=pwr_color[cell_val])
                         else:
                             index =  getstring(str(cell_val),buschar[0],buschar[1])
                             if cell_val in singlebus:
@@ -784,11 +784,11 @@ def Left2Right(textbox: TkTextbox, progressbar: Tkprogressbar,params: dict):
                                     wso_f[get_column_letter(c)+str(r)].value = f"{str(cell_val).replace(index[1],'')}[{str(ew_ch)}]"
                                 else:
                                     wso_f[get_column_letter(c)+str(r)].value = str(cell_val) + buschar[0] + str(ew_ch) + buschar[1]
-                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=singlebus_color[cell_val])
+                                # wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=singlebus_color[cell_val])
                             else:
                                 bit_cnt = multibus[index[2]]
                                 wso_f[get_column_letter(c)+str(r)].value = str(cell_val).replace(index[1],'') + buschar[0] + str(ew_ch * bit_cnt + int(index[0])) + buschar[1]
-                                wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=multibus_color[index[2]])
+                                # wso_f[get_column_letter(c)+str(r)].fill = PatternFill(patternType='solid', fgColor=multibus_color[index[2]])
                         
                     c += 1
                     print("Processing at: "+col_l + str(row) )
